@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/Users/alkengueleoua/.virtualenvs/env_mnmv2/bin/python",
+    "python.formatting.provider": "autopep8",
+    "python.linting.enabled": true
+}
