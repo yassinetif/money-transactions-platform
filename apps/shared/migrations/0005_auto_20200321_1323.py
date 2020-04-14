@@ -24,6 +24,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='corridor',
             name='transaction_type',
-            field=models.CharField(choices=[(shared.models.price.TransactionType['ENVOI_CASH'], 'ENVOI_CASH'), (shared.models.price.TransactionType['RETRAIT_CASH'], 'RETRAIT_CASH')], max_length=5),
+            field=models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 'CASH_TO_CASH'), (shared.models.price.TransactionType['RETRAIT_CASH'], 'RETRAIT_CASH')], max_length=5),
         ),
     ]

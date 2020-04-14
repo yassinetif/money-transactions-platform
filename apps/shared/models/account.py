@@ -5,19 +5,20 @@ from enum import Enum
 
 
 class AccountType(Enum):
-    PRINCIPAL = 1
-    COMMISSION = 2
+    PRINCIPAL = 'PRINCIPAL'
+    COMMISSION = 'COMMISSION'
 
 
 class Account(models.Model):
     limit = models.Q(app_label='entity', model='entity') \
         | models.Q(app_label='kyc', model='customer')
-    content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING, limit_choices_to=limit)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.DO_NOTHING, limit_choices_to=limit, null=True)
+    object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     category = models.CharField(max_length=30, choices=[
-                                (tag.value, tag.value) for tag in AccountType],default=AccountType.PRINCIPAL)
-    balance = models.DecimalField(max_digits=7, decimal_places=2)
+                                (tag.value, tag.value) for tag in AccountType], default=AccountType.PRINCIPAL.value)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=30)),
-                ('transaction_type', models.CharField(choices=[(shared.models.price.TransactionType['ENVOI_CASH'], 1), (shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
+                ('transaction_type', models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 1), (shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
                 ('source_object_id', models.PositiveIntegerField()),
                 ('destination_object_id', models.PositiveIntegerField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('minimum_amount', models.DecimalField(decimal_places=2, max_digits=7)),
                 ('maximum_amount', models.DecimalField(decimal_places=2, max_digits=7)),
-                ('fee_type', models.CharField(choices=[(shared.models.price.TransactionType['ENVOI_CASH'], 1), (shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
+                ('fee_type', models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 1), (shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
                 ('fee', models.DecimalField(decimal_places=2, max_digits=7)),
                 ('corridor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shared.Corridor')),
             ],

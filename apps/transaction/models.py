@@ -2,9 +2,13 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from entity.models import Agent
+from shared.models import Grille, Account
 from core.utils import random_code
+from enum import Enum
+
 
 class Transaction(models.Model):
+
     number = models.CharField(
         max_length=11, default=random_code(10), unique=True, blank=False, null=False)
     code = models.CharField(
@@ -12,6 +16,8 @@ class Transaction(models.Model):
 
     agent = models.ForeignKey(Agent, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
+    paid_amount = models.DecimalField(
+        max_digits=7, decimal_places=2, default=0)
     limit = models.Q(app_label='entity', model='entity') \
         | models.Q(app_label='kyc', model='customer')
 
@@ -26,6 +32,8 @@ class Transaction(models.Model):
     destination_object_id = models.PositiveIntegerField()
     destination_content_object = GenericForeignKey(
         'destination_content_type', 'destination_object_id')
+    grille = models.ForeignKey(
+        Grille, null=True, blank=True, on_delete=models.DO_NOTHING)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -33,3 +41,20 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = "Tranaction"
         verbose_name_plural = "Transactions"
+
+    def __str__(self):
+        return str(self.number)
+
+
+class Operation(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    transaction = models.ForeignKey(
+        Transaction, null=False, blank=False, on_delete=models.DO_NOTHING)
+    comment = models.TextField('Commentaire', null=True, blank=True)
+    balance_after_operation = models.ForeignKey(
+        Account, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name = 'Operation detail'
+        verbose_name_plural = 'Operatons details'

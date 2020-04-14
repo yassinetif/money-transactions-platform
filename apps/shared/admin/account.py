@@ -1,9 +1,17 @@
 from django.contrib import admin
 from shared.models import Account
+from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext_lazy as _
 
 
 class AccountAdmin(admin.ModelAdmin):
-    pass
+
+    list_display = ('account_object_type', 'balance', 'created')
+
+    def account_object_type(self, obj):
+        return obj.content_object
+    account_object_type.allow_tags = True
+    account_object_type.short_description = _('Entités / Clients')
 
 
 admin.site.register(Account, AccountAdmin)

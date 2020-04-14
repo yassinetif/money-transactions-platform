@@ -1,10 +1,15 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from django.contrib.auth.models import User
+from tastypie.serializers import Serializer
 from tastypie import fields
 from entity.models import Agent
-from entity.controller.agent_controller import login, logout
+from entity.controller.agent_controller import login as agent_login
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
+import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UserResource(ModelResource):
@@ -15,7 +20,6 @@ class UserResource(ModelResource):
 
 
 class AgentResource(ModelResource):
-    user = fields.ForeignKey(UserResource, 'user',full=True)
 
     class Meta:
         queryset = Agent.objects.all()
@@ -27,6 +31,18 @@ class AgentResource(ModelResource):
             'user': ALL_WITH_RELATIONS,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
+        serializer = Serializer(
+            formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
+
+    def determine_format(self, request):
+        """
+        Used to determine the desired format from the request.format
+        attribute.
+        """
+        if (hasattr(request, 'format') and
+                request.format in self._meta.serializer.formats):
+            return self._meta.serializer.get_mime_for_format(request.format)
+        return super(AgentResource, self).determine_format(request)
 
     def prepend_urls(self):
         return [
@@ -40,10 +56,6 @@ class AgentResource(ModelResource):
 
     def login(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
-        response = login(self, request)
-        return response
-
-    def logout(self, request, **kwargs):
-        self.method_check(request, allowed=['get'])
-        response = logout(self, request)
+        data = self.deserialize(request, request.body)
+        response = agent_login(self, data, request)
         return response

@@ -1,9 +1,17 @@
 from django.db import models
+from core.utils import random_code
 from django.contrib.auth.models import User
 from .entity import Entity
 
 
 class Agent(models.Model):
+    code = models.CharField(
+        unique=True,
+        max_length=10,
+        null=False,
+        blank=False,
+        default=random_code(6),
+    )
     informations = models.OneToOneField(User, on_delete=models.CASCADE)
     entity = models.OneToOneField(Entity, on_delete=models.DO_NOTHING)
     phone_number = models.CharField(max_length=10, null=False, blank=False)

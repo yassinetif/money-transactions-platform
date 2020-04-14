@@ -1,38 +1,32 @@
 
-from django.contrib.auth import authenticate, login, logout
-from tastypie.http import HttpUnauthorized, HttpForbidden
+from tastypie.http import HttpUnauthorized, HttpForbidden, HttpAccepted
 from entity.repository.agent_repository import AgentRepository
+from entity.repository.entity_repository import EntityRepository
+
+from django.contrib.auth.models import User
 
 
-def login(tastypie, request):
-    data = tastypie.deserialize(request, request.raw_post_data, format=request.META.get(
-        'CONTENT_TYPE', 'application/json'))
+def login(tastypie, data, request):
 
-    username = data.get('username', '')
-    password = data.get('password', '')
-    user = authenticate(username=username, password=password)
-    if user:
-        if user.is_active:
-            login(request, user)
-            agent = AgentRepository.fetch_by_user(user)
-            bundle = tastypie.build_bundle(obj=agent, request=request)
-            bundle = tastypie.full_dehydrate(bundle)
-            return tastypie.create_response(request, bundle)
+    username = data['username']
+    password = data['password']
+
+    try:
+        user = User.objects.get(username=username)
+        if user and user.is_active:
+            result = user.check_password(password)
+            if result:
+                agent = AgentRepository.fetch_by_user(user)
+                bundle = tastypie.build_bundle(obj=agent, request=request)
+                bundle = tastypie.full_dehydrate(bundle)
+
+                entity = EntityRepository.fetch_by_agent(agent)
+                bundle.data.update({'entity': entity})
+
+                return tastypie.create_response(request, bundle)
+            else:
+                return tastypie.create_response(request, {'reason': 'wrong password'}, HttpForbidden)
         else:
-            return tastypie.create_response(request, {
-                'success': False,
-                'reason': 'disabled',
-            }, HttpForbidden)
-    else:
-        return tastypie.create_response(request, {
-            'success': False,
-            'reason': 'incorrect',
-        }, HttpUnauthorized)
-
-
-def logout(tastypie, request):
-    if request.user and request.user.is_authenticated():
-        logout(request)
-        return tastypie.create_response(request, {'success': True})
-    else:
-        return tastypie.create_response(request, {'success': False}, HttpUnauthorized)
+            return tastypie.create_response(request, {'reason': 'user is not active'}, HttpUnauthorized)
+    except User.DoesNotExist:
+        return tastypie.create_response(request, {'reason': 'unknown user'}, HttpForbidden)
