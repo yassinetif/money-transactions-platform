@@ -1,6 +1,6 @@
 
 from decimal import Decimal
-import logging
+import logging,json
 from core.errors import CoreException
 from marshmallow import ValidationError
 from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator
@@ -24,7 +24,7 @@ def _validate_transaction_payload(payload: dict):
 def _dump_transaction_payload(transaction : Transaction) -> dict:
     transaction_type = transaction.grille.corridor.transaction_type
     if transaction_type == TransactionType.CASH_TO_CASH.value:
-        return dict(Cash2CashValidator().dumps(transaction))
+        return json.loads(Cash2CashValidator().dumps(transaction))
 
 
 def _validate_search_transaction_by_code_payload(payload: dict):

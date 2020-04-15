@@ -7,6 +7,13 @@ from core.utils import random_code
 from enum import Enum
 
 
+class TransactionStatus(Enum):
+    PENDING = 'PENDING'
+    SUCCESS = 'SUCCESS'
+    FAILED = 'FAILED'
+    SUSPENDED = 'SUSPENDED'
+
+
 class Transaction(models.Model):
 
     number = models.CharField(
@@ -34,6 +41,9 @@ class Transaction(models.Model):
         'destination_content_type', 'destination_object_id')
     grille = models.ForeignKey(
         Grille, null=True, blank=True, on_delete=models.DO_NOTHING)
+
+    status = models.CharField(max_length=20, choices=[
+        (tag.value, tag.value) for tag in TransactionStatus],default=TransactionStatus.PENDING.value)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
