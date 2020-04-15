@@ -16,13 +16,13 @@ class CustomerValidator(Schema):
 
 
 class Cash2CashValidator(Schema):
-    sender = fields.Nested(CustomerValidator(), required=True)
-    receiver = fields.Nested(CustomerValidator(), required=True)
+    source_content_object = fields.Nested(CustomerValidator(), required=True)
+    destination_content_object = fields.Nested(CustomerValidator(), required=True)
     agent = fields.Nested(AgentValidator(), required=True)
     source_country = fields.Str(required=True)
     destination_country = fields.Str(required=True)
-    amount = fields.Decimal(required=True)
-    paid_amount = fields.Decimal(required=True)
+    amount = fields.Str(required=True)
+    paid_amount = fields.Decimal(required=True,as_string=True)
 
 
 class SearchTransactionCodeValidator(Schema):

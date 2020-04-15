@@ -21,6 +21,12 @@ def _validate_transaction_payload(payload: dict):
         Cash2CashValidator().load(payload)
 
 
+def _dump_transaction_payload(transaction : Transaction) -> dict:
+    transaction_type = transaction.grille.corridor.transaction_type
+    if transaction_type == TransactionType.CASH_TO_CASH.value:
+        return dict(Cash2CashValidator().dumps(transaction))
+
+
 def _validate_search_transaction_by_code_payload(payload: dict):
     SearchTransactionCodeValidator().load(payload)
 
@@ -67,6 +73,7 @@ def search(tastypie, payload, request):
         _get_agent_info(payload)
 
         transaction = search_transaction(payload)
+        payload = _dump_transaction_payload(transaction)
 
         return tastypie.create_response(request, payload)
     except ValidationError as err:

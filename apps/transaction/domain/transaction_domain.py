@@ -7,6 +7,7 @@ from ..models import Transaction, Operation
 from transaction.repository.transaction_repository import TransactionRepository
 from decimal import Decimal
 
+
 def get_grille_tarifaire(payload: dict) -> Grille:
     amount = payload.get('amount')
     source_country = payload.get('source_country')
@@ -21,8 +22,9 @@ def get_grille_tarifaire(payload: dict) -> Grille:
 def get_source_and_destination_of_transaction(payload: dict):
     transaction_type = payload.get('type')
     if transaction_type == TransactionType.CASH_TO_CASH.value:
-        source = _get_or_create_customer(payload.get('sender'))
-        destination = _get_or_create_customer(payload.get('receiver'))
+        source = _get_or_create_customer(payload.get('source_content_object'))
+        destination = _get_or_create_customer(
+            payload.get('destination_content_object'))
     return source, destination
 
 
@@ -49,9 +51,9 @@ def create_transaction(payload: dict, agent) -> Transaction:
 
     return transaction
 
-def search_transaction(payload:dict) -> dict :
-    transaction = TransactionRepository.fetch_transaction_by_code(payload.get('code'))
 
+def search_transaction(payload: dict) -> dict:
+    return TransactionRepository.fetch_transaction_by_code(payload.get('code'))
 
 
 def insert_operation(transaction: Transaction):
@@ -63,5 +65,5 @@ def insert_operation(transaction: Transaction):
     operation.save()
 
 
-# def share_transaction_revenu(transaction: Transaction):
-#    calculation_expression = transaction.corr
+# TODO : def share_transaction_revenu(transaction: Transaction):
+# TODO calculation_expression = transaction.corr
