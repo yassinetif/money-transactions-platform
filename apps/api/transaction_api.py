@@ -1,14 +1,13 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from transaction.models import Transaction
 from tastypie.serializers import Serializer
-from transaction.controller.transaction_controller import create as create_transaction
+from transaction.controller.transaction_controller import create as create_transaction, search as search_transaction
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 import json
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 
 class TransactionResource(ModelResource):
@@ -41,10 +40,19 @@ class TransactionResource(ModelResource):
             url(r"^(?P<resource_name>%s)/create%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('create'), name="api_create_transaction"),
+            url(r"^(?P<resource_name>%s)/search%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('search'), name="api_search_transaction"),
         ]
 
     def create(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         payload = self.deserialize(request, request.body)
         response = create_transaction(self, payload, request)
+        return response
+
+    def search(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        payload = self.deserialize(request, request.body)
+        response = search_transaction(self, payload, request)
         return response

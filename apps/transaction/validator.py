@@ -23,3 +23,8 @@ class Cash2CashValidator(Schema):
     destination_country = fields.Str(required=True)
     amount = fields.Decimal(required=True)
     paid_amount = fields.Decimal(required=True)
+
+
+class SearchTransactionCodeValidator(Schema):
+    code = fields.Str(required=True)
+    agent = fields.Nested(AgentValidator(), required=True)

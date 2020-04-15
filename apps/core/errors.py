@@ -15,3 +15,7 @@ class GrilleException(CoreException):
 
 class CountryException(CoreException):
     pass
+
+
+class TransactionNotFoundException(CoreException):
+    pass

@@ -4,6 +4,7 @@ from kyc.repository.kyc_repository import CustomerRepository
 from entity.domain.entity_domain import debit_entity, get_entity_balance, credit_entity
 from shared.models import TransactionType
 from ..models import Transaction, Operation
+from transaction.repository.transaction_repository import TransactionRepository
 from decimal import Decimal
 
 def get_grille_tarifaire(payload: dict) -> Grille:
@@ -44,10 +45,13 @@ def create_transaction(payload: dict, agent) -> Transaction:
     transaction.source_content_object = source
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
-
     transaction.save()
 
     return transaction
+
+def search_transaction(payload:dict) -> dict :
+    transaction = TransactionRepository.fetch_transaction_by_code(payload.get('code'))
+
 
 
 def insert_operation(transaction: Transaction):
