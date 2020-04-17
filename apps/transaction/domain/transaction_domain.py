@@ -37,6 +37,10 @@ def debit_entity_account(agent, last_balance: Decimal, amount: Decimal):
     debit_entity(agent.entity, last_balance, amount)
 
 
+def credit_entity_account(agent, last_balance: Decimal, amount: Decimal):
+    credit_entity(agent.entity, last_balance, amount)
+
+
 def create_transaction(payload: dict, agent) -> Transaction:
     source, destination = get_source_and_destination_of_transaction(
         payload.copy())
@@ -54,6 +58,10 @@ def create_transaction(payload: dict, agent) -> Transaction:
 
 def search_transaction(payload: dict) -> dict:
     return TransactionRepository.fetch_transaction_by_code(payload.get('code'))
+
+
+def pay_transaction():
+    pass
 
 
 def insert_operation(transaction: Transaction):
