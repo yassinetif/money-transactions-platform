@@ -1,4 +1,4 @@
-from shared.models import Country, Corridor, Grille, Account, Sharing
+from shared.models import Country, Corridor, Grille, Account, Sharing, FeeType
 from django.db.models import Q
 from decimal import Decimal
 from core.errors import CorridorException, GrilleException, CountryException
@@ -33,6 +33,13 @@ class SharedRepository():
             raise GrilleException('grille error', err)
 
     @staticmethod
+    def calculate_fee_by_grille(grille: Grille, amount: Decimal) -> Decimal:
+        if grille.fee_type == FeeType.CONST.value:
+            return grille.fee
+        else:
+            return amount * grille.fee * 100
+
+    @staticmethod
     def fetch_sharing_calculation_expression(transaction):
-        #expression = Sharing.objects.get(corridor=transaction.corridor,ca)
+        # expression = Sharing.objects.get(corridor=transaction.corridor,ca)
         pass

@@ -4,7 +4,7 @@ from transaction.models import Transaction, Operation
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_type', 'number', 'code', 'agent', 'entity', 'amount',
-                    'paid_amount', 'transaction_fee', 'source_country', 'status', 'created')
+                    'paid_amount', 'transaction_fee', 'source_country', 'destination_country', 'status', 'created')
     list_filter = ('created', 'status',)
 
     def transaction_fee(self, obj):
@@ -12,15 +12,6 @@ class TransactionAdmin(admin.ModelAdmin):
     transaction_fee.allow_tags = True
     transaction_fee.short_description = 'Frais'
 
-    def transaction_type(self, obj):
-        return obj.grille.corridor.transaction_type
-    transaction_type.allow_tags = True
-    transaction_type.short_description = 'Type'
-
-    def source_country(self, obj):
-        return obj.agent.entity.country.iso
-    source_country.allow_tags = True
-    source_country.short_description = 'Source country'
 
     def entity(self, obj):
         return obj.agent.entity.brand_name

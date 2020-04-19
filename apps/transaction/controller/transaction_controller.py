@@ -5,11 +5,12 @@ import json
 from core.errors import CoreException
 from marshmallow import ValidationError
 from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
-    RetraitCashValidator
+    RetraitCashValidator, TransactionCash2CashValidator
 from shared.models import TransactionType
 from transaction.models import Transaction
 from tastypie.http import HttpUnauthorized, HttpForbidden, HttpAccepted
 from entity.repository.agent_repository import AgentRepository
+from kyc.repository.kyc_repository import CustomerRepository
 from shared.repository.shared_repository import SharedRepository
 from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
 from transaction.domain.transaction_domain import get_source_and_destination_of_transaction,\
@@ -45,7 +46,7 @@ def _check_agent_balance(agent, payload: dict) -> bool:
                             'agent does not have enough balance')
 
 
-def _debit_entity(agent, amount: Decimal):
+def _debit_entity(agent, amount: Decimal, fee: Decimal = 0):
     last_balance = get_entity_balance_by_agent(agent)
     debit_entity_account(agent, last_balance, amount)
 
@@ -53,6 +54,22 @@ def _debit_entity(agent, amount: Decimal):
 def _credit_entity(agent, amount: Decimal):
     last_balance = get_entity_balance_by_agent(agent)
     debit_entity_account(agent, last_balance, amount)
+
+
+def _addtitional_tranactions_informations(transaction: Transaction, payload: dict) -> dict:
+    info = {'transaction_number': transaction.number,
+            'receipt_code': transaction.code}
+    payload.update(info)
+    return payload
+
+
+def _addtitional_customer_informations(payload: dict) -> dict:
+    customer = CustomerRepository.fetch_customer_by_phone_number(
+        payload.get('phone_number'))
+    info = {'first_name': customer.informations.first_name,
+            'last_name': customer.informations.last_name}
+    payload.update(info)
+    return payload
 
 
 def create(tastypie, payload, request):
@@ -63,11 +80,13 @@ def create(tastypie, payload, request):
         _check_agent_balance(agent, payload)
 
         transaction = create_transaction(payload, agent)
-        _debit_entity(agent, payload.get('amount'))
+
+        _debit_entity(agent, payload.get(
+            'paid_amount'), transaction.grille.fee)
 
         insert_operation(transaction)
-
-        return tastypie.create_response(request, payload)
+        response = _addtitional_tranactions_informations(transaction, payload)
+        return tastypie.create_response(request, response)
     except ValidationError as err:
         return tastypie.create_response(request, {'reason': err.messages}, HttpUnauthorized)
     except CoreException as err:
@@ -83,6 +102,10 @@ def search(tastypie, payload, request):
 
         transaction = search_transaction(payload)
         payload = _dump_transaction_payload(transaction)
+        payload.get('source_content_object').update(
+            _addtitional_customer_informations(payload.get('source_content_object')))
+        payload.get('destination_content_object').update(
+            _addtitional_customer_informations(payload.get('destination_content_object')))
 
         return tastypie.create_response(request, payload)
     except ValidationError as err:
@@ -100,10 +123,8 @@ def pay(tastypie, payload, request):
 
         transaction = pay_transaction(payload, agent)
         _credit_entity(agent, payload.get('amount'))
-
         insert_operation(transaction)
-
-        return tastypie.create_response(request, payload)
+        return tastypie.create_response(request, {'success': True})
     except ValidationError as err:
         return tastypie.create_response(request, {'reason': err.messages}, HttpUnauthorized)
     except CoreException as err:

@@ -6,6 +6,7 @@ from shared.models import TransactionType
 from ..models import Transaction, Operation
 from transaction.repository.transaction_repository import TransactionRepository
 from decimal import Decimal
+from core.utils import random_code
 
 
 def get_grille_tarifaire(payload: dict) -> Grille:
@@ -45,23 +46,37 @@ def create_transaction(payload: dict, agent) -> Transaction:
     source, destination = get_source_and_destination_of_transaction(
         payload.copy())
     transaction = Transaction()
+    transaction.transaction_type = TransactionType.CASH_TO_CASH.value
     transaction.agent = agent
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = source
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = SharedRepository.fetch_country_by_iso(
+        payload.get('source_country'))
+    transaction.destination_country = SharedRepository.fetch_country_by_iso(
+        payload.get('destination_country'))
     transaction.save()
 
     return transaction
 
 
-def search_transaction(payload: dict) -> dict:
+def search_transaction(payload: dict) -> Transaction:
     return TransactionRepository.fetch_transaction_by_code(payload.get('code'))
 
 
-def pay_transaction():
-    pass
+def pay_transaction(payload: dict, agent) -> Transaction:
+    transaction = search_transaction(payload)
+    parent = transaction
+
+    transaction.pk = None
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
+    transaction.parent = parent
+    transaction.transaction_type = TransactionType.RETRAIT_CASH.value
+    transaction.agent = agent
+    transaction.save()
 
 
 def insert_operation(transaction: Transaction):

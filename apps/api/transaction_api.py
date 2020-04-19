@@ -2,7 +2,7 @@ from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from transaction.models import Transaction
 from tastypie.serializers import Serializer
 from transaction.controller.transaction_controller import create as create_transaction,\
-     search as search_transaction, pay as pay_transaction
+    search as search_transaction, pay as pay_transaction
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 import json
@@ -44,6 +44,9 @@ class TransactionResource(ModelResource):
             url(r"^(?P<resource_name>%s)/search%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('search'), name="api_search_transaction"),
+            url(r"^(?P<resource_name>%s)/pay%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('pay'), name="api_pay_transaction"),
         ]
 
     def create(self, request, **kwargs):

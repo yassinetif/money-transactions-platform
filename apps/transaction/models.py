@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from entity.models import Agent
-from shared.models import Grille, Account
+from shared.models import Grille, Account, Country, TransactionType
 from core.utils import random_code
 from enum import Enum
 
@@ -42,8 +42,19 @@ class Transaction(models.Model):
     grille = models.ForeignKey(
         Grille, null=True, blank=True, on_delete=models.DO_NOTHING)
 
+    source_country = models.ForeignKey(
+        Country, null=True, blank=True, on_delete=models.DO_NOTHING, related_name='transaction_source_country')
+    destination_country = models.ForeignKey(
+        Country, null=True, blank=True, on_delete=models.DO_NOTHING, related_name='transaction_destination_country')
+
     status = models.CharField(max_length=20, choices=[
-        (tag.value, tag.value) for tag in TransactionStatus],default=TransactionStatus.PENDING.value)
+        (tag.value, tag.value) for tag in TransactionStatus], default=TransactionStatus.PENDING.value)
+
+    transaction_type = models.CharField(max_length=20, choices=[
+        (tag.value, tag.value) for tag in TransactionType], default=TransactionType.CASH_TO_CASH.value)
+
+    parent = models.ForeignKey("self", on_delete=models.CASCADE,
+                            null=True, blank=True, related_name="parent_transaction")
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
