@@ -14,7 +14,8 @@ from kyc.repository.kyc_repository import CustomerRepository
 from shared.repository.shared_repository import SharedRepository
 from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
 from transaction.domain.transaction_domain import get_source_and_destination_of_transaction,\
-    debit_entity_account, create_transaction, insert_operation, search_transaction, pay_transaction
+    debit_entity_account, create_transaction, insert_operation, search_transaction, pay_transaction,\
+    credit_entity_account
 logger = logging.getLogger(__name__)
 
 
@@ -53,7 +54,7 @@ def _debit_entity(agent, amount: Decimal, fee: Decimal = 0):
 
 def _credit_entity(agent, amount: Decimal):
     last_balance = get_entity_balance_by_agent(agent)
-    debit_entity_account(agent, last_balance, amount)
+    credit_entity_account(agent, last_balance, amount)
 
 
 def _addtitional_tranactions_informations(transaction: Transaction, payload: dict) -> dict:
@@ -120,9 +121,8 @@ def pay(tastypie, payload, request):
     try:
         _validate_transaction_payload(payload.copy())
         agent = _get_agent_info(payload)
-
         transaction = pay_transaction(payload, agent)
-        _credit_entity(agent, payload.get('amount'))
+        _credit_entity(agent, Decimal(payload.get('paid_amount')))
         insert_operation(transaction)
         return tastypie.create_response(request, {'success': True})
     except ValidationError as err:
@@ -130,3 +130,6 @@ def pay(tastypie, payload, request):
     except CoreException as err:
         logging.error(err, err.errors)
         return tastypie.create_response(request, {'reason': err.errors}, HttpForbidden)
+
+
+

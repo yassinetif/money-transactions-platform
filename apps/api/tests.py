@@ -19,13 +19,13 @@ response = requests.post(url, data=json.dumps(payload), headers=headers)
 response.json()
 
 # Search code
-payload = {'code': '39812071', 'agent': {'code': '086796'}}
+payload = {'code': '03681479', 'agent': {'code': '086796'}}
 url = 'http://127.0.0.1:8000/api/v1/transaction/search/'
 response = requests.post(url, data=json.dumps(payload), headers=headers)
 response.json()
 
 # Pay cash to cash transactions
-payload = {'code': '39812071', 'agent': {'code': '086796'}, 'type': 'RETRAIT_CASH','paid_amount': '15000'}
+payload = {'code': '03681479', 'agent': {'code': '086796'}, 'type': 'RETRAIT_CASH','paid_amount': '15000'}
 url = 'http://127.0.0.1:8000/api/v1/transaction/pay/'
 response = requests.post(url, data=json.dumps(payload), headers=headers)
 response.json()

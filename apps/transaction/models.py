@@ -53,8 +53,8 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=20, choices=[
         (tag.value, tag.value) for tag in TransactionType], default=TransactionType.CASH_TO_CASH.value)
 
-    parent = models.ForeignKey("self", on_delete=models.CASCADE,
-                            null=True, blank=True, related_name="parent_transaction")
+    parent_transaction_number = models.CharField(
+        max_length=11, default=random_code(10), blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

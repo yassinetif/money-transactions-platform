@@ -32,7 +32,7 @@ class OperationAdmin(admin.ModelAdmin):
     _balance_after_operation.short_description = 'Balance after operation'
 
     def transaction_type(self, obj):
-        return obj.transaction.grille.corridor.transaction_type
+        return obj.transaction.transaction_type
     transaction_type.allow_tags = True
     transaction_type.short_description = 'Type'
 

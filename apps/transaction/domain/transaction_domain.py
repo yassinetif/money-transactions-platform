@@ -1,9 +1,10 @@
 from shared.models import Grille, Corridor, Account
+from core.errors import CoreException
 from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.domain.entity_domain import debit_entity, get_entity_balance, credit_entity
 from shared.models import TransactionType
-from ..models import Transaction, Operation
+from ..models import Transaction, Operation, TransactionStatus
 from transaction.repository.transaction_repository import TransactionRepository
 from decimal import Decimal
 from core.utils import random_code
@@ -63,30 +64,51 @@ def create_transaction(payload: dict, agent) -> Transaction:
 
 
 def search_transaction(payload: dict) -> Transaction:
-    return TransactionRepository.fetch_transaction_by_code(payload.get('code'))
+    return TransactionRepository.fetch_unpaid_transaction_by_code(payload.get('code'))
 
 
 def pay_transaction(payload: dict, agent) -> Transaction:
     transaction = search_transaction(payload)
+    _can_agent_pay_transaction(transaction, agent)
+
     parent = transaction
+    parent.status = TransactionStatus.SUCCESS.value
+    parent.save()
 
     transaction.pk = None
     transaction.number = random_code(10)
     transaction.code = random_code(8)
-    transaction.parent = parent
+    transaction.status = TransactionStatus.SUCCESS.value
+    transaction.parent_transaction_number = parent.number
     transaction.transaction_type = TransactionType.RETRAIT_CASH.value
     transaction.agent = agent
     transaction.save()
+    return transaction
 
 
 def insert_operation(transaction: Transaction):
     operation = Operation()
-    operation.comment = transaction.grille.corridor.transaction_type
+    operation.comment = _get_operation_comment(transaction)
     operation.balance_after_operation = transaction.agent\
         .entity.accounts.last()
     operation.transaction = transaction
     operation.save()
 
 
-# TODO : def share_transaction_revenu(transaction: Transaction):
-# TODO calculation_expression = transaction.corr
+def _get_operation_comment(transaction: Transaction) -> str:
+    comment = ''
+    if transaction.transaction_type == TransactionType.CASH_TO_CASH.value:
+        comment = f'Débit de {transaction.paid_amount} : transaction {transaction.number}'
+    elif transaction.transaction_type == TransactionType.RETRAIT_CASH.value:
+        comment = f'Crédit de {transaction.amount} : transaction {transaction.number}'
+    return comment
+
+    # TODO : def share_transaction_revenu(transaction: Transaction):
+    # TODO calculation_expression = transaction.corr
+
+
+def _can_agent_pay_transaction(transaction: Transaction, agent) -> bool:
+    if transaction.agent == agent:
+        raise CoreException('agent can not be affected to this operation', '')
+    else:
+        return True
