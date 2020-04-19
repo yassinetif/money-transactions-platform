@@ -12,6 +12,7 @@ class EntityType(Enum):
     PROVIDER = 'PROVIDER'
     DISTRIBUTEUR = 'DISTRIBUTEUR'
     BANQUE = 'BANQUE'
+    BUSINESS_PARTNER = 'BUSINESS_PARTNER'
 
 
 class Entity(MPTTModel):
