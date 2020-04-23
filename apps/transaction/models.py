@@ -14,6 +14,11 @@ class TransactionStatus(Enum):
     SUSPENDED = 'SUSPENDED'
 
 
+class TransactionCodePrefix(Enum):
+    WORLD_REMIT = 'WR'
+    YONNA = 'YN'
+
+
 class Transaction(models.Model):
 
     number = models.CharField(

@@ -4,10 +4,11 @@ from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.domain.entity_domain import debit_entity, get_entity_balance, credit_entity
 from shared.models import TransactionType
-from ..models import Transaction, Operation, TransactionStatus
+from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from transaction.repository.transaction_repository import TransactionRepository
 from decimal import Decimal
-from core.utils import random_code
+from core.utils import random_code, convert_enum_to_tuple
+from importlib import import_module
 
 
 def get_grille_tarifaire(payload: dict) -> Grille:
@@ -63,8 +64,25 @@ def create_transaction(payload: dict, agent) -> Transaction:
     return transaction
 
 
+def get_partner_module_name(code: str) -> str:
+    for _prefux in convert_enum_to_tuple(TransactionCodePrefix):
+        if code.startswith(_prefux):
+            return f'transaction.domain.{TransactionCodePrefix(_prefux).name.lower()}_domain'
+    return None
+
+
+def download_transaction_from_partner(payload: dict, partner_module: str) -> Transaction:
+    module = import_module(partner_module)
+    print(module.search_transaction(payload))
+
+
 def search_transaction(payload: dict) -> Transaction:
-    return TransactionRepository.fetch_unpaid_transaction_by_code(payload.get('code'))
+    code = payload.get('code')
+    partner_module = get_partner_module_name(code)
+    if partner_module:
+        download_transaction_from_partner(payload, partner_module)
+        
+    return TransactionRepository.fetch_unpaid_transaction_by_code(code)
 
 
 def pay_transaction(payload: dict, agent) -> Transaction:

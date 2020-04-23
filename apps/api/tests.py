@@ -1,6 +1,5 @@
 import requests
 import json
-headers = {'Content-Type': 'application/json'}
 
 # Login
 url = 'http://127.0.0.1:8000/api/v1/entity/agent/login/'
@@ -19,7 +18,8 @@ response = requests.post(url, data=json.dumps(payload), headers=headers)
 response.json()
 
 # Search code
-payload = {'code': '03681479', 'agent': {'code': '086796'}}
+headers = {'Content-Type': 'application/json'}
+payload = {'code': 'WR14636702', 'agent': {'code': '086796'}}
 url = 'http://127.0.0.1:8000/api/v1/transaction/search/'
 response = requests.post(url, data=json.dumps(payload), headers=headers)
 response.json()
