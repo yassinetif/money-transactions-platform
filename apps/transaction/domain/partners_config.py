@@ -1,4 +1,5 @@
 WORLD_REMIT = {
+    'entity' : 'WORLD REMIT'
     'test': {
         'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
         'credentials': {

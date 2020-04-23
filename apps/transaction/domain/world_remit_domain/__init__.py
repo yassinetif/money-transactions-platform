@@ -1,7 +1,7 @@
 from transaction.domain import partners_config
 from core.errors import TransactionNotFoundException
+from core.utils import convert_partner_cash_to_cash_payload
 import requests
-import json
 
 
 def search_transaction(payload: dict):
@@ -10,7 +10,8 @@ def search_transaction(payload: dict):
     headers = configs.get('production').get('credentials').get('headers')
     response = requests.get(configs.get('url'), params=params, headers=headers)
     if response.status_code == 200:
-        pass
+        json_request = convert_partner_cash_to_cash_payload(
+            configs.get('payload'), response.json())
 
     else:
         raise TransactionNotFoundException(
