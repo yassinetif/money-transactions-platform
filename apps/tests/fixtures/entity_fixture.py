@@ -1,17 +1,21 @@
 import pytest
 from entity.models import Entity, Agent
-from tests.fixtures.shared_fixture import country
 from django.contrib.auth.models import User
+from shared.models import Country
 
 
 @pytest.fixture
-def entity(country):
+def entity():
+    country = Country(**{
+        'iso': 'SN'
+    })
     entity = Entity(**{
         'category': 'PROVIDER',
         'phone_number': 'XXXXXXX',
-        'email': 'test@test.com',
+        'email': 'test@example.com',
         'address': 'Dakar'
     })
+    country.save()
     entity.country = country
     entity.save()
     return entity
@@ -19,21 +23,22 @@ def entity(country):
 
 @pytest.fixture
 def entity_payload(country):
-    return Entity(**{
+    entity = Entity(**{
         'category': 'PROVIDER',
         'phone_number': 'XXXXXXX',
-        'email': 'test@test.com',
+        'email': 'test@example.com',
         'address': 'Dakar'
     })
+    return entity
 
 
 @pytest.fixture
 def agent(entity):
 
     user = User(**{
-        'username': 'test',
+        'username': 'fidelis',
         'password': 'password',
-        'email': 'test@test.com',
+        'email': 'test@example1.com',
     })
     user.save()
 

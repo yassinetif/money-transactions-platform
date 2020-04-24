@@ -3,7 +3,7 @@ from tests.fixtures.entity_fixture import entity_payload, entity, agent
 from tests.fixtures.shared_fixture import country
 
 
-class TestEntity:
+class TestEntityModel:
 
     @pytest.mark.django_db
     def test_entity_is_created(self, entity_payload, country):

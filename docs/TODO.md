@@ -1,4 +1,4 @@
-# TODO
+## TODO
 
 Les changements à apporter, les bonnes idées ou encore les dettes techniques font parti de 
 ce fichier. Il faudra les supprimer au fur et à mesure qu'ils ont été faits et testés.
