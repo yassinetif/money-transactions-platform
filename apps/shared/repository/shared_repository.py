@@ -37,7 +37,7 @@ class SharedRepository():
         if grille.fee_type == FeeType.CONST.value:
             return grille.fee
         else:
-            return amount * grille.fee * 100
+            return amount * grille.fee / 100
 
     @staticmethod
     def fetch_sharing_calculation_expression(transaction):
