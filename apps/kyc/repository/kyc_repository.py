@@ -30,4 +30,4 @@ class CustomerRepository():
         try:
             return Customer.objects.get(informations__username=phone_number)
         except Exception as err:
-            raise CustomerException('unable to get or create', str(err))
+            raise CustomerException('customer not found', str(err))

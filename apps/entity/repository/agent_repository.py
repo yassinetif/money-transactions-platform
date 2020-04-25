@@ -1,5 +1,5 @@
 from entity.models import Agent
-from core.errors import CoreException
+from core.errors import AgentException
 
 class AgentRepository():
 
@@ -8,12 +8,12 @@ class AgentRepository():
         try:
             return Agent.objects.get(informations=user)
         except Agent.DoesNotExist:
-            return None
+            raise AgentException('unknown agent account',err)
 
     @staticmethod
     def fetch_by_code(code):
         try:
             return Agent.objects.get(code=code)
         except Agent.DoesNotExist as err:
-            raise CoreException('unknown agent account',err)
+            raise AgentException('unknown agent account',err)
 

@@ -8,6 +8,6 @@ class TransactionRepository():
     def fetch_unpaid_transaction_by_code(code: str) -> Transaction:
         try:
             return Transaction.objects.get(code=code, status=TransactionStatus.PENDING.value)
-        except Transaction.DoesNotExist as err:
+        except Transaction.DoesNotExist:
             raise TransactionNotFoundException(
-                str(err), 'No transaction is found')
+                'unavailable transaction code', 'No transaction is found')

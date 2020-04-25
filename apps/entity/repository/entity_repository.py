@@ -1,7 +1,7 @@
 from entity.models import Entity
 from entity.models import Agent
 from shared.models import Account
-
+from core.errors import AgentException
 
 class EntityRepository():
 
@@ -13,7 +13,7 @@ class EntityRepository():
             entity_dict.update({'country': entity.country.iso})
             return entity_dict
         except Agent.DoesNotExist:
-            return {}
+            raise AgentException('agent does not exist','error')
 
     @staticmethod
     def fetch_all_ancestors(entity: Entity) -> list:

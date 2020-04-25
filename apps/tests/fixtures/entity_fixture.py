@@ -22,6 +22,26 @@ def entity():
 
 
 @pytest.fixture
+def entity_child(entity):
+    country = Country(**{
+        'iso': 'SN'
+    })
+    _entity = Entity(**{
+        'category': 'PROVIDER',
+        'phone_number': 'XXXXXXX',
+        'email': 'test@example.com',
+        'address': 'Dakar',
+        'code': '12345',
+        'account_number': '47Z34543'
+    })
+    country.save()
+    _entity.country = country
+    _entity.parent = entity
+    _entity.save()
+    return _entity
+
+
+@pytest.fixture
 def entity_payload(country):
     entity = Entity(**{
         'category': 'PROVIDER',
@@ -48,5 +68,24 @@ def agent(entity):
     })
     agent.informations = user
     agent.entity = entity
+    agent.save()
+    return agent
+
+
+def agent_88888(entity_child):
+
+    user = User(**{
+        'username': 'semper',
+        'password': 'password',
+        'email': 'test@example1.com',
+    })
+    user.save()
+
+    agent = Agent(**{
+        'phone_number': '88888',
+        'address': 'TEST',
+    })
+    agent.informations = user
+    agent.entity = entity_child
     agent.save()
     return agent
