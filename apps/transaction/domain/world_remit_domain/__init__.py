@@ -12,7 +12,12 @@ def search_transaction(payload: dict):
     if response.status_code == 200:
         json_request = convert_partner_cash_to_cash_payload(
             configs.get('payload'), response.json())
+        return json_request
 
     else:
         raise TransactionNotFoundException(
             'No transaction Wr is found', 'No transaction is found')
+
+
+
+

@@ -4,7 +4,6 @@ from kyc.models import Customer
 
 
 @pytest.fixture
-@pytest.mark.django_db
 def customer():
 
     user = User(**{

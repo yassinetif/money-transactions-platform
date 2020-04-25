@@ -25,15 +25,11 @@ def get_grille_tarifaire(payload: dict) -> Grille:
 def get_source_and_destination_of_transaction(payload: dict):
     transaction_type = payload.get('type')
     if transaction_type == TransactionType.CASH_TO_CASH.value:
-        source = _get_or_create_customer(payload.get('source_content_object'))
-        destination = _get_or_create_customer(
+        source = CustomerRepository.fetch_or_create_customer(
+            payload.get('source_content_object'))
+        destination = CustomerRepository.fetch_or_create_customer(
             payload.get('destination_content_object'))
     return source, destination
-
-
-def _get_or_create_customer(payload: dict):
-    customer = CustomerRepository.fetch_or_create_customer(payload)
-    return customer
 
 
 def debit_entity_account(agent, last_balance: Decimal, amount: Decimal):
@@ -65,15 +61,16 @@ def create_transaction(payload: dict, agent) -> Transaction:
 
 
 def get_partner_module_name(code: str) -> str:
-    for _prefux in convert_enum_to_tuple(TransactionCodePrefix):
-        if code.startswith(_prefux):
-            return f'transaction.domain.{TransactionCodePrefix(_prefux).name.lower()}_domain'
+    for _prefix in convert_enum_to_tuple(TransactionCodePrefix):
+        if code.startswith(_prefix):
+            return f'transaction.domain.{TransactionCodePrefix(_prefix).name.lower()}_domain'
     return None
 
 
 def download_transaction_from_partner(payload: dict, partner_module: str) -> Transaction:
     module = import_module(partner_module)
-    print(module.search_transaction(payload))
+    transaction = module.search_transaction(payload)
+    return transaction
 
 
 def search_transaction(payload: dict) -> Transaction:
@@ -81,7 +78,7 @@ def search_transaction(payload: dict) -> Transaction:
     partner_module = get_partner_module_name(code)
     if partner_module:
         download_transaction_from_partner(payload, partner_module)
-        
+
     return TransactionRepository.fetch_unpaid_transaction_by_code(code)
 
 

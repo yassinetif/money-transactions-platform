@@ -12,7 +12,7 @@ def entity():
     entity = Entity(**{
         'category': 'PROVIDER',
         'phone_number': 'XXXXXXX',
-        'email': 'test@example.com',
+        'email': 'test2@example.com',
         'address': 'Dakar'
     })
     country.save()
@@ -68,11 +68,13 @@ def agent(entity):
     })
     agent.informations = user
     agent.entity = entity
+    agent.code = 'AGENT_CODE'
     agent.save()
     return agent
 
 
-def agent_88888(entity_child):
+@pytest.fixture
+def other_agent(entity_child):
 
     user = User(**{
         'username': 'semper',
@@ -81,11 +83,12 @@ def agent_88888(entity_child):
     })
     user.save()
 
-    agent = Agent(**{
+    other_agent = Agent(**{
         'phone_number': '88888',
         'address': 'TEST',
     })
-    agent.informations = user
-    agent.entity = entity_child
-    agent.save()
-    return agent
+    other_agent.informations = user
+    other_agent.entity = entity_child
+    other_agent.code = 'AUTRE_AGENT'
+    other_agent.save()
+    return other_agent
