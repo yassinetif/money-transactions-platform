@@ -20,21 +20,25 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='entity',
             name='country',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='shared.Country'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='shared.Country'),
         ),
         migrations.AddField(
             model_name='entity',
             name='parent',
-            field=mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='entity.Entity'),
+            field=mptt.fields.TreeForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='entity.Entity'),
         ),
         migrations.AddField(
             model_name='agent',
             name='entity',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.DO_NOTHING, to='entity.Entity'),
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='entity.Entity'),
         ),
         migrations.AddField(
             model_name='agent',
             name='informations',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
     ]

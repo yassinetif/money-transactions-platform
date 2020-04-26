@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Agent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('phone_number', models.CharField(max_length=10)),
                 ('address', models.CharField(max_length=100)),
                 ('created', models.DateTimeField(auto_now_add=True)),
@@ -28,9 +29,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Entity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.CharField(default='884601', max_length=10, unique=True)),
-                ('catetory', models.CharField(choices=[(entity.models.entity.EntityType['PROVIDER'], 1), (entity.models.entity.EntityType['DISTRIBUTEUR'], 2), (entity.models.entity.EntityType['BANQUE'], 3)], max_length=5)),
+                ('catetory', models.CharField(choices=[(entity.models.entity.EntityType['PROVIDER'], 1), (
+                    entity.models.entity.EntityType['DISTRIBUTEUR'], 2), (entity.models.entity.EntityType['BANQUE'], 3)], max_length=5)),
                 ('brand_name', models.CharField(max_length=30)),
                 ('phone_number', models.CharField(max_length=10)),
                 ('email', models.CharField(max_length=30)),

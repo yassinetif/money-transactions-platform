@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='parent',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='transaction.Transaction'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='transaction.Transaction'),
         ),
     ]

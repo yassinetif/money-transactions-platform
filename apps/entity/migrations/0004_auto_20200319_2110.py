@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='entity',
             name='catetory',
-            field=models.CharField(choices=[(entity.models.entity.EntityType['PROVIDER'], 'PROVIDER'), (entity.models.entity.EntityType['DISTRIBUTEUR'], 'DISTRIBUTEUR'), (entity.models.entity.EntityType['BANQUE'], 'BANQUE')], max_length=5),
+            field=models.CharField(choices=[(entity.models.entity.EntityType['PROVIDER'], 'PROVIDER'), (
+                entity.models.entity.EntityType['DISTRIBUTEUR'], 'DISTRIBUTEUR'), (entity.models.entity.EntityType['BANQUE'], 'BANQUE')], max_length=5),
         ),
         migrations.AlterField(
             model_name='entity',

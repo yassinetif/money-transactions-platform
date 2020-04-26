@@ -17,7 +17,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Transaction',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('number', models.CharField(default='9917694939', max_length=11, unique=True)),
                 ('code', models.CharField(default='12129115', max_length=11, unique=True)),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=7)),
@@ -25,9 +26,14 @@ class Migration(migrations.Migration):
                 ('destination_object_id', models.PositiveIntegerField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('agent', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='entity.Agent')),
-                ('destination_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='destination_content_type', to='contenttypes.ContentType')),
-                ('source_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='source_content_type', to='contenttypes.ContentType')),
+                ('agent', models.ForeignKey(
+                    on_delete=django.db.models.deletion.DO_NOTHING, to='entity.Agent')),
+                ('destination_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'),
+                                                                                                                                                          ('model', 'customer')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING,
+                                                               related_name='destination_content_type', to='contenttypes.ContentType')),
+                ('source_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'),
+                                                                                             ('model', 'entity')), models.Q(('app_label', 'kyc'),
+                                                                                                                            ('model', 'customer')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='source_content_type', to='contenttypes.ContentType')),
             ],
         ),
     ]

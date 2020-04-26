@@ -16,12 +16,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='account',
             name='category',
-            field=models.CharField(choices=[(1, 1), (2, 2)], default=shared.models.account.AccountType['PRINCIPAL'], max_length=30),
+            field=models.CharField(choices=[(
+                1, 1), (2, 2)], default=shared.models.account.AccountType['PRINCIPAL'], max_length=30),
         ),
         migrations.AlterField(
             model_name='account',
             name='content_type',
-            field=models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='contenttypes.ContentType'),
+            field=models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(
+                ('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='contenttypes.ContentType'),
         ),
         migrations.AlterField(
             model_name='account',
@@ -31,7 +33,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='corridor',
             name='destination_content_type',
-            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')), _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_destination_content_type', to='contenttypes.ContentType'),
+            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')),
+                                                                          _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_destination_content_type', to='contenttypes.ContentType'),
         ),
         migrations.AlterField(
             model_name='corridor',
@@ -41,7 +44,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='corridor',
             name='source_content_type',
-            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')), _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_source_content_type', to='contenttypes.ContentType'),
+            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')),
+                                                                          _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_source_content_type', to='contenttypes.ContentType'),
         ),
         migrations.AlterField(
             model_name='corridor',
@@ -51,12 +55,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='corridor',
             name='transaction_type',
-            field=models.CharField(choices=[('ENVOI_CASH', 'ENVOI_CASH'), ('RETRAIT_CASH', 'RETRAIT_CASH')], max_length=20),
+            field=models.CharField(
+                choices=[('ENVOI_CASH', 'ENVOI_CASH'), ('RETRAIT_CASH', 'RETRAIT_CASH')], max_length=20),
         ),
         migrations.AlterField(
             model_name='grille',
             name='fee_type',
-            field=models.CharField(choices=[('CONSTANTE', 'CONSTANTE'), ('PERCENTAGE', 'PERCENTAGE')], max_length=15),
+            field=models.CharField(
+                choices=[('CONSTANTE', 'CONSTANTE'), ('PERCENTAGE', 'PERCENTAGE')], max_length=15),
         ),
         migrations.AlterField(
             model_name='grille',

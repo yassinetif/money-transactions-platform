@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='grille',
             name='fee_type',
-            field=models.CharField(choices=[(shared.models.price.FeeType['CONST'], 'CONSTANTE'), (shared.models.price.FeeType['PERCENT'], 'PERCENTAGE')], max_length=5),
+            field=models.CharField(choices=[(shared.models.price.FeeType['CONST'], 'CONSTANTE'), (
+                shared.models.price.FeeType['PERCENT'], 'PERCENTAGE')], max_length=5),
         ),
     ]

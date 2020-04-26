@@ -25,12 +25,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Operation',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('comment', models.TextField(blank=True, null=True, verbose_name='Commentaire')),
-                ('balance_after_operation', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='shared.Account')),
-                ('transaction', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='transaction.Transaction')),
+                ('balance_after_operation', models.ForeignKey(
+                    on_delete=django.db.models.deletion.DO_NOTHING, to='shared.Account')),
+                ('transaction', models.ForeignKey(
+                    on_delete=django.db.models.deletion.DO_NOTHING, to='transaction.Transaction')),
             ],
             options={
                 'verbose_name': 'Operation detail',

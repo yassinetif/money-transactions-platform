@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customer',
             name='issuer_country',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='shared.Country'),
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='shared.Country'),
         ),
     ]

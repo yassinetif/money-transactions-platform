@@ -14,11 +14,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Sharing',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, max_length=20, null=True)),
                 ('description', models.CharField(blank=True, max_length=20, null=True)),
                 ('revenue', models.DecimalField(decimal_places=2, max_digits=7)),
-                ('calculation_expression', models.TextField(validators=[shared.models.price.validate_calculation_expression])),
+                ('calculation_expression', models.TextField(validators=[
+                 shared.models.price.validate_calculation_expression])),
             ],
             options={
                 'verbose_name': 'Revenue Sharing',

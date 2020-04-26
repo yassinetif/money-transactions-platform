@@ -18,7 +18,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='entity',
             name='category',
-            field=models.CharField(choices=[('PROVIDER', 'PROVIDER'), ('DISTRIBUTEUR', 'DISTRIBUTEUR'), ('BANQUE', 'BANQUE')], default='PROVIDER', max_length=30),
+            field=models.CharField(choices=[('PROVIDER', 'PROVIDER'), (
+                'DISTRIBUTEUR', 'DISTRIBUTEUR'), ('BANQUE', 'BANQUE')], default='PROVIDER', max_length=30),
         ),
         migrations.AlterField(
             model_name='entity',

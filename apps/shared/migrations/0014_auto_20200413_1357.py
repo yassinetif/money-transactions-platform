@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sharing',
             name='calculation_expression',
-            field=models.CharField(help_text='FRAIS/2->PROVIDER:0.2:CREDIT;BANQUE:0.4:CREDIT', max_length=100, validators=[shared.models.price.validate_calculation_expression]),
+            field=models.CharField(help_text='FRAIS/2->PROVIDER:0.2:CREDIT;BANQUE:0.4:CREDIT',
+                                   max_length=100, validators=[shared.models.price.validate_calculation_expression]),
         ),
     ]

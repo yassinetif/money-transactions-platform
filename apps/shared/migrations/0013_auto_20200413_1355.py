@@ -23,11 +23,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sharing',
             name='corridor',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='shared.Corridor'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='shared.Corridor'),
         ),
         migrations.AlterField(
             model_name='sharing',
             name='calculation_expression',
-            field=models.TextField(help_text='FRAIS/2->PROVIDER:0.2:CREDIT;BANQUE:0.4:CREDIT', validators=[shared.models.price.validate_calculation_expression]),
+            field=models.TextField(help_text='FRAIS/2->PROVIDER:0.2:CREDIT;BANQUE:0.4:CREDIT',
+                                   validators=[shared.models.price.validate_calculation_expression]),
         ),
     ]

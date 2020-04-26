@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='corridor',
             name='transaction_type',
-            field=models.CharField(choices=[('CASH_TO_CASH', 'CASH_TO_CASH'), ('RETRAIT_CASH', 'RETRAIT_CASH')], max_length=20),
+            field=models.CharField(
+                choices=[('CASH_TO_CASH', 'CASH_TO_CASH'), ('RETRAIT_CASH', 'RETRAIT_CASH')], max_length=20),
         ),
     ]

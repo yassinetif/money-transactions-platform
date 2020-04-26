@@ -19,11 +19,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='account',
             name='category',
-            field=models.CharField(choices=[(shared.models.account.AccountType['PRINCIPAL'], 1), (shared.models.account.AccountType['COMMISSION'], 2)], default=shared.models.account.AccountType['PRINCIPAL'], max_length=15),
+            field=models.CharField(choices=[(shared.models.account.AccountType['PRINCIPAL'], 1), (
+                shared.models.account.AccountType['COMMISSION'], 2)], default=shared.models.account.AccountType['PRINCIPAL'], max_length=15),
         ),
         migrations.AlterField(
             model_name='corridor',
             name='transaction_type',
-            field=models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 'CASH_TO_CASH'), (shared.models.price.TransactionType['RETRAIT_CASH'], 'RETRAIT_CASH')], max_length=5),
+            field=models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 'CASH_TO_CASH'), (
+                shared.models.price.TransactionType['RETRAIT_CASH'], 'RETRAIT_CASH')], max_length=5),
         ),
     ]

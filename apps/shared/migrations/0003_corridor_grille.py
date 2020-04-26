@@ -16,15 +16,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Corridor',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=30)),
-                ('transaction_type', models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 1), (shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
+                ('transaction_type', models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 1), (
+                    shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
                 ('source_object_id', models.PositiveIntegerField()),
                 ('destination_object_id', models.PositiveIntegerField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('destination_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_destination_content_type', to='contenttypes.ContentType')),
-                ('source_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_source_content_type', to='contenttypes.ContentType')),
+                ('destination_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'),
+                                                                                                                                                          ('model', 'country')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_destination_content_type', to='contenttypes.ContentType')),
+                ('source_content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'),
+                                                                                                                                                     ('model', 'country')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_source_content_type', to='contenttypes.ContentType')),
             ],
             options={
                 'verbose_name': 'Corridor',
@@ -33,12 +37,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Grille',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('minimum_amount', models.DecimalField(decimal_places=2, max_digits=7)),
                 ('maximum_amount', models.DecimalField(decimal_places=2, max_digits=7)),
-                ('fee_type', models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 1), (shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
+                ('fee_type', models.CharField(choices=[(shared.models.price.TransactionType['CASH_TO_CASH'], 1), (
+                    shared.models.price.TransactionType['RETRAIT_CASH'], 2)], max_length=5)),
                 ('fee', models.DecimalField(decimal_places=2, max_digits=7)),
-                ('corridor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shared.Corridor')),
+                ('corridor', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='shared.Corridor')),
             ],
             options={
                 'verbose_name': 'Grille tarif.',

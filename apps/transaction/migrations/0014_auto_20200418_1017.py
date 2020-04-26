@@ -20,7 +20,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='destination_content_type',
-            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), null=False, on_delete=django.db.models.deletion.DO_NOTHING, related_name='destination_content_type', to='contenttypes.ContentType'),
+            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')),
+                                                                          _connector='OR'), null=False, on_delete=django.db.models.deletion.DO_NOTHING, related_name='destination_content_type', to='contenttypes.ContentType'),
         ),
         migrations.AlterField(
             model_name='transaction',
@@ -30,6 +31,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='source_content_type',
-            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), null=False, on_delete=django.db.models.deletion.DO_NOTHING, related_name='source_content_type', to='contenttypes.ContentType'),
+            field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), (
+                'model', 'customer')), _connector='OR'), null=False, on_delete=django.db.models.deletion.DO_NOTHING, related_name='source_content_type', to='contenttypes.ContentType'),
         ),
     ]

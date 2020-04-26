@@ -15,12 +15,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='destination_country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='transaction_destination_country', to='shared.Country'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING,
+                                    related_name='transaction_destination_country', to='shared.Country'),
         ),
         migrations.AddField(
             model_name='transaction',
             name='source_country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='transaction_source_country', to='shared.Country'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING,
+                                    related_name='transaction_source_country', to='shared.Country'),
         ),
         migrations.AlterField(
             model_name='transaction',

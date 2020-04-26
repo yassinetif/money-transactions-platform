@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='parent_transaction_number',
-            field=models.CharField(blank=True, default='1598487785', max_length=11, null=True),
+            field=models.CharField(blank=True, default='1598487785',
+                                   max_length=11, null=True),
         ),
         migrations.AlterField(
             model_name='transaction',

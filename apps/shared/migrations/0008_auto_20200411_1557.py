@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='account',
             name='category',
-            field=models.CharField(choices=[('PRINCIPAL', 'PRINCIPAL'), ('COMMISSION', 'COMMISSION')], default='PRINCIPAL', max_length=30),
+            field=models.CharField(choices=[(
+                'PRINCIPAL', 'PRINCIPAL'), ('COMMISSION', 'COMMISSION')], default='PRINCIPAL', max_length=30),
         ),
     ]

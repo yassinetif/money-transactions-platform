@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='status',
-            field=models.CharField(choices=[('PENDING', 'PENDING'), ('SUCCESS', 'SUCCESS'), ('FAILED', 'FAILED'), ('SUSPENDED', 'SUSPENDED')], default='PENDING', max_length=20),
+            field=models.CharField(choices=[('PENDING', 'PENDING'), ('SUCCESS', 'SUCCESS'), (
+                'FAILED', 'FAILED'), ('SUSPENDED', 'SUSPENDED')], default='PENDING', max_length=20),
         ),
         migrations.AlterField(
             model_name='transaction',

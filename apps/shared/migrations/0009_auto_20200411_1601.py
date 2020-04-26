@@ -14,11 +14,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='corridor',
             name='destination_country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='destination_country', to='shared.Country'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING,
+                                    related_name='destination_country', to='shared.Country'),
         ),
         migrations.AddField(
             model_name='corridor',
             name='source_country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='source_country', to='shared.Country'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING,
+                                    related_name='source_country', to='shared.Country'),
         ),
     ]

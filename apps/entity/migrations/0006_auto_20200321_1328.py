@@ -22,7 +22,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='entity',
             name='category',
-            field=models.CharField(choices=[(entity.models.entity.EntityType['PROVIDER'], 'PROVIDER'), (entity.models.entity.EntityType['DISTRIBUTEUR'], 'DISTRIBUTEUR'), (entity.models.entity.EntityType['BANQUE'], 'BANQUE')], default='PROVIDER', max_length=30),
+            field=models.CharField(choices=[(entity.models.entity.EntityType['PROVIDER'], 'PROVIDER'), (entity.models.entity.EntityType['DISTRIBUTEUR'],
+                                                                                                        'DISTRIBUTEUR'), (entity.models.entity.EntityType['BANQUE'], 'BANQUE')], default='PROVIDER', max_length=30),
         ),
         migrations.AlterField(
             model_name='entity',

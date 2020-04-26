@@ -18,7 +18,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Country',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('iso', django_countries.fields.CountryField(max_length=2)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
@@ -30,13 +31,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Account',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('object_id', models.PositiveIntegerField()),
-                ('catetory', models.CharField(choices=[(shared.models.account.AccountType['PRINCIPAL'], 1), (shared.models.account.AccountType['COMMISSION'], 2)], max_length=5)),
+                ('catetory', models.CharField(choices=[(shared.models.account.AccountType['PRINCIPAL'], 1), (
+                    shared.models.account.AccountType['COMMISSION'], 2)], max_length=5)),
                 ('balance', models.DecimalField(decimal_places=2, max_digits=7)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(
+                    ('app_label', 'kyc'), ('model', 'customer')), _connector='OR'), on_delete=django.db.models.deletion.DO_NOTHING, to='contenttypes.ContentType')),
             ],
             options={
                 'verbose_name': 'Account',
