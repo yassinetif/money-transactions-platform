@@ -46,8 +46,6 @@ INSTALLED_APPS = [
     "mptt",
     "core",
     "api",
-
-
     "entity",
     "kyc",
     "shared",
