@@ -4,7 +4,7 @@ from tests.fixtures.shared_fixture import country
 from entity.repository.entity_repository import EntityRepository
 from core.errors import AgentException
 from django.contrib.auth.models import User
-from entity.models import Agent
+from entity.models.agent  import Agent
 
 
 @pytest.mark.django_db

@@ -4,7 +4,7 @@ from core.utils import convert_partner_cash_to_cash_payload
 import requests
 
 
-def search_transaction(payload: dict):
+def search_transaction(payload):
     configs = partners_config.WORLD_REMIT
     params = {"wr_transaction_number": payload.get('code')}
     headers = configs.get('production').get('credentials').get('headers')
@@ -17,7 +17,3 @@ def search_transaction(payload: dict):
     else:
         raise TransactionNotFoundException(
             'No transaction Wr is found', 'No transaction is found')
-
-
-
-

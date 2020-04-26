@@ -5,7 +5,6 @@ from transaction.controller.transaction_controller import create as create_trans
     search as search_transaction, pay as pay_transaction
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
-import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -31,8 +30,7 @@ class TransactionResource(ModelResource):
         Used to determine the desired format from the request.format
         attribute.
         """
-        if (hasattr(request, 'format') and
-                request.format in self._meta.serializer.formats):
+        if (hasattr(request, 'format') and request.format in self._meta.serializer.formats):
             return self._meta.serializer.get_mime_for_format(request.format)
         return super(TransactionResource, self).determine_format(request)
 

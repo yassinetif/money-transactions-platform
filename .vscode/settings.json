@@ -1,5 +1,6 @@
 {
     "python.pythonPath": "/Users/alkengueleoua/.virtualenvs/env_mnmv2/bin/python",
     "python.formatting.provider": "autopep8",
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "cornflakes.linter.executablePath": "/usr/local/bin/flake8",
 }

@@ -1,6 +1,5 @@
 from django.contrib import admin
 from shared.models import Corridor, Grille, Sharing
-from django.utils.translation import ugettext_lazy as _
 
 
 class GrilleInline(admin.TabularInline):

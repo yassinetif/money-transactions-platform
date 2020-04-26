@@ -1,5 +1,5 @@
 from django.db import models
-from core.utils import random_code
+from core.utils.string import random_code
 from django.contrib.auth.models import User
 from .entity import Entity
 

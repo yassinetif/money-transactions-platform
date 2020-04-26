@@ -34,7 +34,8 @@ class Migration(migrations.Migration):
             model_name='corridor',
             name='destination_content_type',
             field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')),
-                                                                          _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_destination_content_type', to='contenttypes.ContentType'),
+                                                                          _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING,
+                                    related_name='corridor_destination_content_type', to='contenttypes.ContentType'),
         ),
         migrations.AlterField(
             model_name='corridor',
@@ -45,7 +46,8 @@ class Migration(migrations.Migration):
             model_name='corridor',
             name='source_content_type',
             field=models.ForeignKey(blank=True, limit_choices_to=models.Q(models.Q(('app_label', 'entity'), ('model', 'entity')), models.Q(('app_label', 'shared'), ('model', 'country')),
-                                                                          _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='corridor_source_content_type', to='contenttypes.ContentType'),
+                                                                          _connector='OR'), null=True, on_delete=django.db.models.deletion.DO_NOTHING,
+                                    related_name='corridor_source_content_type', to='contenttypes.ContentType'),
         ),
         migrations.AlterField(
             model_name='corridor',

@@ -1,12 +1,10 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from django.contrib.auth.models import User
 from tastypie.serializers import Serializer
-from tastypie import fields
-from entity.models import Agent
+from entity.models.agent import Agent
 from entity.controller.agent_controller import login as agent_login
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
-import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -39,8 +37,7 @@ class AgentResource(ModelResource):
         Used to determine the desired format from the request.format
         attribute.
         """
-        if (hasattr(request, 'format') and
-                request.format in self._meta.serializer.formats):
+        if (hasattr(request, 'format') and request.format in self._meta.serializer.formats):
             return self._meta.serializer.get_mime_for_format(request.format)
         return super(AgentResource, self).determine_format(request)
 

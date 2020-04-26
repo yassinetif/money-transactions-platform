@@ -7,7 +7,7 @@ from tests.fixtures.transaction_fixture import transaction_cash_to_cash_payload,
 from transaction.domain.transaction_domain import get_grille_tarifaire, debit_entity_account,\
     credit_entity_account, create_transaction, get_partner_module_name, search_transaction,\
     pay_transaction, _can_agent_pay_transaction, _get_operation_comment
-from shared.models import FeeType
+from shared.models.price import FeeType
 from core.errors import GrilleException, CoreException, CountryException, TransactionNotFoundException
 
 

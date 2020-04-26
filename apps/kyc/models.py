@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from shared.models import Account, Country
+from shared.models.account import Account
+from shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
 
 
@@ -12,7 +13,7 @@ class Customer(models.Model):
         max_length=10, null=True, blank=True)
     identification_number = models.CharField(
         max_length=10, null=True, blank=True)
-    issuer_country = models.ForeignKey(Country, on_delete=models.DO_NOTHING,null=True)
+    issuer_country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
     address = models.CharField(max_length=100, null=False, blank=False)
     created = models.DateTimeField(auto_now_add=True)

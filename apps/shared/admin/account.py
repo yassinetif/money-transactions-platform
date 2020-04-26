@@ -1,6 +1,5 @@
 from django.contrib import admin
-from shared.models import Account
-from django.contrib.contenttypes.models import ContentType
+from shared.models.account import Account
 from django.utils.translation import ugettext_lazy as _
 
 

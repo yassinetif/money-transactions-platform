@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from shared.models import Country
+from shared.models.country import Country
 from enum import Enum
 from decimal import Decimal
 
@@ -15,7 +15,7 @@ class FeeType(Enum):
     PERCENT = 'PERCENTAGE'
 
 
-def validate_calculation_expression(expression: str):
+def validate_calculation_expression(expression):
     try:
         sharing_expression = expression.split('->')[1]
 
@@ -29,16 +29,16 @@ def validate_calculation_expression(expression: str):
                 else:
                     revenue += Decimal(expr[1])
             if revenue != 1:
-                raise ValidationError(
-                    f'La somme doit être = 1 . Valeur {revenue}')
+                raise ValidationError('La somme doit être = 1 . Valeur {0}'.format(revenue))
     except Exception as err:
         raise ValidationError(err)
 
 
 class Sharing(models.Model):
     calculation_expression = models.CharField(max_length=200,
-        validators=[validate_calculation_expression], help_text='FRAIS/2->PROVIDER:0.2:CREDIT;BANQUE:0.4:CREDIT')
-    corridor = models.ForeignKey('Corridor', on_delete=models.CASCADE,null=True,blank=True)
+                                              validators=[validate_calculation_expression],
+                                              help_text='FRAIS/2->PROVIDER:0.2:CREDIT;BANQUE:0.4:CREDIT')
+    corridor = models.ForeignKey('Corridor', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = "Revenue Sharing"
@@ -66,7 +66,7 @@ class Corridor(models.Model):
 
 
 class Grille(models.Model):
-    name = models.CharField(max_length=20,null=True,blank=True)
+    name = models.CharField(max_length=20, null=True, blank=True)
     corridor = models.ForeignKey('Corridor', on_delete=models.CASCADE)
     minimum_amount = models.DecimalField(max_digits=7, decimal_places=2)
     maximum_amount = models.DecimalField(max_digits=10, decimal_places=2)

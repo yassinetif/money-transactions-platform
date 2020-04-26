@@ -1,7 +1,6 @@
 from django.contrib import admin
 from transaction.models import Transaction, Operation
 
-
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_type', 'number', 'code', 'agent', 'entity', 'amount',
                     'paid_amount', 'transaction_fee', 'source_country', 'destination_country', 'status', 'created')
@@ -11,7 +10,6 @@ class TransactionAdmin(admin.ModelAdmin):
         return obj.grille.fee
     transaction_fee.allow_tags = True
     transaction_fee.short_description = 'Frais'
-
 
     def entity(self, obj):
         return obj.agent.entity.brand_name

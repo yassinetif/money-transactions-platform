@@ -1,5 +1,5 @@
 from django.contrib import admin
-from entity.models import Agent
+from entity.models.agent import Agent
 
 
 class AgentAdmin(admin.ModelAdmin):

@@ -1,19 +1,18 @@
-from entity.models import Agent
+from entity.models.agent import Agent
 from core.errors import AgentException
 
 class AgentRepository():
 
     @staticmethod
-    def fetch_by_user(user) -> Agent:
+    def fetch_by_user(user):
         try:
             return Agent.objects.get(informations=user)
         except Agent.DoesNotExist:
-            raise AgentException('unknown agent account',err)
+            raise AgentException('unknown agent account', {'response_code': 'ERR', 'response_text': 'unknown agent'})
 
     @staticmethod
     def fetch_by_code(code):
         try:
             return Agent.objects.get(code=code)
-        except Agent.DoesNotExist as err:
-            raise AgentException('unknown agent account',err)
-
+        except Agent.DoesNotExist:
+            raise AgentException('unknown agent account', {'response_code': 'ERR', 'response_text': 'unknown agent'})

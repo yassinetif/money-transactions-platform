@@ -4,22 +4,18 @@ import logging
 import json
 from core.errors import CoreException
 from marshmallow import ValidationError
-from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
-    RetraitCashValidator, TransactionCash2CashValidator
+from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator, RetraitCashValidator
 from shared.models import TransactionType
-from transaction.models import Transaction
-from tastypie.http import HttpUnauthorized, HttpForbidden, HttpAccepted
+from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from kyc.repository.kyc_repository import CustomerRepository
-from shared.repository.shared_repository import SharedRepository
 from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
-from transaction.domain.transaction_domain import get_source_and_destination_of_transaction,\
-    debit_entity_account, create_transaction, insert_operation, search_transaction, pay_transaction,\
+from transaction.domain.transaction_domain import debit_entity_account, create_transaction, insert_operation, search_transaction, pay_transaction,\
     credit_entity_account
 logger = logging.getLogger(__name__)
 
 
-def _validate_transaction_payload(payload: dict):
+def _validate_transaction_payload(payload):
     transaction_type = payload.pop('type')
     if transaction_type == TransactionType.CASH_TO_CASH.value:
         Cash2CashValidator().load(payload)
@@ -27,44 +23,44 @@ def _validate_transaction_payload(payload: dict):
         RetraitCashValidator().load(payload)
 
 
-def _dump_transaction_payload(transaction: Transaction) -> dict:
+def _dump_transaction_payload(transaction):
     transaction_type = transaction.grille.corridor.transaction_type
     if transaction_type == TransactionType.CASH_TO_CASH.value:
         return json.loads(Cash2CashValidator().dumps(transaction))
 
 
-def _validate_search_transaction_by_code_payload(payload: dict):
+def _validate_search_transaction_by_code_payload(payload):
     SearchTransactionCodeValidator().load(payload)
 
 
-def _get_agent_info(payload: dict):
+def _get_agent_info(payload):
     return AgentRepository.fetch_by_code(payload.get('agent').get('code'))
 
 
-def _check_agent_balance(agent, payload: dict) -> bool:
+def _check_agent_balance(agent, payload):
     if not check_entity_balance(agent, payload.get('amount')):
         raise CoreException('transaction can not continue',
                             'agent does not have enough balance')
 
 
-def _debit_entity(agent, amount: Decimal, fee: Decimal = 0):
+def _debit_entity(agent, amount, fee=0):
     last_balance = get_entity_balance_by_agent(agent)
     debit_entity_account(agent, last_balance, amount)
 
 
-def _credit_entity(agent, amount: Decimal):
+def _credit_entity(agent, amount):
     last_balance = get_entity_balance_by_agent(agent)
     credit_entity_account(agent, last_balance, amount)
 
 
-def _addtitional_tranactions_informations(transaction: Transaction, payload: dict) -> dict:
+def _addtitional_tranactions_informations(transaction, payload):
     info = {'transaction_number': transaction.number,
             'receipt_code': transaction.code}
     payload.update(info)
     return payload
 
 
-def _addtitional_customer_informations(payload: dict) -> dict:
+def _addtitional_customer_informations(payload):
     customer = CustomerRepository.fetch_customer_by_phone_number(
         payload.get('phone_number'))
     info = {'first_name': customer.informations.first_name,
@@ -130,6 +126,3 @@ def pay(tastypie, payload, request):
     except CoreException as err:
         logging.error(err, err.errors)
         return tastypie.create_response(request, {'reason': err.errors}, HttpForbidden)
-
-
-

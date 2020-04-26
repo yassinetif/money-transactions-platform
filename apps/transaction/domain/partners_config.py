@@ -1,5 +1,5 @@
 WORLD_REMIT = {
-    'entity' : 'WORLD REMIT'
+    'entity': 'WORLD REMIT',
     'test': {
         'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
         'credentials': {
@@ -19,7 +19,7 @@ WORLD_REMIT = {
                         'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
                         }
         }
-    }
+    },
     'payload':
         {'source_content_object': {'first_name': 'sender_first_name',
                                    'last_name': 'sender_last_name',

@@ -1,4 +1,6 @@
 from django.apps import AppConfig
+import logging
+logger = logging.getLogger(__name__)
 
 
 class EntityConfig(AppConfig):
@@ -7,4 +9,5 @@ class EntityConfig(AppConfig):
     verbose_name_plural = "Partners"
 
     def ready(self):
-        import entity.signals
+        from entity import signals
+        logger.info(signals)

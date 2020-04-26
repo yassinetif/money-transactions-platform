@@ -1,17 +1,15 @@
 import rstr
-from enum import Enum
-import json
 
 
-def random_code(len) -> str:
+def random_code(len):
     return rstr.digits(len)
 
 
-def convert_enum_to_tuple(enum: Enum):
+def convert_enum_to_tuple(enum):
     return tuple([prefix.value for idp, prefix in enumerate(enum)])
 
 
-def convert_partner_cash_to_cash_payload(base_payload: dict, partner_payload: dict):
+def convert_partner_cash_to_cash_payload(base_payload, partner_payload):
     result = base_payload.copy()
     for key in base_payload:
         if not isinstance(base_payload.get(key), dict):

@@ -1,11 +1,11 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
-from shared.models import Account, Country
+from shared.models.account import Account
+from shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
-from core.utils import random_code
+from core.utils.string import random_code
 from django.forms.models import model_to_dict
 from enum import Enum
-import rstr
 
 
 class EntityType(Enum):

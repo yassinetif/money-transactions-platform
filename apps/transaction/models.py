@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from entity.models import Agent
-from shared.models import Grille, Account, Country, TransactionType
-from core.utils import random_code
+from entity.models.agent import Agent
+from shared.models.price import Grille, TransactionType
+from shared.models.account import Account
+from shared.models.country import Country
+from core.utils.string import random_code
 from enum import Enum
 
 

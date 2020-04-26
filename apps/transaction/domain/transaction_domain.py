@@ -1,17 +1,15 @@
-from shared.models import Grille, Corridor, Account
 from core.errors import CoreException
 from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
-from entity.domain.entity_domain import debit_entity, get_entity_balance, credit_entity
-from shared.models import TransactionType
+from entity.domain.entity_domain import debit_entity, credit_entity
+from shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from transaction.repository.transaction_repository import TransactionRepository
-from decimal import Decimal
-from core.utils import random_code, convert_enum_to_tuple
+from core.utils.string import random_code, convert_enum_to_tuple
 from importlib import import_module
 
 
-def get_grille_tarifaire(payload: dict) -> Grille:
+def get_grille_tarifaire(payload):
     amount = payload.get('amount')
     source_country = payload.get('source_country')
     destination_country = payload.get('destination_country')
@@ -22,7 +20,7 @@ def get_grille_tarifaire(payload: dict) -> Grille:
     return grille
 
 
-def get_source_and_destination_of_transaction(payload: dict):
+def get_source_and_destination_of_transaction(payload):
     transaction_type = payload.get('type')
     if transaction_type == TransactionType.CASH_TO_CASH.value:
         source = CustomerRepository.fetch_or_create_customer(
@@ -32,15 +30,15 @@ def get_source_and_destination_of_transaction(payload: dict):
     return source, destination
 
 
-def debit_entity_account(agent, last_balance: Decimal, amount: Decimal):
+def debit_entity_account(agent, last_balance, amount):
     debit_entity(agent.entity, last_balance, amount)
 
 
-def credit_entity_account(agent, last_balance: Decimal, amount: Decimal):
+def credit_entity_account(agent, last_balance, amount):
     credit_entity(agent.entity, last_balance, amount)
 
 
-def create_transaction(payload: dict, agent) -> Transaction:
+def create_transaction(payload, agent):
     source, destination = get_source_and_destination_of_transaction(
         payload.copy())
     transaction = Transaction()
@@ -60,20 +58,20 @@ def create_transaction(payload: dict, agent) -> Transaction:
     return transaction
 
 
-def get_partner_module_name(code: str) -> str:
+def get_partner_module_name(code):
     for _prefix in convert_enum_to_tuple(TransactionCodePrefix):
         if code.startswith(_prefix):
-            return f'transaction.domain.{TransactionCodePrefix(_prefix).name.lower()}_domain'
+            return 'transaction.domain.{0}_domain'.format(TransactionCodePrefix(_prefix).name.lower())
     return None
 
 
-def download_transaction_from_partner(payload: dict, partner_module: str) -> Transaction:
+def download_transaction_from_partner(payload, partner_module):
     module = import_module(partner_module)
     transaction = module.search_transaction(payload)
     return transaction
 
 
-def search_transaction(payload: dict) -> Transaction:
+def search_transaction(payload):
     code = payload.get('code')
     partner_module = get_partner_module_name(code)
     if partner_module:
@@ -82,7 +80,7 @@ def search_transaction(payload: dict) -> Transaction:
     return TransactionRepository.fetch_unpaid_transaction_by_code(code)
 
 
-def pay_transaction(payload: dict, agent) -> Transaction:
+def pay_transaction(payload, agent):
     transaction = search_transaction(payload)
     _can_agent_pay_transaction(transaction, agent)
 
@@ -101,7 +99,7 @@ def pay_transaction(payload: dict, agent) -> Transaction:
     return transaction
 
 
-def insert_operation(transaction: Transaction):
+def insert_operation(transaction):
     operation = Operation()
     operation.comment = _get_operation_comment(transaction)
     operation.balance_after_operation = transaction.agent\
@@ -110,19 +108,19 @@ def insert_operation(transaction: Transaction):
     operation.save()
 
 
-def _get_operation_comment(transaction: Transaction) -> str:
+def _get_operation_comment(transaction):
     comment = ''
     if transaction.transaction_type == TransactionType.CASH_TO_CASH.value:
-        comment = f'Débit de {transaction.paid_amount} : transaction {transaction.number}'
+        comment = 'Débit de {0} : transaction {1}'.format(transaction.paid_amount, transaction.number)
     elif transaction.transaction_type == TransactionType.RETRAIT_CASH.value:
-        comment = f'Crédit de {transaction.amount} : transaction {transaction.number}'
+        comment = 'Crédit de {0} : transaction {1}'.format(transaction.amount, transaction.number)
     return comment
 
     # TODO : def share_transaction_revenu(transaction: Transaction):
     # TODO calculation_expression = transaction.corr
 
 
-def _can_agent_pay_transaction(transaction: Transaction, agent) -> bool:
+def _can_agent_pay_transaction(transaction, agent):
     if transaction.agent == agent:
         raise CoreException('agent can not be affected to this operation', '')
     else:

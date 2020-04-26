@@ -1,8 +1,7 @@
 
-from tastypie.http import HttpUnauthorized, HttpForbidden, HttpAccepted
+from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from entity.repository.entity_repository import EntityRepository
-
 from django.contrib.auth.models import User
 
 

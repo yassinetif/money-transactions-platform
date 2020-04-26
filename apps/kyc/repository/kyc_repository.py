@@ -26,7 +26,7 @@ class CustomerRepository():
             raise CustomerException('unable to get or create', str(err))
 
     @staticmethod
-    def fetch_customer_by_phone_number(phone_number: str) -> Customer:
+    def fetch_customer_by_phone_number(phone_number):
         try:
             return Customer.objects.get(informations__username=phone_number)
         except Exception as err:
