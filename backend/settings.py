@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_countries",
     "mptt",
-    "core",
     "api",
     "entity",
     "kyc",
