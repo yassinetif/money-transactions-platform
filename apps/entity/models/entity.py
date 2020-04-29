@@ -1,7 +1,7 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from shared.models.account import Account
-from shared.models.country import Country
+from shared.models.country import Country, Currency
 from django.contrib.contenttypes.fields import GenericRelation
 from core.utils.string import random_code
 from django.forms.models import model_to_dict
@@ -56,6 +56,7 @@ class Entity(MPTTModel):
 
 class EntitySettings(models.Model):
     entity = models.ForeignKey('Entity', null=True, blank=True, on_delete=models.DO_NOTHING)
+    currency = models.ForeignKey(Currency, null=True, blank=True, on_delete=models.DO_NOTHING)
     check_entity_balance = models.BooleanField(default=True, help_text='Check Entity balance before processing operation')
     overdraft_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Overdraft amount')
 
