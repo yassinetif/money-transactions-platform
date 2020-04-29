@@ -13,6 +13,24 @@ def transaction_cash_to_cash_payload():
             'destination_content_object': {'first_name': 'Akpene', 'last_name': 'WONU', 'phone_number': '90909333', 'address': 'Lome'}, 'type': 'CASH_TO_CASH',
             'agent': {'code': '086796'}, 'source_country': 'SN', 'destination_country': 'SN', 'amount': '5000', 'paid_amount': '5300'}
 
+@pytest.fixture
+def dumped_transaction_cash_to_cash_payload():
+
+    return {'agent': {'code': 'AGENT_CODE'},
+            'amount': '15000',
+            'destination_content_object': {'address': 'TEST',
+                                           'identification_number': 'TEST',
+                                           'identification_type': 'TEST',
+                                           'issuer_country': 'SN',
+                                           'phone_number': '777777'},
+            'destination_country': 'SN',
+            'paid_amount': '15300',
+            'source_content_object': {'address': 'TEST',
+                                      'identification_number': 'TEST',
+                                      'identification_type': 'TEST',
+                                      'issuer_country': 'SN',
+                                      'phone_number': '777777'},
+            'source_country': 'SN'}
 
 @pytest.fixture
 def transaction(agent, customer, country):

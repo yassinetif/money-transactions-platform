@@ -1,6 +1,7 @@
 import pytest
 from kyc.repository.kyc_repository import CustomerRepository
 from tests.fixtures.kyc_fixture import customer
+from tests.fixtures.shared_fixture import country
 from core.errors import CustomerException
 
 

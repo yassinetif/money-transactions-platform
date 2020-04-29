@@ -15,21 +15,29 @@ from transaction.domain.transaction_domain import debit_entity_account, create_t
 
 def _validate_transaction_payload(payload):
     transaction_type = payload.pop('type')
-    if transaction_type == TransactionType.CASH_TO_CASH.value:
-        Cash2CashValidator().load(payload)
-    if transaction_type == TransactionType.RETRAIT_CASH.value:
-        RetraitCashValidator().load(payload)
+    try:
+        if transaction_type == TransactionType.CASH_TO_CASH.value:
+            Cash2CashValidator().load(payload)
+        if transaction_type == TransactionType.RETRAIT_CASH.value:
+            RetraitCashValidator().load(payload)
+    except ValidationError as err:
+        raise ValidationError(str(err))
 
 
 def _dump_transaction_payload(transaction):
-    transaction_type = transaction.grille.corridor.transaction_type
-    if transaction_type == TransactionType.CASH_TO_CASH.value:
-        return json.loads(Cash2CashValidator().dumps(transaction))
+    try:
+        transaction_type = transaction.grille.corridor.transaction_type
+        if transaction_type == TransactionType.CASH_TO_CASH.value:
+            return json.loads(Cash2CashValidator().dumps(transaction))
+    except ValidationError as err:
+        raise ValidationError(str(err))
 
 
 def _validate_search_transaction_by_code_payload(payload):
-    SearchTransactionCodeValidator().load(payload)
-
+    try:
+        SearchTransactionCodeValidator().load(payload)
+    except ValidationError as err:
+        raise ValidationError(str(err))
 
 def _get_agent_info(payload):
     return AgentRepository.fetch_by_code(payload.get('agent').get('code'))
@@ -37,8 +45,7 @@ def _get_agent_info(payload):
 
 def _check_agent_balance(agent, payload):
     if not check_entity_balance(agent, payload.get('amount')):
-        raise CoreException('transaction can not continue',
-                            'agent does not have enough balance')
+        raise CoreException('agent does not have enough balance', 'agent does not have enough balance')
 
 
 def _debit_entity(agent, amount, fee=0):
@@ -68,17 +75,13 @@ def _addtitional_customer_informations(payload):
 
 
 def create(tastypie, payload, request):
-
     try:
         _validate_transaction_payload(payload.copy())
         agent = _get_agent_info(payload)
         _check_agent_balance(agent, payload)
-
         transaction = create_transaction(payload, agent)
-
         _debit_entity(agent, payload.get(
             'paid_amount'), transaction.grille.fee)
-
         insert_operation(transaction)
         response = _addtitional_tranactions_informations(transaction, payload)
         return tastypie.create_response(request, response)
@@ -89,28 +92,23 @@ def create(tastypie, payload, request):
 
 
 def search(tastypie, payload, request):
-
     try:
         _validate_search_transaction_by_code_payload(payload.copy())
         _get_agent_info(payload)
-
         transaction = search_transaction(payload)
         payload = _dump_transaction_payload(transaction)
         payload.get('source_content_object').update(
             _addtitional_customer_informations(payload.get('source_content_object')))
         payload.get('destination_content_object').update(
             _addtitional_customer_informations(payload.get('destination_content_object')))
-
         return tastypie.create_response(request, payload)
     except ValidationError as err:
-        print(err)
         return tastypie.create_response(request, {'response_text': str(err.messages), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
 
 
 def pay(tastypie, payload, request):
-
     try:
         _validate_transaction_payload(payload.copy())
         agent = _get_agent_info(payload)

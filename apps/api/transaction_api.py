@@ -42,6 +42,9 @@ class TransactionResource(ModelResource):
             url(r"^(?P<resource_name>%s)/pay%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('pay'), name="api_pay_transaction"),
+            url(r"^(?P<resource_name>%s)/fee%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('fee'), name="api_fee_transaction"),
         ]
 
     def create(self, request, **kwargs):
@@ -57,6 +60,12 @@ class TransactionResource(ModelResource):
         return response
 
     def pay(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        payload = self.deserialize(request, request.body)
+        response = pay_transaction(self, payload, request)
+        return response
+
+    def fee(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         payload = self.deserialize(request, request.body)
         response = pay_transaction(self, payload, request)

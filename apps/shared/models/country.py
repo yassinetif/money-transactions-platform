@@ -9,7 +9,7 @@ class Country(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.iso.name
+        return self.iso.code
 
     class Meta:
         verbose_name = "Country"
@@ -39,8 +39,8 @@ class Change(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.iso
+        return self.name
 
     class Meta:
-        verbose_name = "Currency"
-        verbose_name_plural = "Currencies"
+        verbose_name = "Change"
+        verbose_name_plural = "Changes"
