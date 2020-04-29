@@ -35,6 +35,7 @@ class Cash2CashValidator(Schema):
     destination_country = fields.Str(required=True)
     amount = fields.Str(required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)
+    payer_network = fields.Str(required=False, null=True)
 
 
 class TransactionCash2CashValidator(Schema):

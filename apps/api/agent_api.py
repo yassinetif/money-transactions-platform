@@ -5,9 +5,7 @@ from entity.models.agent import Agent
 from entity.controller.agent_controller import login as agent_login
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
-import logging
 
-logger = logging.getLogger(__name__)
 
 
 class UserResource(ModelResource):

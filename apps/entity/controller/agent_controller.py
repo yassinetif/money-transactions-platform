@@ -21,11 +21,12 @@ def login(tastypie, data, request):
 
                 entity = EntityRepository.fetch_by_agent(agent)
                 bundle.data.update({'entity': entity})
+                bundle.data.update({'reponse_code': '000'})
 
                 return tastypie.create_response(request, bundle)
             else:
-                return tastypie.create_response(request, {'reason': 'wrong password'}, HttpForbidden)
+                return tastypie.create_response(request, {'response_text': 'wrong password', 'response_code': '100'}, HttpForbidden)
         else:
-            return tastypie.create_response(request, {'reason': 'user is not active'}, HttpUnauthorized)
+            return tastypie.create_response(request, {'response_text': 'agent is not active', 'response_code': '100'}, HttpUnauthorized)
     except User.DoesNotExist:
-        return tastypie.create_response(request, {'reason': 'unknown user'}, HttpForbidden)
+        return tastypie.create_response(request, {'response_text': 'unknwonw user', 'response_code': '100'}, HttpForbidden)

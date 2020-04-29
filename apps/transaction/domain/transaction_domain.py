@@ -6,6 +6,7 @@ from shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from transaction.repository.transaction_repository import TransactionRepository
 from core.utils.string import random_code, convert_enum_to_tuple
+from core.utils.http import post_simple_json_request
 from importlib import import_module
 
 
@@ -44,6 +45,8 @@ def create_transaction(payload, agent):
     transaction = Transaction()
     transaction.transaction_type = TransactionType.CASH_TO_CASH.value
     transaction.agent = agent
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = source
@@ -67,8 +70,12 @@ def get_partner_module_name(code):
 
 def download_transaction_from_partner(payload, partner_module):
     module = import_module(partner_module)
-    transaction = module.search_transaction(payload)
-    return transaction
+    transaction_json_data = module.search_transaction(payload)
+    return transaction_json_data
+
+def send_partner_downloaded_transaction(payload):
+    url = 'http://127.0.0.1:8000/api/v1/transaction/create/'
+    response = post_simple_json_request(url, payload)
 
 
 def search_transaction(payload):
@@ -122,6 +129,6 @@ def _get_operation_comment(transaction):
 
 def _can_agent_pay_transaction(transaction, agent):
     if transaction.agent == agent:
-        raise CoreException('agent can not be affected to this operation', '')
+        raise CoreException('agent can not be affected to this operation', 'agent can not be affected to this operation')
     else:
         return True

@@ -3,6 +3,7 @@
 Les changements à apporter, les bonnes idées ou encore les dettes techniques font parti de 
 ce fichier. Il faudra les supprimer au fur et à mesure qu'ils ont été faits et testés.
 
+- Avant de créditer ou de débiter s'assure que l'opération se fasse dans la devise appropriée
 
 - Revoir validateur CashToCashValidator : Accepter que certains champs ne soient pas remplis
     - `partial = True`

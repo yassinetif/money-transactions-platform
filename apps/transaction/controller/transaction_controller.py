@@ -1,18 +1,16 @@
 
 from decimal import Decimal
-import logging
 import json
 from core.errors import CoreException
 from marshmallow import ValidationError
 from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator, RetraitCashValidator
-from shared.models import TransactionType
+from shared.models.price import TransactionType
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
 from transaction.domain.transaction_domain import debit_entity_account, create_transaction, insert_operation, search_transaction, pay_transaction,\
     credit_entity_account
-logger = logging.getLogger(__name__)
 
 
 def _validate_transaction_payload(payload):
@@ -85,10 +83,9 @@ def create(tastypie, payload, request):
         response = _addtitional_tranactions_informations(transaction, payload)
         return tastypie.create_response(request, response)
     except ValidationError as err:
-        return tastypie.create_response(request, {'reason': err.messages}, HttpUnauthorized)
+        return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
-        logging.error(err, err.errors)
-        return tastypie.create_response(request, {'reason': err.errors}, HttpForbidden)
+        return tastypie.create_response(request, err.errors, HttpForbidden)
 
 
 def search(tastypie, payload, request):
@@ -106,10 +103,10 @@ def search(tastypie, payload, request):
 
         return tastypie.create_response(request, payload)
     except ValidationError as err:
-        return tastypie.create_response(request, {'reason': err.messages}, HttpUnauthorized)
+        print(err)
+        return tastypie.create_response(request, {'response_text': str(err.messages), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
-        logging.error(err, err.errors)
-        return tastypie.create_response(request, {'reason': err.errors}, HttpForbidden)
+        return tastypie.create_response(request, err.errors, HttpForbidden)
 
 
 def pay(tastypie, payload, request):
@@ -120,9 +117,8 @@ def pay(tastypie, payload, request):
         transaction = pay_transaction(payload, agent)
         _credit_entity(agent, Decimal(payload.get('paid_amount')))
         insert_operation(transaction)
-        return tastypie.create_response(request, {'success': True})
+        return tastypie.create_response(request, {'reponse_code': '000'})
     except ValidationError as err:
-        return tastypie.create_response(request, {'reason': err.messages}, HttpUnauthorized)
+        return tastypie.create_response(request, {'response_text': str(err.messages), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
-        logging.error(err, err.errors)
-        return tastypie.create_response(request, {'reason': err.errors}, HttpForbidden)
+        return tastypie.create_response(request, err.errors, HttpForbidden)

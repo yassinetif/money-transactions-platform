@@ -21,7 +21,7 @@ class TestKycRepository:
         with pytest.raises(CustomerException) as e:
             CustomerRepository.fetch_or_create_customer(payload)
 
-        assert str(e.value) == 'unable to get or create'
+        assert str(e.value) == 'CustomerException'
 
     def test_fetch_customer_by_phone_number_sucess(self, customer):
         phone_number = '777777'
@@ -34,4 +34,4 @@ class TestKycRepository:
         with pytest.raises(CustomerException) as e:
             CustomerRepository.fetch_customer_by_phone_number(
                 phone_number)
-        assert str(e.value) == 'customer not found'
+        assert str(e.value) == 'CustomerException 111111'

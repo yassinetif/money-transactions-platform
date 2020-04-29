@@ -52,3 +52,15 @@ class Entity(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ["brand_name"]
+
+
+class EntitySettings(models.Model):
+    entity = models.ForeignKey('Entity', null=True, blank=True, on_delete=models.DO_NOTHING)
+    check_entity_balance = models.BooleanField(default=True, help_text='Check Entity balance before processing operation')
+    overdraft_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Overdraft amount')
+
+    def __str__(self):
+        return self.entity
+
+    class Meta:
+        verbose_name = 'Entity setting'

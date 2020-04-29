@@ -22,12 +22,12 @@ class CustomerRepository():
             customer, created = Customer.objects.get_or_create(
                 informations=user, issuer_country=issuer_country, **data)
             return customer
-        except Exception as err:
-            raise CustomerException('unable to get or create', str(err))
+        except Exception:
+            raise CustomerException('CustomerException', 'unable to create this customer in the system')
 
     @staticmethod
     def fetch_customer_by_phone_number(phone_number):
         try:
             return Customer.objects.get(informations__username=phone_number)
-        except Exception as err:
-            raise CustomerException('customer not found', str(err))
+        except Exception:
+            raise CustomerException('CustomerException {0}'.format(phone_number), 'unable to find customer with phone number {0}'.format(phone_number))

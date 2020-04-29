@@ -5,9 +5,6 @@ from transaction.controller.transaction_controller import create as create_trans
     search as search_transaction, pay as pay_transaction
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class TransactionResource(ModelResource):
