@@ -10,5 +10,4 @@ payload = {'source_content_object': {'first_name': 'Williams', 'last_name': 'de 
            'agent': {'code': '086796'}, 'source_countr': 'SN', 'destination_country': 'TG', 'amount': '15000', 'paid_amount': '15300'}
 url = 'http://127.0.0.1:8000/api/v1/transaction/create/'
 response = requests.post(url, data=json.dumps(payload), headers=headers)
-print (response.json())
-
+print(response.json())

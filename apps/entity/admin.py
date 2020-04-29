@@ -8,7 +8,7 @@ class EntityAdmin(admin.ModelAdmin):
 
 
 class EntitySettingsAdmin(admin.ModelAdmin):
-    list_display = ('entity', 'currency', 'check_entity_balance', 'overdraft_amount')
+    list_display = ('entity', 'check_entity_balance', 'overdraft_amount')
 
 
 class AgentAdmin(admin.ModelAdmin):

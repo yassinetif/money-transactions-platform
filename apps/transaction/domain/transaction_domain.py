@@ -8,6 +8,7 @@ from transaction.repository.transaction_repository import TransactionRepository
 from core.utils.string import random_code, convert_enum_to_tuple
 from core.utils.http import post_simple_json_request
 from importlib import import_module
+from decimal import Decimal
 
 
 def get_grille_tarifaire(payload):
@@ -21,6 +22,21 @@ def get_grille_tarifaire(payload):
     return grille
 
 
+def calculate_transaction_fee(payload, entity):
+    grille = get_grille_tarifaire(payload)
+    amount = Decimal(payload.get('amount'))
+    source_currency = entity.country.currency
+    destination_currency = grille.corridor.currency
+    converted_amount = currency_change(source_currency, destination_currency, amount)
+    fee = SharedRepository.get_fee_by_grille(grille, converted_amount)
+    converted_fee = currency_change(destination_currency, source_currency, fee)
+    return converted_fee
+
+def currency_change(source_currency, destination_currency, amount):
+    parity = SharedRepository.fetch_change_parity_value(source_currency, destination_currency)
+    return amount * parity
+
+
 def get_source_and_destination_of_transaction(payload):
     transaction_type = payload.get('type')
     if transaction_type == TransactionType.CASH_TO_CASH.value:
@@ -30,14 +46,11 @@ def get_source_and_destination_of_transaction(payload):
             payload.get('destination_content_object'))
     return source, destination
 
-
 def debit_entity_account(agent, last_balance, amount):
     debit_entity(agent.entity, last_balance, amount)
 
-
 def credit_entity_account(agent, last_balance, amount):
     credit_entity(agent.entity, last_balance, amount)
-
 
 def create_transaction(payload, agent):
     source, destination = get_source_and_destination_of_transaction(
@@ -76,6 +89,7 @@ def download_transaction_from_partner(payload, partner_module):
 def send_partner_downloaded_transaction(payload):
     url = 'http://127.0.0.1:8000/api/v1/transaction/create/'
     response = post_simple_json_request(url, payload)
+    return response.json()
 
 
 def search_transaction(payload):

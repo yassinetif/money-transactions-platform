@@ -1,7 +1,7 @@
-from shared.models.country import Country
+from shared.models.country import Country, Change
 from shared.models.price import Corridor, Grille, FeeType
 from django.db.models import Q
-from core.errors import CorridorException, GrilleException, CountryException
+from core.errors import CorridorException, GrilleException, CountryException, CoreException
 
 
 class SharedRepository():
@@ -33,11 +33,19 @@ class SharedRepository():
             raise GrilleException('grille error', err)
 
     @staticmethod
-    def calculate_fee_by_grille(grille, amount):
+    def get_fee_by_grille(grille, amount):
         if grille.fee_type == FeeType.CONST.value:
             return grille.fee
         else:
             return amount * grille.fee / 100
+
+    @staticmethod
+    def fetch_change_parity_value(source_currency, destination_currency):
+        try:
+            change = Change.objects.get(source_currency__iso=source_currency, destination_currency__iso=destination_currency, status=True)
+            return change.parity
+        except Change.DoesNotExist as err:
+            raise CoreException(err, 'unable to find change for currencies')
 
     @staticmethod
     def fetch_sharing_calculation_expression(transaction):

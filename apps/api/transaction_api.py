@@ -2,7 +2,7 @@ from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from transaction.models import Transaction
 from tastypie.serializers import Serializer
 from transaction.controller.transaction_controller import create as create_transaction,\
-    search as search_transaction, pay as pay_transaction
+    search as search_transaction, pay as pay_transaction, fee as transaction_fee
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 
@@ -68,5 +68,5 @@ class TransactionResource(ModelResource):
     def fee(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         payload = self.deserialize(request, request.body)
-        response = pay_transaction(self, payload, request)
+        response = transaction_fee(self, payload, request)
         return response

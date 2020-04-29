@@ -3,14 +3,16 @@ from decimal import Decimal
 import json
 from core.errors import CoreException
 from marshmallow import ValidationError
-from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator, RetraitCashValidator
+from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
+    RetraitCashValidator, FeeValidator
 from shared.models.price import TransactionType
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
-from transaction.domain.transaction_domain import debit_entity_account, create_transaction, insert_operation, search_transaction, pay_transaction,\
-    credit_entity_account
+from transaction.domain.transaction_domain import debit_entity_account, create_transaction, \
+    insert_operation, search_transaction, pay_transaction,\
+    credit_entity_account, calculate_transaction_fee
 
 
 def _validate_transaction_payload(payload):
@@ -72,6 +74,19 @@ def _addtitional_customer_informations(payload):
             'last_name': customer.informations.last_name}
     payload.update(info)
     return payload
+
+
+def fee(tastypie, payload, request):
+    try:
+        FeeValidator().load(payload)
+        agent = _get_agent_info(payload)
+        total_fee = calculate_transaction_fee(payload, agent.entity)
+        response = {'response_code': '000', 'response_text': total_fee}
+        return tastypie.create_response(request, response)
+    except ValidationError as err:
+        return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
+    except CoreException as err:
+        return tastypie.create_response(request, err.errors, HttpForbidden)
 
 
 def create(tastypie, payload, request):

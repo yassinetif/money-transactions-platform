@@ -161,3 +161,9 @@ class TestTransactionDomain:
         expected = 'Crédit de 15000 : transaction TEST_NUMBER'
         result = _get_operation_comment(transaction)
         assert result == expected
+
+    def test_calculate_transaction_fee(self):
+        # TODO
+
+    def test_currency_change(self):
+        # TODO

@@ -50,12 +50,16 @@ class TestSharedRepository:
             SharedRepository.fetch_grille_by_corridor(corridor, amount)
         assert str(e.value) == 'grille error'
 
-    def test_calculate_fee_by_grille_with_feetype_const_success(self, grille_tarifaire):
+    def test_get_fee_by_grille_with_feetype_const_success(self, grille_tarifaire):
         amount = 5000
-        result = SharedRepository.calculate_fee_by_grille(grille_tarifaire, amount)
+        result = SharedRepository.get_fee_by_grille(grille_tarifaire, amount)
         assert result == 500
 
-    def test_calculate_fee_by_grille_with_feetype_percent_success(self, grille_tarifaire_percent):
+    def test_get_fee_by_grille_with_feetype_percent_success(self, grille_tarifaire_percent):
         amount = 5000
-        result = SharedRepository.calculate_fee_by_grille(grille_tarifaire_percent, amount)
+        result = SharedRepository.get_fee_by_grille(grille_tarifaire_percent, amount)
         assert result == 100
+    
+    def test_fetch_change_parity_value(self):
+        # TODO
+        pass

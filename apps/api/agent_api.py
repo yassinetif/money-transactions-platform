@@ -7,7 +7,6 @@ from django.conf.urls import url
 from tastypie.utils import trailing_slash
 
 
-
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()

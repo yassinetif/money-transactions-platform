@@ -62,22 +62,29 @@ class TestTransactionController:
         assert str(err.value) == 'agent does not have enough balance'
 
     def test_debit_entity(self):
+        # TODO
         pass
 
     def test_credit_entity(self):
+        # TODO
         pass
 
     def test_addtitional_tranactions_informations(self):
+        # TODO
         pass
 
     def test_addtitional_customer_informations(self):
+        # TODO
         pass
 
     def test_create(self):
+        # TODO
         pass
 
     def test_search(self):
+        # TODO
         pass
 
     def test_pay(self):
+        # TODO
         pass

@@ -55,3 +55,11 @@ class RetraitCashValidator(Schema):
 class SearchTransactionCodeValidator(Schema):
     code = fields.Str(required=True)
     agent = fields.Nested(AgentValidator(), required=True)
+
+
+class FeeValidator(Schema):
+    type = fields.Str(required=True)
+    agent = fields.Nested(AgentValidator(), required=True)
+    source_country = fields.Str(required=True)
+    destination_country = fields.Str(required=True)
+    amount = fields.Str(required=True)
