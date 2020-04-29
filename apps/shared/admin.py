@@ -1,0 +1,48 @@
+from shared.models.price import Corridor, Grille, Sharing
+from shared.models.country import Country, Currency
+from django.contrib import admin
+from shared.models.account import Account
+from django.utils.translation import ugettext_lazy as _
+
+
+class AccountAdmin(admin.ModelAdmin):
+
+    list_display = ('account_object_type', 'balance', 'created')
+
+    def account_object_type(self, obj):
+        return obj.content_object
+    account_object_type.allow_tags = True
+    account_object_type.short_description = _('Entités / Clients')
+
+
+admin.site.register(Account, AccountAdmin)
+
+
+class CountryAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Country, CountryAdmin)
+
+
+class GrilleInline(admin.TabularInline):
+    model = Sharing
+
+
+class SharingInline(admin.TabularInline):
+    model = Grille
+
+
+class CorridorAdmin(admin.ModelAdmin):
+    inlines = [GrilleInline, SharingInline]
+    list_display = ('name', 'source_country', 'destination_country', 'created')
+
+
+admin.site.register(Corridor, CorridorAdmin)
+
+
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'iso', 'status', 'created')
+
+
+admin.site.register(Currency, CurrencyAdmin)
