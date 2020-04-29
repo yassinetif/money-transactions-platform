@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from shared.models.country import Country
+from shared.models.country import Country, Currency
 from enum import Enum
 from decimal import Decimal
 
@@ -57,7 +57,7 @@ class Corridor(models.Model):
         Country, null=True, blank=True, on_delete=models.DO_NOTHING, related_name='source_country')
     destination_country = models.ForeignKey(
         Country, null=True, blank=True, on_delete=models.DO_NOTHING, related_name='destination_country')
-
+    currency = models.ForeignKey(Currency, null=True, blank=True, on_delete=models.DO_NOTHING)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

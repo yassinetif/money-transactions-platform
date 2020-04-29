@@ -61,7 +61,8 @@ class EntitySettings(models.Model):
     overdraft_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Overdraft amount')
 
     def __str__(self):
-        return self.entity
+        return self.entity.brand_name
 
     class Meta:
         verbose_name = 'Entity setting'
+        verbose_name_plural = 'Entity settings'

@@ -1,5 +1,5 @@
 from shared.models.price import Corridor, Grille, Sharing
-from shared.models.country import Country, Currency
+from shared.models.country import Country, Currency, Change
 from django.contrib import admin
 from shared.models.account import Account
 from django.utils.translation import ugettext_lazy as _
@@ -35,7 +35,7 @@ class SharingInline(admin.TabularInline):
 
 class CorridorAdmin(admin.ModelAdmin):
     inlines = [GrilleInline, SharingInline]
-    list_display = ('name', 'source_country', 'destination_country', 'created')
+    list_display = ('name', 'source_country', 'destination_country', 'currency', 'created')
 
 
 admin.site.register(Corridor, CorridorAdmin)
@@ -46,3 +46,10 @@ class CurrencyAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Currency, CurrencyAdmin)
+
+
+class ChangeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'source_currency', 'destination_currency', 'status')
+
+
+admin.site.register(Change, ChangeAdmin)
