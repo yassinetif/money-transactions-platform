@@ -163,7 +163,9 @@ class TestTransactionDomain:
         assert result == expected
 
     def test_calculate_transaction_fee(self):
+        pass
         # TODO
 
     def test_currency_change(self):
+        pass
         # TODO

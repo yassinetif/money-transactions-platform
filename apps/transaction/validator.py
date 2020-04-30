@@ -13,6 +13,8 @@ class SenderCustomerValidator(Schema):
     identification_type = fields.Str(required=True)
     identification_number = fields.Str(required=True)
     issuer_country = fields.Str(required=True)
+    identification_document_deleivery_date = fields.Date(required=True)
+    identification_document_expiry_date = fields.Date(required=True)
 
 
 class ReceiverCustomerValidator(Schema):

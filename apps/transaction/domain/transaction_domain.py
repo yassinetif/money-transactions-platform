@@ -97,7 +97,6 @@ def search_transaction(payload):
     partner_module = get_partner_module_name(code)
     if partner_module:
         download_transaction_from_partner(payload, partner_module)
-
     return TransactionRepository.fetch_unpaid_transaction_by_code(code)
 
 

@@ -18,7 +18,6 @@ class FeeType(Enum):
 def validate_calculation_expression(expression):
     try:
         sharing_expression = expression.split('->')[1]
-
         for sharing_plan in sharing_expression.split("#"):
             revenue = 0
             for _s in sharing_plan.split(';'):
@@ -32,7 +31,6 @@ def validate_calculation_expression(expression):
                 raise ValidationError('La somme doit être = 1 . Valeur {0}'.format(revenue))
     except Exception as err:
         raise ValidationError(err)
-
 
 class Sharing(models.Model):
     calculation_expression = models.CharField(max_length=200,

@@ -10,17 +10,16 @@ class CustomerRepository():
     def fetch_or_create_customer(payload):
         try:
             data = payload.copy()
-            user, created = User.objects.get_or_create(**{'username': data.pop('phone_number'),
-                                                          'first_name': data.pop('first_name'),
-                                                          'last_name': data.pop('last_name')})
+            user, created = User.objects.get_or_create(
+                **{'username': data.pop('phone_number'),
+                   'first_name': data.pop('first_name'),
+                   'last_name': data.pop('last_name')})
             payload_country = data.pop('issuer_country', None)
             issuer_country = None
             if payload_country:
-                issuer_country = SharedRepository.fetch_country_by_iso(
-                    payload_country)
-
-            customer, created = Customer.objects.get_or_create(
-                informations=user, issuer_country=issuer_country, **data)
+                issuer_country = SharedRepository.fetch_country_by_iso(payload_country)
+            data.update({'issuer_country': issuer_country})
+            customer, created = Customer.objects.update_or_create(informations=user, defaults=data)
             return customer
         except Exception:
             raise CustomerException('CustomerException', 'unable to create this customer in the system')
