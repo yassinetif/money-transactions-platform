@@ -3,7 +3,7 @@ from decimal import Decimal
 import json
 from core.errors import CoreException
 from marshmallow import ValidationError
-from transaction.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
+from core.utils.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
     RetraitCashValidator, FeeValidator
 from shared.models.price import TransactionType
 from tastypie.http import HttpUnauthorized, HttpForbidden
