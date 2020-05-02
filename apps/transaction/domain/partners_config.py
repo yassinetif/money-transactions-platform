@@ -1,26 +1,27 @@
 WORLD_REMIT = {
     'entity': 'WORLD REMIT',
-    'test': {
-        'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
-        'credentials': {
-            'headers': {'Content-type': 'application/json; charset=utf-8',
-                        'Authorization': 'Basic EAAAANANYpY3541qOuuHfA991vQZ0NCA8mqpqfYMyZsCYOg5og8hThnp4zrEDqbXtCVNnYs+Dw3ED'
-                        'XhM3Um16jBFkXFbBdkgBeqU0P2U0XoJmkMFhi/lk197DtgnLRucrXv5CQ==',
-                        'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
-                        }
-        }
-    },
-    'production': {
-        'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
-        'credentials': {
-            'headers': {'Content-type': 'application/json; charset=utf-8',
-                        'Authorization': 'Basic EAAAANANYpY3541qOuuHfA991vQZ0NCA8mqpqfYMyZsCYOg5og8hThnp4zrEDqbXtCVNnYs+Dw3ED'
-                        'XhM3Um16jBFkXFbBdkgBeqU0P2U0XoJmkMFhi/lk197DtgnLRucrXv5CQ==',
-                        'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
-                        }
-        }
-    },
-    'payload':
+    'CASH_TO_CASH': {
+        'test': {
+            'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
+            'credentials': {
+                'headers': {'Content-type': 'application/json; charset=utf-8',
+                            'Authorization': 'Basic EAAAANANYpY3541qOuuHfA991vQZ0NCA8mqpqfYMyZsCYOg5og8hThnp4zrEDqbXtCVNnYs+Dw3ED'
+                            'XhM3Um16jBFkXFbBdkgBeqU0P2U0XoJmkMFhi/lk197DtgnLRucrXv5CQ==',
+                            'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
+                            }
+            }
+        },
+        'production': {
+            'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
+            'credentials': {
+                'headers': {'Content-type': 'application/json; charset=utf-8',
+                            'Authorization': 'Basic EAAAANANYpY3541qOuuHfA991vQZ0NCA8mqpqfYMyZsCYOg5og8hThnp4zrEDqbXtCVNnYs+Dw3ED'
+                            'XhM3Um16jBFkXFbBdkgBeqU0P2U0XoJmkMFhi/lk197DtgnLRucrXv5CQ==',
+                            'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
+                            }
+            }
+        },
+        'payload':
         {'source_content_object': {'first_name': 'sender_first_name',
                                    'last_name': 'sender_last_name',
                                    'phone_number': '773453810',
@@ -39,6 +40,48 @@ WORLD_REMIT = {
          'amount': 'payout_amount',
          'paid_amount': 'payout_amount'},
 
-    'transaction_id': 'wr_transaction_id',
-    'transaction_number': 'wr_transaction_number'
+        'transaction_id': 'wr_transaction_id',
+        'transaction_number': 'wr_transaction_number'
+    }
+
+}
+
+APG = {
+    'entity': 'APG',
+    'ACTIVATION_CARTE': {
+        'test': {
+            'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
+            'credentials': {
+                'headers': {'Content-type': 'application/json; charset=utf-8',
+                            'Authorization': 'Basic EAAAANANYpY3541qOuuHfA991vQZ0NCA8mqpqfYMyZsCYOg5og8hThnp4zrEDqbXtCVNnYs+Dw3ED'
+                            'XhM3Um16jBFkXFbBdkgBeqU0P2U0XoJmkMFhi/lk197DtgnLRucrXv5CQ==',
+                            'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
+                            }
+            }
+        },
+        'production': {
+            'url': 'https://payoutapi.worldremit.com/v1/payout/transactions/',
+            'credentials': {
+                'headers': {'Content-type': 'application/json; charset=utf-8',
+                            'Authorization': 'Basic EAAAANANYpY3541qOuuHfA991vQZ0NCA8mqpqfYMyZsCYOg5og8hThnp4zrEDqbXtCVNnYs+Dw3ED'
+                            'XhM3Um16jBFkXFbBdkgBeqU0P2U0XoJmkMFhi/lk197DtgnLRucrXv5CQ==',
+                            'Authorization-Token': 'C9156AAD714C4FDFA2F5E68D1100B4F8'
+                            }
+            }
+        },
+        'payload': {'cardCin': 'card_number',
+                    'cardCurrency': 'XOF',
+                    'customerAddress': 'address',
+                    "customerCountry": 'country',
+                    'customerDocumentExpiryDate': 'identification_document_expiry_date',
+                    "customerDocumentIssueDate": "identification_document_deleivery_date",
+                    "customerDocumentNumber": 'identification_number',
+                    "customerFirstName": 'first_name',
+                    "customerLastName": 'last_name',
+                    "customerPhone": 'phone_number',
+                    "message": "SUCCESS",
+                    }
+
+    }
+
 }

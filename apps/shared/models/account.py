@@ -23,7 +23,7 @@ class Account(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.category)
+        return str(self.balance)
 
     class Meta:
         verbose_name = "Account"

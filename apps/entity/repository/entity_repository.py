@@ -12,7 +12,14 @@ class EntityRepository():
             entity_dict.update({'country': entity.country.iso})
             return entity_dict
         except Agent.DoesNotExist:
-            raise AgentException('agent does not exist', {'response_code': 'ERR', 'response_text': 'unknown agent'})
+            raise AgentException('agent does not exist', {'response_code': '100', 'response_text': 'unknown agent'})
+
+    @staticmethod
+    def fetch_by_agent_code(code):
+        try:
+            return Entity.objects.get(agent__code=code)
+        except Agent.DoesNotExist:
+            raise AgentException('agent does not exist', {'response_code': '100', 'response_text': 'unknown agent'})
 
     @staticmethod
     def fetch_all_ancestors(entity):

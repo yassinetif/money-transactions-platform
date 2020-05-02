@@ -7,11 +7,12 @@ import requests
 def search_transaction(payload):
     configs = partners_config.WORLD_REMIT
     params = {"wr_transaction_number": payload.get('code')}
-    headers = configs.get('production').get('credentials').get('headers')
-    response = requests.get(configs.get('url'), params=params, headers=headers)
+    transaction_type = payload.get('type')
+    headers = configs.get(transaction_type).get('production').get('credentials').get('headers')
+    response = requests.get(configs.get(transaction_type).get('url'), params=params, headers=headers)
     if response.status_code == 200:
         json_request = convert_partner_cash_to_cash_payload(
-            configs.get('payload'), response.json())
+            configs.get(transaction_type).get('payload'), response.json())
         return json_request
 
     else:

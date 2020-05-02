@@ -2,6 +2,7 @@ from shared.models.country import Country, Change
 from shared.models.price import Corridor, Grille, FeeType
 from django.db.models import Q
 from core.errors import CorridorException, GrilleException, CountryException, CoreException
+from shared.models.account import Account, AccountType
 
 
 class SharedRepository():
@@ -22,8 +23,8 @@ class SharedRepository():
                                                                                                                                   destination_country__iso=destination_country) | Q(
                                                                                                                                       transaction_type=transaction_type, source_country__isnull=True,
                 destination_country__isnull=True))
-        except Corridor.DoesNotExist as err:
-            raise CorridorException('corridor error', err)
+        except Corridor.DoesNotExist:
+            raise CorridorException('corridor error', 'No corridor is found for this transaction type')
 
     @staticmethod
     def fetch_grille_by_corridor(corridor, amount):
@@ -51,3 +52,9 @@ class SharedRepository():
     def fetch_sharing_calculation_expression(transaction):
         # TODO : get right calculation expression for revenu sharing
         pass
+
+    @staticmethod
+    def initialize_account(instance, created):
+        if created:
+            Account.objects.create(content_object=instance,
+                                   category=AccountType.PRINCIPAL, balance=0)

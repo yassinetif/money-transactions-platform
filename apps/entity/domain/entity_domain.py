@@ -9,7 +9,7 @@ def check_entity_balance(agent, amount):
 
 
 def get_entity_balance_by_agent(agent):
-    return agent.entity.accounts.last().balance
+    return agent.entity.accounts.first().balance
 
 
 def get_entity_balance(entity):

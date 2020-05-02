@@ -15,13 +15,18 @@ class CustomerRepository():
                    'first_name': data.pop('first_name'),
                    'last_name': data.pop('last_name')})
             payload_country = data.pop('issuer_country', None)
+            residence_country = data.pop('country', None)
             issuer_country = None
+            country = None
             if payload_country:
                 issuer_country = SharedRepository.fetch_country_by_iso(payload_country)
+            if residence_country:
+                country = SharedRepository.fetch_country_by_iso(residence_country)
             data.update({'issuer_country': issuer_country})
-            customer, created = Customer.objects.update_or_create(informations=user, defaults=data)
+            customer, created = Customer.objects.update_or_create(informations=user, country=country, defaults=data)
+            SharedRepository.initialize_account(customer, created)
             return customer
-        except Exception:
+        except Exception as err:
             raise CustomerException('CustomerException', 'unable to create this customer in the system')
 
     @staticmethod

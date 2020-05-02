@@ -1,6 +1,7 @@
 from core.errors import CoreException
 from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
+from entity.repository.entity_repository import EntityRepository
 from entity.domain.entity_domain import debit_entity, credit_entity
 from shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
@@ -44,6 +45,11 @@ def get_source_and_destination_of_transaction(payload):
             payload.get('source_content_object'))
         destination = CustomerRepository.fetch_or_create_customer(
             payload.get('destination_content_object'))
+    elif transaction_type == TransactionType.ACTIVATION_CARTE.value:
+        source = CustomerRepository.fetch_or_create_customer(
+            payload.get('customer'))
+        destination = EntityRepository.fetch_by_agent_code(payload.get('agent').get('code'))
+
     return source, destination
 
 def debit_entity_account(agent, last_balance, amount):
@@ -53,6 +59,17 @@ def credit_entity_account(agent, last_balance, amount):
     credit_entity(agent.entity, last_balance, amount)
 
 def create_transaction(payload, agent):
+    transaction_type = payload.get('type')
+    transaction = None
+    if transaction_type == TransactionType.CASH_TO_CASH.value:
+        transaction = _create_cash_to_cash_transaction(payload, agent)
+    elif transaction_type == TransactionType.ACTIVATION_CARTE.value:
+        transaction = _create_card_activation_transaction(payload, agent)
+
+    return transaction
+
+
+def _create_cash_to_cash_transaction(payload, agent):
     source, destination = get_source_and_destination_of_transaction(
         payload.copy())
     transaction = Transaction()
@@ -70,7 +87,27 @@ def create_transaction(payload, agent):
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
         payload.get('destination_country'))
     transaction.save()
+    return transaction
 
+def _create_card_activation_transaction(payload, agent):
+    payload.update({'source_country': payload.get('customer').get('country'),
+                    'destination_country': agent.entity.country.iso})
+    source, destination = get_source_and_destination_of_transaction(
+        payload.copy())
+    transaction = Transaction()
+    transaction.transaction_type = TransactionType.ACTIVATION_CARTE.value
+    transaction.agent = agent
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
+    transaction.amount = payload.get('amount')
+    transaction.paid_amount = payload.get('paid_amount')
+    transaction.source_content_object = source
+    transaction.destination_content_object = destination
+    transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = agent.entity.country
+    transaction.destination_country = SharedRepository.fetch_country_by_iso(
+        payload.get('customer').get('country'))
+    transaction.save()
     return transaction
 
 
@@ -131,9 +168,11 @@ def insert_operation(transaction):
 def _get_operation_comment(transaction):
     comment = ''
     if transaction.transaction_type == TransactionType.CASH_TO_CASH.value:
-        comment = 'Débit de {0} : transaction {1}'.format(transaction.paid_amount, transaction.number)
+        comment = 'Débit de {0} : transaction {1}, Transfert d\'argent cash to cash'.format(transaction.paid_amount, transaction.number)
+    elif transaction.transaction_type == TransactionType.ACTIVATION_CARTE.value:
+        comment = 'Débit de {0} : transaction {1}, Activation d\'une carte Monnamon'.format(transaction.paid_amount, transaction.number)
     elif transaction.transaction_type == TransactionType.RETRAIT_CASH.value:
-        comment = 'Crédit de {0} : transaction {1}'.format(transaction.amount, transaction.number)
+        comment = 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
     return comment
 
     # TODO : def share_transaction_revenu(transaction: Transaction):

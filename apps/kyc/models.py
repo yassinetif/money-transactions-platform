@@ -15,6 +15,7 @@ class Customer(models.Model):
     identification_number = models.CharField(
         max_length=10, null=True, blank=True)
     issuer_country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True)
+    country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True, related_name='residence_country')
     identification_document_deleivery_date = models.DateField(" Document deleivery date", default=datetime.date.today)
     identification_document_expiry_date = models.DateField("Document expiry date", default=datetime.date.today)
     phone_number = models.CharField(max_length=10, null=False, blank=False)

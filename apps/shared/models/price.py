@@ -8,6 +8,8 @@ from decimal import Decimal
 class TransactionType(Enum):
     CASH_TO_CASH = 'CASH_TO_CASH'
     RETRAIT_CASH = 'RETRAIT_CASH'
+    ACTIVATION_CARTE = 'ACTIVATION_CARTE'
+    CREATION_WALLET = 'CREATION_WALLET'
 
 
 class FeeType(Enum):

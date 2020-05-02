@@ -150,7 +150,7 @@ class TestTransactionDomain:
         assert str(e.value) == 'agent can not be affected to this operation'
 
     def test_get_operation_comment_cash_to_cash(self, transaction):
-        expected = 'Débit de 15300 : transaction TEST_NUMBER'
+        expected = 'Débit de 15300 : transaction TEST_NUMBER, Transfert d\'argent cash to cash'
         result = _get_operation_comment(transaction)
         assert result == expected
 
@@ -158,7 +158,7 @@ class TestTransactionDomain:
         transaction.transaction_type = 'RETRAIT_CASH'
         transaction.save()
 
-        expected = 'Crédit de 15000 : transaction TEST_NUMBER'
+        expected = 'Crédit de 15000 : transaction TEST_NUMBER, Retrait d\'argent cash to cash'
         result = _get_operation_comment(transaction)
         assert result == expected
 
@@ -167,5 +167,13 @@ class TestTransactionDomain:
         # TODO
 
     def test_currency_change(self):
+        pass
+        # TODO
+
+    def test_create_cash_to_cash_transaction(self):
+        pass
+        # TODO
+
+    def test_create_card_activation_transaction(self):
         pass
         # TODO

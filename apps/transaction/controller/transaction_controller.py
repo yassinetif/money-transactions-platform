@@ -4,7 +4,7 @@ import json
 from core.errors import CoreException
 from marshmallow import ValidationError
 from core.utils.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
-    RetraitCashValidator, FeeValidator
+    RetraitCashValidator, FeeValidator, CardActivationValidator, SenderCustomerValidator
 from shared.models.price import TransactionType
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
@@ -22,6 +22,10 @@ def _validate_transaction_payload(payload):
             Cash2CashValidator().load(payload)
         if transaction_type == TransactionType.RETRAIT_CASH.value:
             RetraitCashValidator().load(payload)
+        if transaction_type == TransactionType.ACTIVATION_CARTE.value:
+            CardActivationValidator().load(payload)
+        if transaction_type == TransactionType.CREATION_WALLET.value:
+            SenderCustomerValidator().load(payload)
     except ValidationError as err:
         raise ValidationError(str(err))
 
@@ -46,12 +50,13 @@ def _get_agent_info(payload):
 
 
 def _check_agent_balance(agent, payload):
-    if not check_entity_balance(agent, payload.get('amount')):
+    if not check_entity_balance(agent, payload.get('paid_amount')):
         raise CoreException('agent does not have enough balance', 'agent does not have enough balance')
 
 
 def _debit_entity(agent, amount, fee=0):
     last_balance = get_entity_balance_by_agent(agent)
+    print('last_balance', last_balance)
     debit_entity_account(agent, last_balance, amount)
 
 
@@ -60,7 +65,7 @@ def _credit_entity(agent, amount):
     credit_entity_account(agent, last_balance, amount)
 
 
-def _addtitional_tranactions_informations(transaction, payload):
+def _addtitional_transactions_informations(transaction, payload):
     info = {'transaction_number': transaction.number,
             'receipt_code': transaction.code}
     payload.update(info)
@@ -98,7 +103,7 @@ def create(tastypie, payload, request):
         _debit_entity(agent, payload.get(
             'paid_amount'), transaction.grille.fee)
         insert_operation(transaction)
-        response = _addtitional_tranactions_informations(transaction, payload)
+        response = _addtitional_transactions_informations(transaction, payload)
         return tastypie.create_response(request, response)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)

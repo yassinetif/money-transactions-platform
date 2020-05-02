@@ -15,6 +15,7 @@ class SenderCustomerValidator(Schema):
     issuer_country = fields.Str(required=True)
     identification_document_deleivery_date = fields.Date(required=True)
     identification_document_expiry_date = fields.Date(required=True)
+    country = fields.Str(required=False)
 
 
 class ReceiverCustomerValidator(Schema):
@@ -64,4 +65,12 @@ class FeeValidator(Schema):
     agent = fields.Nested(AgentValidator(), required=True)
     source_country = fields.Str(required=True)
     destination_country = fields.Str(required=True)
+    amount = fields.Str(required=True)
+
+
+class CardActivationValidator(Schema):
+    customer = fields.Nested(SenderCustomerValidator(), required=True)
+    agent = fields.Nested(AgentValidator(), required=True)
+    card_number = fields.Str(required=True)
+    paid_amount = fields.Decimal(required=True, as_string=True)
     amount = fields.Str(required=True)

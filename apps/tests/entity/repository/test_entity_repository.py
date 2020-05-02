@@ -4,7 +4,7 @@ from tests.fixtures.shared_fixture import country
 from entity.repository.entity_repository import EntityRepository
 from core.errors import AgentException
 from django.contrib.auth.models import User
-from entity.models.agent  import Agent
+from entity.models.agent import Agent
 
 
 @pytest.mark.django_db
@@ -42,3 +42,7 @@ class TestEntityRepository:
 
         result = EntityRepository.fetch_all_ancestors(entity_child)
         assert entity in result
+
+    def test_fetch_by_agent_code(self):
+        # TODO
+        pass

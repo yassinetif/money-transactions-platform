@@ -35,7 +35,8 @@ class SharingInline(admin.TabularInline):
 
 class CorridorAdmin(admin.ModelAdmin):
     inlines = [GrilleInline, SharingInline]
-    list_display = ('name', 'source_country', 'destination_country', 'currency', 'created')
+    list_display = ('name', 'transaction_type', 'source_country', 'destination_country', 'currency', 'created')
+    save_as = True
 
 
 admin.site.register(Corridor, CorridorAdmin)

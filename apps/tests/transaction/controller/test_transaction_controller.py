@@ -69,7 +69,7 @@ class TestTransactionController:
         # TODO
         pass
 
-    def test_addtitional_tranactions_informations(self):
+    def test_addtitional_transactions_informations(self):
         # TODO
         pass
 
