@@ -7,6 +7,7 @@ from enum import Enum
 class AccountType(Enum):
     PRINCIPAL = 'PRINCIPAL'
     COMMISSION = 'COMMISSION'
+    CARTE_MONNAMON = 'CARTE_MONNAMON'
 
 
 class Account(models.Model):

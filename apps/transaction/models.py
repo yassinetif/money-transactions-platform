@@ -57,7 +57,7 @@ class Transaction(models.Model):
     status = models.CharField(max_length=20, choices=[
         (tag.value, tag.value) for tag in TransactionStatus], default=TransactionStatus.PENDING.value)
 
-    transaction_type = models.CharField(max_length=20, choices=[
+    transaction_type = models.CharField(max_length=30, choices=[
         (tag.value, tag.value) for tag in TransactionType], default=TransactionType.CASH_TO_CASH.value)
 
     parent_transaction_number = models.CharField(

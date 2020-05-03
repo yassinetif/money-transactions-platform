@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class AccountAdmin(admin.ModelAdmin):
 
-    list_display = ('account_object_type', 'balance', 'created')
+    list_display = ('account_object_type', 'category', 'balance', 'created')
 
     def account_object_type(self, obj):
         return obj.content_object

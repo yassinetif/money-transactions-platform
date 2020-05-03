@@ -7,9 +7,11 @@ from decimal import Decimal
 
 class TransactionType(Enum):
     CASH_TO_CASH = 'CASH_TO_CASH'
+    CASH_TO_WALLET = 'CASH_TO_WALLET'
     RETRAIT_CASH = 'RETRAIT_CASH'
     ACTIVATION_CARTE = 'ACTIVATION_CARTE'
     CREATION_WALLET = 'CREATION_WALLET'
+    RECHARGEMENT_COMPTE_ENTITE = 'RECHARGEMENT_COMPTE_ENTITE'
 
 
 class FeeType(Enum):
@@ -50,7 +52,7 @@ class Corridor(models.Model):
     limit = models.Q(app_label='entity', model='entity') \
         | models.Q(app_label='shared', model='country')
 
-    transaction_type = models.CharField(max_length=20, choices=[
+    transaction_type = models.CharField(max_length=30, choices=[
         (tag.value, tag.value) for tag in TransactionType])
 
     source_country = models.ForeignKey(

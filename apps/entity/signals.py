@@ -8,4 +8,4 @@ from entity.models.entity import Entity
 def create_entity_account(sender, instance, created, **kwargs):
     if created:
         Account.objects.create(content_object=instance,
-                               category=AccountType.PRINCIPAL, balance=0)
+                               category=AccountType.PRINCIPAL.value, balance=0)

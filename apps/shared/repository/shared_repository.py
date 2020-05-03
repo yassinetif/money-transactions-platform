@@ -54,7 +54,10 @@ class SharedRepository():
         pass
 
     @staticmethod
-    def initialize_account(instance, created):
+    def initialize_account(instance, created, is_card_activation):
         if created:
             Account.objects.create(content_object=instance,
-                                   category=AccountType.PRINCIPAL, balance=0)
+                                   category=AccountType.PRINCIPAL.value, balance=0)
+            if is_card_activation:
+                Account.objects.create(content_object=instance,
+                                       category=AccountType.CARTE_MONNAMON.value, balance=0)

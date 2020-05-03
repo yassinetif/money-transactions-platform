@@ -9,7 +9,7 @@ def check_entity_balance(agent, amount):
 
 
 def get_entity_balance_by_agent(agent):
-    return agent.entity.accounts.first().balance
+    return agent.entity.accounts.last().balance
 
 
 def get_entity_balance(entity):
@@ -21,11 +21,11 @@ def credit_entity(entity, last_balance, amount):
         raise CoreException('unable to credit entity', 'transaction failed')
 
     Account.objects.create(content_object=entity,
-                           category=AccountType.PRINCIPAL, balance=last_balance+Decimal(amount))
+                           category=AccountType.PRINCIPAL.value, balance=last_balance+Decimal(amount))
 
 
 def debit_entity(entity, last_balance, amount):
     if Decimal(amount) < 0:
         raise CoreException('unable to debit entity', 'transaction failed')
     Account.objects.create(content_object=entity,
-                           category=AccountType.PRINCIPAL, balance=last_balance-Decimal(amount))
+                           category=AccountType.PRINCIPAL.value, balance=last_balance-Decimal(amount))

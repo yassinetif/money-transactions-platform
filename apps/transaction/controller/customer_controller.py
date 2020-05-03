@@ -12,11 +12,12 @@ def create_customer_with_card(tastypie, payload, request):
         _validate_transaction_payload(payload.copy())
         agent = _get_agent_info(payload)
         _check_agent_balance(agent, payload)
+        # activate_monnamon_card(payload)
         transaction = create_transaction(payload, agent)
         _debit_entity(agent, payload.get('paid_amount'))
         insert_operation(transaction)
-        response = payload.update({'response_code': '000'})
-        return tastypie.create_response(request, response)
+        payload.update({'response_code': '000'})
+        return tastypie.create_response(request, payload)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:

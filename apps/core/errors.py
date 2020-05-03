@@ -34,5 +34,11 @@ class CountryException(CoreException):
 class AgentException(CoreException):
     pass
 
+class EntityException(CoreException):
+    pass
+
 class TransactionNotFoundException(CoreException):
+    pass
+
+class PartnerApiException(CoreException):
     pass

@@ -7,7 +7,7 @@ from shared.repository.shared_repository import SharedRepository
 class CustomerRepository():
 
     @staticmethod
-    def fetch_or_create_customer(payload):
+    def fetch_or_create_customer(payload, is_card_activation=False):
         try:
             data = payload.copy()
             user, created = User.objects.get_or_create(
@@ -24,9 +24,9 @@ class CustomerRepository():
                 country = SharedRepository.fetch_country_by_iso(residence_country)
             data.update({'issuer_country': issuer_country})
             customer, created = Customer.objects.update_or_create(informations=user, country=country, defaults=data)
-            SharedRepository.initialize_account(customer, created)
+            SharedRepository.initialize_account(customer, created, is_card_activation)
             return customer
-        except Exception as err:
+        except Exception:
             raise CustomerException('CustomerException', 'unable to create this customer in the system')
 
     @staticmethod

@@ -28,6 +28,10 @@ class ReceiverCustomerValidator(Schema):
     issuer_country = fields.Str(required=False)
 
 
+class CustomerWalletValidator(Schema):
+    phone_number = fields.Str(required=True)
+
+
 class Cash2CashValidator(Schema):
     source_content_object = fields.Nested(
         SenderCustomerValidator(), required=True)
@@ -59,7 +63,6 @@ class SearchTransactionCodeValidator(Schema):
     code = fields.Str(required=True)
     agent = fields.Nested(AgentValidator(), required=True)
 
-
 class FeeValidator(Schema):
     type = fields.Str(required=True)
     agent = fields.Nested(AgentValidator(), required=True)
@@ -67,10 +70,25 @@ class FeeValidator(Schema):
     destination_country = fields.Str(required=True)
     amount = fields.Str(required=True)
 
-
 class CardActivationValidator(Schema):
     customer = fields.Nested(SenderCustomerValidator(), required=True)
     agent = fields.Nested(AgentValidator(), required=True)
     card_number = fields.Str(required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)
     amount = fields.Str(required=True)
+
+class RechargementCompteEntiteValidator(Schema):
+    account_number = fields.Str(required=True)
+    agent = fields.Nested(AgentValidator(), required=True)
+    paid_amount = fields.Decimal(required=True, as_string=True)
+    amount = fields.Str(required=True)
+
+
+class CashToWalletValidator(Schema):
+    source_content_object = fields.Nested(
+        SenderCustomerValidator(), required=True)
+    destination_content_object = fields.Nested(
+        CustomerWalletValidator(), required=True)
+    agent = fields.Nested(AgentValidator(), required=True)
+    amount = fields.Str(required=True)
+    paid_amount = fields.Decimal(required=True, as_string=True)

@@ -4,7 +4,8 @@ import json
 from core.errors import CoreException
 from marshmallow import ValidationError
 from core.utils.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
-    RetraitCashValidator, FeeValidator, CardActivationValidator, SenderCustomerValidator
+    RetraitCashValidator, FeeValidator, CardActivationValidator, SenderCustomerValidator,\
+    RechargementCompteEntiteValidator, CashToWalletValidator
 from shared.models.price import TransactionType
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
@@ -16,8 +17,8 @@ from transaction.domain.transaction_domain import debit_entity_account, create_t
 
 
 def _validate_transaction_payload(payload):
-    transaction_type = payload.pop('type')
     try:
+        transaction_type = payload.pop('type')
         if transaction_type == TransactionType.CASH_TO_CASH.value:
             Cash2CashValidator().load(payload)
         if transaction_type == TransactionType.RETRAIT_CASH.value:
@@ -26,8 +27,14 @@ def _validate_transaction_payload(payload):
             CardActivationValidator().load(payload)
         if transaction_type == TransactionType.CREATION_WALLET.value:
             SenderCustomerValidator().load(payload)
+        if transaction_type == TransactionType.RECHARGEMENT_COMPTE_ENTITE.value:
+            RechargementCompteEntiteValidator().load(payload)
+        if transaction_type == TransactionType.CASH_TO_WALLET.value:
+            CashToWalletValidator().load(payload)
     except ValidationError as err:
         raise ValidationError(str(err))
+    except KeyError:
+        raise ValidationError('please specify transaction type')
 
 
 def _dump_transaction_payload(transaction):
@@ -56,7 +63,6 @@ def _check_agent_balance(agent, payload):
 
 def _debit_entity(agent, amount, fee=0):
     last_balance = get_entity_balance_by_agent(agent)
-    print('last_balance', last_balance)
     debit_entity_account(agent, last_balance, amount)
 
 
