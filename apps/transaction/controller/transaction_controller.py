@@ -142,9 +142,7 @@ def _create_agent_transaction(payload):
 def _create_wallet_transaction(payload):
     customer = _get_customer_info(payload)
     _check_customer_balance(customer, payload)
-    transaction = create_transaction(payload, agent)
-    _debit_customer(customer, payload.get(
-        'paid_amount'), transaction.grille.fee)
+    transaction = create_transaction(payload, customer)
     return transaction
 
 

@@ -26,6 +26,7 @@ class ReceiverCustomerValidator(Schema):
     identification_type = fields.Str(required=False)
     identification_number = fields.Str(required=False)
     issuer_country = fields.Str(required=False)
+    country = fields.Str(required=False)
 
 
 class CustomerWalletValidator(Schema):
@@ -86,12 +87,8 @@ class CashToWalletValidator(Schema):
 
 class WalletToCashValidator(Schema):
     source_content_object = fields.Nested(
-        CreationWalletValidator(), required=True)
+        CustomerWalletValidator(), required=True)
     destination_content_object = fields.Nested(
         ReceiverCustomerValidator(), required=True)
-    agent = fields.Nested(AgentValidator(), required=True)
-    source_country = fields.Str(required=True)
-    destination_country = fields.Str(required=True)
     amount = fields.Str(required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)
-    payer_network = fields.Str(required=False, null=True)

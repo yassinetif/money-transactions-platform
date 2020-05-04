@@ -11,7 +11,7 @@ def get_customer_balance(customer):
     return customer.accounts.last().balance
 
 
-def credit_customer(customer, last_balance, amount):
+def credit_customer_account(customer, last_balance, amount):
     if Decimal(amount) < 0:
         raise CustomerException('unable to credit customer Wallet', 'transaction failed')
 

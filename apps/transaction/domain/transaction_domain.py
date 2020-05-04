@@ -3,7 +3,7 @@ from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.repository.entity_repository import EntityRepository
 from entity.domain.entity_domain import debit_entity, credit_entity, get_entity_balance
-from kyc.domain.customer_domain import credit_customer, get_customer_balance
+from kyc.domain.customer_domain import credit_customer_account, get_customer_balance, debit_customer_account
 from shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from transaction.repository.transaction_repository import TransactionRepository
@@ -68,13 +68,12 @@ def debit_entity_account(agent, last_balance, amount):
 def credit_entity_account(agent, last_balance, amount):
     credit_entity(agent.entity, last_balance, amount)
 
-def create_transaction(payload, agent_or_customer_obj):
+def create_transaction(payload, executer):
     transaction_type = payload.get('type')
     _ = transaction_type.lower()
     module = import_module('transaction.domain.transaction_domain')
     method = getattr(module, '_create_{0}_transaction'.format(_))
-    print('method', method)
-    return method(payload, agent_or_customer_obj)
+    return method(payload, executer)
 
 
 def _create_cash_to_cash_transaction(payload, agent):
@@ -165,7 +164,30 @@ def _create_cash_to_wallet_transaction(payload, agent):
     transaction.destination_country = destination.country
     transaction.save()
 
-    credit_customer(destination, get_customer_balance(destination), payload.get('amount'))
+    credit_customer_account(destination, get_customer_balance(destination), payload.get('amount'))
+    return transaction
+
+def _create_wallet_to_cash_transaction(payload, agent):
+
+    source, destination = get_source_and_destination_of_transaction(
+        payload.copy())
+    payload.update({'source_country': source.country.iso,
+                    'destination_country': destination.country.iso})
+
+    transaction = Transaction()
+    transaction.transaction_type = TransactionType.WALLET_TO_CASH.value
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
+    transaction.amount = payload.get('amount')
+    transaction.paid_amount = payload.get('paid_amount')
+    transaction.source_content_object = source
+    transaction.destination_content_object = destination
+    transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = source.country
+    transaction.destination_country = destination.country
+    transaction.save()
+
+    debit_customer_account(destination, get_customer_balance(source), payload.get('paid_amount'))
     return transaction
 
 
