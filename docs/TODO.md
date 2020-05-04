@@ -23,16 +23,15 @@ ce fichier. Il faudra les supprimer au fur et à mesure qu'ils ont été faits e
 
 * [x] Les types de transactions à faire
     - `[x] Cash to Cash` 
-    - [-]  Cash to  Cash en prenant en compte le réseau payeur
+    - [-]  Cash to Cash en prenant en compte le réseau payeur
     - `[x] Activation Carte` 
     - `[x] Retrait Cash` 
     - [-]  Rechargement carte monnamon
-    - [-]  Rechargement compte Wallet
+    - `[x] Rechargement compte Wallet`
     - `[x] Rechargement compte entité` 
     - [-] Retrait compte entité
 
     
-
 ### API CARTERA
 
 Cartera est une application mobile qui permet aux utilisateurs de MONAMON de faire tout un ensemble de services 
@@ -59,8 +58,8 @@ financiers avec leur téléphone portable allant du transfert d’argent au paie
 
 - `[x] Transfert cash to cash`
 - `[x] Activation de carte de monnamon`
-- [-] Rechargement d'une carte monnamon
-- [-] Transfert d'argent cash to Wallet
-- [-] Paiement marchand
-- [-] Reporting
+-  [-] Rechargement d'une carte monnamon
+- `[-] Transfert d'argent cash to Wallet`
+-  [-] Paiement marchand
+-  [-] Reporting
 - `[x] Calculateur de frais`
