@@ -2,11 +2,10 @@
 from decimal import Decimal
 import json
 from core.errors import CoreException
+from core.utils.string import convert_snake_to_camel_case
 from marshmallow import ValidationError
-from core.utils.validator import Cash2CashValidator, SearchTransactionCodeValidator,\
-    RetraitCashValidator, FeeValidator, CardActivationValidator, SenderCustomerValidator,\
-    RechargementCompteEntiteValidator, CashToWalletValidator
-from shared.models.price import TransactionType
+from importlib import import_module
+from core.utils.validator import SearchTransactionCodeValidator, FeeValidator
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from kyc.repository.kyc_repository import CustomerRepository
@@ -16,21 +15,18 @@ from transaction.domain.transaction_domain import debit_entity_account, create_t
     credit_entity_account, calculate_transaction_fee
 
 
+def _get_validator_class(transaction_type):
+    validator = convert_snake_to_camel_case(transaction_type)
+    module = import_module('core.utils.validator')
+    klass = getattr(module, '{}Validator'.format(validator))
+    return klass()
+
 def _validate_transaction_payload(payload):
     try:
         transaction_type = payload.pop('type')
-        if transaction_type == TransactionType.CASH_TO_CASH.value:
-            Cash2CashValidator().load(payload)
-        if transaction_type == TransactionType.RETRAIT_CASH.value:
-            RetraitCashValidator().load(payload)
-        if transaction_type == TransactionType.ACTIVATION_CARTE.value:
-            CardActivationValidator().load(payload)
-        if transaction_type == TransactionType.CREATION_WALLET.value:
-            SenderCustomerValidator().load(payload)
-        if transaction_type == TransactionType.RECHARGEMENT_COMPTE_ENTITE.value:
-            RechargementCompteEntiteValidator().load(payload)
-        if transaction_type == TransactionType.CASH_TO_WALLET.value:
-            CashToWalletValidator().load(payload)
+        validator_klass = _get_validator_class(transaction_type)
+        print('validator_klass', validator_klass, transaction_type)
+        validator_klass.load(payload)
     except ValidationError as err:
         raise ValidationError(str(err))
     except KeyError:
@@ -40,8 +36,9 @@ def _validate_transaction_payload(payload):
 def _dump_transaction_payload(transaction):
     try:
         transaction_type = transaction.grille.corridor.transaction_type
-        if transaction_type == TransactionType.CASH_TO_CASH.value:
-            return json.loads(Cash2CashValidator().dumps(transaction))
+        validator_klass = _get_validator_class(transaction_type)
+        return json.loads(validator_klass.dumps(transaction))
+
     except ValidationError as err:
         raise ValidationError(str(err))
 

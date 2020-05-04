@@ -28,10 +28,10 @@ def create_customer_with_wallet(tastypie, payload, request):
     try:
         data = payload.copy()
         data.update({'type': 'CREATION_WALLET'})
-        _validate_transaction_payload(payload.copy())
-        response = payload.update({'response_code': '000'})
+        _validate_transaction_payload(data)
+        payload.update({'response_code': '000'})
         CustomerRepository.fetch_or_create_customer(payload)
-        return tastypie.create_response(request, response)
+        return tastypie.create_response(request, payload)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:

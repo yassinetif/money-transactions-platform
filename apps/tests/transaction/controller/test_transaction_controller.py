@@ -88,3 +88,7 @@ class TestTransactionController:
     def test_pay(self):
         # TODO
         pass
+
+    def test_get_validator_class(self):
+        # TODO
+        pass

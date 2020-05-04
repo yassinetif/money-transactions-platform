@@ -174,6 +174,6 @@ class TestTransactionDomain:
         pass
         # TODO
 
-    def test_create_card_activation_transaction(self):
+    def test_create_activation_carte_transaction(self):
         pass
         # TODO

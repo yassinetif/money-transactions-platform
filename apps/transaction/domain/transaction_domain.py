@@ -7,7 +7,7 @@ from kyc.domain.customer_domain import debit_customer, credit_customer, get_cust
 from shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from transaction.repository.transaction_repository import TransactionRepository
-from core.utils.string import random_code, convert_enum_to_tuple
+from core.utils.string import random_code, convert_enum_to_tuple, convert_snake_to_camel_case
 from core.utils.http import post_simple_json_request
 from importlib import import_module
 from decimal import Decimal
@@ -67,17 +67,11 @@ def credit_entity_account(agent, last_balance, amount):
 
 def create_transaction(payload, agent):
     transaction_type = payload.get('type')
-    transaction = None
-    if transaction_type == TransactionType.CASH_TO_CASH.value:
-        transaction = _create_cash_to_cash_transaction(payload, agent)
-    elif transaction_type == TransactionType.ACTIVATION_CARTE.value:
-        transaction = _create_card_activation_transaction(payload, agent)
-    elif transaction_type == TransactionType.RECHARGEMENT_COMPTE_ENTITE.value:
-        transaction = _create_rechargement_compte_entite_transaction(payload, agent)
-    elif transaction_type == TransactionType.CASH_TO_WALLET.value:
-        transaction = _create_cash_to_wallet_transaction(payload, agent)
-
-    return transaction
+    _ = transaction_type.lower()
+    module = import_module('transaction.domain.transaction_domain')
+    method = getattr(module, '_create_{0}_transaction'.format(_))
+    print('method', method)
+    return method(payload, agent)
 
 
 def _create_cash_to_cash_transaction(payload, agent):
@@ -100,7 +94,7 @@ def _create_cash_to_cash_transaction(payload, agent):
     transaction.save()
     return transaction
 
-def _create_card_activation_transaction(payload, agent):
+def _create_activation_carte_transaction(payload, agent):
 
     payload.update({'source_country': payload.get('customer').get('country'),
                     'destination_country': agent.entity.country.iso})

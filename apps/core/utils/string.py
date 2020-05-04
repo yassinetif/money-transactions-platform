@@ -25,3 +25,7 @@ def convert_partner_cash_to_cash_payload(base_payload, partner_payload):
                 base_payload.get(key), partner_payload)
             result.update({key: data})
     return result
+
+
+def convert_snake_to_camel_case(word):
+    return ''.join(x.capitalize() or '_' for x in word.split('_'))

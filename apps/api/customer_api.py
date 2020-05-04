@@ -32,10 +32,10 @@ class CustomerResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/create%s$" %
+            url(r"^(?P<resource_name>%s)/card/create%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('activate_card'), name="api_activate_card"),
-            url(r"^(?P<resource_name>%s)/create%s$" %
+            url(r"^(?P<resource_name>%s)/wallet/create%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('create_wallet'), name="api_create_wallet"),
         ]

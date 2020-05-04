@@ -1,4 +1,4 @@
-from core.utils.string import convert_partner_cash_to_cash_payload
+from core.utils.string import convert_partner_cash_to_cash_payload, convert_snake_to_camel_case
 from tests.fixtures.api_fixtures import partner_payload, cash_to_cash_base_payload
 
 
@@ -69,3 +69,8 @@ class TestString:
         }
 
         assert result != expected_payload
+
+    def test_convert_snake_to_camel_case(self):
+        _ = 'ACTIVATION_CARTE'
+        result = convert_snake_to_camel_case(_)
+        assert result == 'ActivationCarte'
