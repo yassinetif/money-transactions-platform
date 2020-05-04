@@ -3,11 +3,11 @@ from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.repository.entity_repository import EntityRepository
 from entity.domain.entity_domain import debit_entity, credit_entity, get_entity_balance
-from kyc.domain.customer_domain import debit_customer, credit_customer, get_customer_balance
+from kyc.domain.customer_domain import credit_customer, get_customer_balance
 from shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from transaction.repository.transaction_repository import TransactionRepository
-from core.utils.string import random_code, convert_enum_to_tuple, convert_snake_to_camel_case
+from core.utils.string import random_code, convert_enum_to_tuple
 from core.utils.http import post_simple_json_request
 from importlib import import_module
 from decimal import Decimal
@@ -56,6 +56,9 @@ def get_source_and_destination_of_transaction(payload):
     elif transaction_type == TransactionType.CASH_TO_WALLET.value:
         source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
         destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
+    elif transaction_type == TransactionType.WALLET_TO_CASH.value:
+        destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
+        source = CustomerRepository.fetch_customer_by_phone_number(payload.get('source_content_object').get('phone_number'))
 
     return source, destination
 
@@ -65,13 +68,13 @@ def debit_entity_account(agent, last_balance, amount):
 def credit_entity_account(agent, last_balance, amount):
     credit_entity(agent.entity, last_balance, amount)
 
-def create_transaction(payload, agent):
+def create_transaction(payload, agent_or_customer_obj):
     transaction_type = payload.get('type')
     _ = transaction_type.lower()
     module = import_module('transaction.domain.transaction_domain')
     method = getattr(module, '_create_{0}_transaction'.format(_))
     print('method', method)
-    return method(payload, agent)
+    return method(payload, agent_or_customer_obj)
 
 
 def _create_cash_to_cash_transaction(payload, agent):

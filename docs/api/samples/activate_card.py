@@ -3,7 +3,7 @@ import json
 
 # Cash to Cash
 headers = {'Content-Type': 'application/json'}
-url = 'http://127.0.0.1:8000/api/v1/customer/activate_card/'
+url = 'http://127.0.0.1:8000/api/v1/customer/card/create/'
 payload = {
     "customer": {
         "first_name": "Sepopo",
@@ -24,7 +24,6 @@ payload = {
         "code": "086796"
     }
 }
-url = 'http://127.0.0.1:8000/api/v1/customer/create/'
 response = requests.post(url, data=json.dumps(payload), headers=headers)
 print (response)
 print(response.json())

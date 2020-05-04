@@ -1,7 +1,7 @@
 
 from decimal import Decimal
 import json
-from core.errors import CoreException
+from core.errors import CoreException, CustomerException
 from core.utils.string import convert_snake_to_camel_case
 from marshmallow import ValidationError
 from importlib import import_module
@@ -9,10 +9,13 @@ from core.utils.validator import SearchTransactionCodeValidator, FeeValidator
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from kyc.repository.kyc_repository import CustomerRepository
+from kyc.domain.customer_domain import check_customer_balance, get_customer_balance, debit_customer_account
 from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
 from transaction.domain.transaction_domain import debit_entity_account, create_transaction, \
     insert_operation, search_transaction, pay_transaction,\
     credit_entity_account, calculate_transaction_fee
+
+from shared.models.price import AGENT_TRANSACTIONS
 
 
 def _get_validator_class(transaction_type):
@@ -52,15 +55,28 @@ def _validate_search_transaction_by_code_payload(payload):
 def _get_agent_info(payload):
     return AgentRepository.fetch_by_code(payload.get('agent').get('code'))
 
+def _get_customer_info(payload):
+    return CustomerRepository.fetch_customer_by_phone_number(payload.get('phone_number'))
+
 
 def _check_agent_balance(agent, payload):
     if not check_entity_balance(agent, payload.get('paid_amount')):
         raise CoreException('agent does not have enough balance', 'agent does not have enough balance')
 
 
+def _check_customer_balance(customer, payload):
+    if not check_customer_balance(customer, payload.get('paid_amount')):
+        raise CustomerException('customer does not have enough balance', 'customer does not have enough balance')
+
+
 def _debit_entity(agent, amount, fee=0):
     last_balance = get_entity_balance_by_agent(agent)
     debit_entity_account(agent, last_balance, amount)
+
+
+def _debit_customer(customer, amount, fee=0):
+    last_balance = get_customer_balance(customer)
+    debit_customer_account(customer, last_balance, amount)
 
 
 def _credit_entity(agent, amount):
@@ -100,11 +116,11 @@ def fee(tastypie, payload, request):
 def create(tastypie, payload, request):
     try:
         _validate_transaction_payload(payload.copy())
-        agent = _get_agent_info(payload)
-        _check_agent_balance(agent, payload)
-        transaction = create_transaction(payload, agent)
-        _debit_entity(agent, payload.get(
-            'paid_amount'), transaction.grille.fee)
+        transaction_type = payload.get('transaction_type')
+        if transaction_type in AGENT_TRANSACTIONS:
+            transaction = _create_agent_transaction(payload)
+        else:
+            transaction = _create_wallet_transaction(payload)
         insert_operation(transaction)
         response = _addtitional_transactions_informations(transaction, payload)
         return tastypie.create_response(request, response)
@@ -112,6 +128,24 @@ def create(tastypie, payload, request):
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
+
+
+def _create_agent_transaction(payload):
+    agent = _get_agent_info(payload)
+    _check_agent_balance(agent, payload)
+    transaction = create_transaction(payload, agent)
+    _debit_entity(agent, payload.get(
+        'paid_amount'), transaction.grille.fee)
+    return transaction
+
+
+def _create_wallet_transaction(payload):
+    customer = _get_customer_info(payload)
+    _check_customer_balance(customer, payload)
+    transaction = create_transaction(payload, agent)
+    _debit_customer(customer, payload.get(
+        'paid_amount'), transaction.grille.fee)
+    return transaction
 
 
 def search(tastypie, payload, request):

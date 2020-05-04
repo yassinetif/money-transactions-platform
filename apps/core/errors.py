@@ -9,14 +9,13 @@ TRANSACTION_EXCEPTION_ERROR = 600
 CORRIDOR_EXCEPTION_ERROR = 700
 
 
-logger = logging.getLogger(__name__)
-
+logger = logging.getLogger('db')
 class CoreException(Exception):
     def __init__(self, message, errors):
         super().__init__(message)
         self.errors = errors
-        logger.error(message, errors)
         self.errors = {'response_code': CORE_EXCEPTION_ERROR, 'response_text': self.errors}
+        logger.error(str(message), self.errors, exc_info=1)
 
 
 class CustomerException(CoreException):
