@@ -58,7 +58,7 @@ def get_source_and_destination_of_transaction(payload):
         destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
     elif transaction_type == TransactionType.WALLET_TO_CASH.value:
         destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
-        source = CustomerRepository.fetch_customer_by_phone_number(payload.get('source_content_object').get('phone_number'))
+        source = None
 
     return source, destination
 
@@ -167,11 +167,11 @@ def _create_cash_to_wallet_transaction(payload, agent):
     credit_customer_account(destination, get_customer_balance(destination), payload.get('amount'))
     return transaction
 
-def _create_wallet_to_cash_transaction(payload, agent):
+def _create_wallet_to_cash_transaction(payload, customer):
 
-    source, destination = get_source_and_destination_of_transaction(
+    _, destination = get_source_and_destination_of_transaction(
         payload.copy())
-    payload.update({'source_country': source.country.iso,
+    payload.update({'source_country': customer.country.iso,
                     'destination_country': destination.country.iso})
 
     transaction = Transaction()
@@ -180,14 +180,14 @@ def _create_wallet_to_cash_transaction(payload, agent):
     transaction.code = random_code(8)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
-    transaction.source_content_object = source
+    transaction.source_content_object = customer
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
-    transaction.source_country = source.country
+    transaction.source_country = customer.country
     transaction.destination_country = destination.country
     transaction.save()
 
-    debit_customer_account(destination, get_customer_balance(source), payload.get('paid_amount'))
+    debit_customer_account(destination, get_customer_balance(customer), payload.get('paid_amount'))
     return transaction
 
 

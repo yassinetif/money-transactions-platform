@@ -10,4 +10,4 @@ class TransactionRepository():
             return Transaction.objects.get(code=code, status=TransactionStatus.PENDING.value)
         except Transaction.DoesNotExist:
             raise TransactionNotFoundException(
-                'unavailable transaction code', 'Transaction code  : {0} not found'.format(code))
+                'unavailable transaction code', 'Transaction code  : {0} not found or already paid'.format(code))

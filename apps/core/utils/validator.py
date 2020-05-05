@@ -50,6 +50,8 @@ class RetraitCashValidator(Schema):
     code = fields.Str(required=True)
     agent = fields.Nested(AgentValidator(), required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)
+    destination_content_object = fields.Nested(
+        CreationWalletValidator(), required=True)
 
 class SearchTransactionCodeValidator(Schema):
     code = fields.Str(required=True)

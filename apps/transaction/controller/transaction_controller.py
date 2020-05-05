@@ -28,7 +28,6 @@ def _validate_transaction_payload(payload):
     try:
         transaction_type = payload.pop('type')
         validator_klass = _get_validator_class(transaction_type)
-        print('validator_klass', validator_klass, transaction_type)
         validator_klass.load(payload)
     except ValidationError as err:
         raise ValidationError(str(err))
@@ -56,7 +55,7 @@ def _get_agent_info(payload):
     return AgentRepository.fetch_by_code(payload.get('agent').get('code'))
 
 def _get_customer_info(payload):
-    return CustomerRepository.fetch_customer_by_phone_number(payload.get('phone_number'))
+    return CustomerRepository.fetch_customer_by_phone_number(payload.get('source_content_object').get('phone_number'))
 
 
 def _check_agent_balance(agent, payload):
