@@ -2,6 +2,7 @@ from core.errors import CoreException
 from shared.repository.shared_repository import SharedRepository
 from kyc.repository.kyc_repository import CustomerRepository
 from entity.repository.entity_repository import EntityRepository
+from entity.repository.agent_repository import AgentRepository
 from entity.domain.entity_domain import debit_entity, credit_entity, get_entity_balance
 from kyc.domain.customer_domain import credit_customer_account, get_customer_balance, debit_customer_account
 from shared.models.price import TransactionType
@@ -50,9 +51,10 @@ def get_source_and_destination_of_transaction(payload):
         source = CustomerRepository.fetch_or_create_customer(
             payload.get('customer'), True)
         destination = EntityRepository.fetch_by_agent_code(payload.get('agent').get('code'))
-    elif transaction_type == TransactionType.RECHARGEMENT_COMPTE_ENTITE.value:
+    elif transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
         source = None
         destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
+
     elif transaction_type == TransactionType.CASH_TO_WALLET.value:
         source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
         destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
@@ -119,15 +121,15 @@ def _create_activation_carte_transaction(payload, agent):
     return transaction
 
 
-def _create_rechargement_compte_entite_transaction(payload, agent):
-
+def _create_credit_compte_entite_transaction(payload, agent):
     _, destination = get_source_and_destination_of_transaction(
         payload.copy())
+    _can_agent_execute_transaction(agent.entity, destination)
     payload.update({'source_country': agent.entity.country.iso,
                     'destination_country': destination.country.iso})
 
     transaction = Transaction()
-    transaction.transaction_type = TransactionType.RECHARGEMENT_COMPTE_ENTITE.value
+    transaction.transaction_type = TransactionType.CREDIT_COMPTE_ENTITE.value
     transaction.agent = agent
     transaction.number = random_code(10)
     transaction.code = random_code(8)
@@ -141,6 +143,31 @@ def _create_rechargement_compte_entite_transaction(payload, agent):
     transaction.save()
 
     credit_entity(destination, get_entity_balance(destination), payload.get('amount'))
+    return transaction
+
+
+def _create_debit_compte_entite_transaction(payload, agent):
+    _, destination = get_source_and_destination_of_transaction(
+        payload.copy())
+    _can_agent_execute_transaction(agent.entity, destination)
+    payload.update({'source_country': agent.entity.country.iso,
+                    'destination_country': destination.country.iso})
+
+    transaction = Transaction()
+    transaction.transaction_type = TransactionType.DEBIT_COMPTE_ENTITE.value
+    transaction.agent = agent
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
+    transaction.amount = payload.get('amount')
+    transaction.paid_amount = payload.get('paid_amount')
+    transaction.source_content_object = agent.entity
+    transaction.destination_content_object = destination
+    transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = agent.entity.country
+    transaction.destination_country = destination.country
+    transaction.save()
+
+    debit_entity(destination, get_entity_balance(destination), payload.get('amount'))
     return transaction
 
 def _create_cash_to_wallet_transaction(payload, agent):
@@ -178,6 +205,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
     transaction.transaction_type = TransactionType.WALLET_TO_CASH.value
     transaction.number = random_code(10)
     transaction.code = random_code(8)
+    transaction.agent = AgentRepository.fetch_by_username('AGENT_WALLET')
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = customer
@@ -187,7 +215,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
     transaction.destination_country = destination.country
     transaction.save()
 
-    debit_customer_account(destination, get_customer_balance(customer), payload.get('paid_amount'))
+    debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
     return transaction
 
 
@@ -237,9 +265,11 @@ def pay_transaction(payload, agent):
 
 
 def insert_operation(transaction):
-    if transaction.transaction_type == TransactionType.RECHARGEMENT_COMPTE_ENTITE.value or \
-            transaction.transaction_type == TransactionType.CASH_TO_WALLET.value:
-        _insert_rechargement_operation(transaction)
+    if transaction.transaction_type == TransactionType.CREDIT_COMPTE_ENTITE.value or \
+        transaction.transaction_type == TransactionType.CASH_TO_WALLET.value or \
+            transaction.transaction_type == TransactionType.DEBIT_COMPTE_ENTITE.value:
+        _insert_credit_compte_entite_operation(transaction)
+
     else:
         operation = Operation()
         operation.comment = _get_operation_comment(transaction)
@@ -248,7 +278,7 @@ def insert_operation(transaction):
         operation.save()
 
 
-def _insert_rechargement_operation(transaction):
+def _insert_credit_compte_entite_operation(transaction):
     operation_debit = Operation()
     operation_debit.comment = _get_operation_comment(transaction)
     operation_debit.balance_after_operation = transaction.agent.entity.accounts.last()
@@ -281,11 +311,20 @@ def _get_operation_comment(transaction, flag=False):
         comment = 'Débit de {0} : transaction {1}, Transfert d\'argent cash to cash'.format(transaction.paid_amount, transaction.number)
     elif transaction.transaction_type == TransactionType.ACTIVATION_CARTE.value:
         comment = 'Débit de {0} : transaction {1}, Activation d\'une carte Monnamon'.format(transaction.paid_amount, transaction.number)
+    elif transaction.transaction_type == TransactionType.WALLET_TO_CASH.value:
+        comment = 'Débit de {0} : transaction {1}, Envoi d\'argent depuis Wallet {2}'.format(
+            transaction.paid_amount, transaction.number, transaction.source_content_object)
     elif transaction.transaction_type == TransactionType.RETRAIT_CASH.value:
         comment = 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
-    elif transaction.transaction_type == TransactionType.RECHARGEMENT_COMPTE_ENTITE.value or \
+    elif transaction.transaction_type == TransactionType.CREDIT_COMPTE_ENTITE.value or \
             transaction.transaction_type == TransactionType.CASH_TO_WALLET.value:
         comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'\
+            .format(transaction.amount, transaction.number, transaction.destination_content_object)
+        if flag:
+            comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'\
+                .format(transaction.amount, transaction.number, transaction.source_content_object)
+    elif transaction.transaction_type == TransactionType.DEBIT_COMPTE_ENTITE.value:
+        comment = 'Débit de {0} : transaction {1}, Débit compte  : {2}'\
             .format(transaction.amount, transaction.number, transaction.destination_content_object)
         if flag:
             comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'\
@@ -299,6 +338,13 @@ def _get_operation_comment(transaction, flag=False):
 
 def _can_agent_pay_transaction(transaction, agent):
     if transaction.agent == agent:
-        raise CoreException('agent can not be affected to this operation', 'agent can not be affected to this operation')
+        raise CoreException(('Operation {}'.format(transaction.number)), 'agent can not be affected to this operation')
+    else:
+        return True
+
+def _can_agent_execute_transaction(source, destination):
+    if source == destination:
+        raise CoreException(('Entity{} is doing same operation on itself').format(source), 'This operation is done by the same agent. This'
+                            ' action prohibited by the system')
     else:
         return True

@@ -1,6 +1,6 @@
 import logging
 
-from django_db_logger.config import DJANGO_DB_LOGGER_ENABLE_FORMATTER, MSG_STYLE_SIMPLE
+from django_db_logger.config import DJANGO_DB_LOGGER_ENABLE_FORMATTER
 
 
 db_default_formatter = logging.Formatter()

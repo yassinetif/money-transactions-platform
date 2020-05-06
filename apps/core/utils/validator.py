@@ -71,7 +71,14 @@ class ActivationCarteValidator(Schema):
     paid_amount = fields.Decimal(required=True, as_string=True)
     amount = fields.Str(required=True)
 
-class RechargementCompteEntiteValidator(Schema):
+class CreditCompteEntiteValidator(Schema):
+    account_number = fields.Str(required=True)
+    agent = fields.Nested(AgentValidator(), required=True)
+    paid_amount = fields.Decimal(required=True, as_string=True)
+    amount = fields.Str(required=True)
+
+
+class DebitCompteEntiteValidator(Schema):
     account_number = fields.Str(required=True)
     agent = fields.Nested(AgentValidator(), required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)

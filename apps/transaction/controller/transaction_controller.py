@@ -115,11 +115,12 @@ def fee(tastypie, payload, request):
 def create(tastypie, payload, request):
     try:
         _validate_transaction_payload(payload.copy())
-        transaction_type = payload.get('transaction_type')
+        transaction_type = payload.get('type')
         if transaction_type in AGENT_TRANSACTIONS:
             transaction = _create_agent_transaction(payload)
         else:
             transaction = _create_wallet_transaction(payload)
+
         insert_operation(transaction)
         response = _addtitional_transactions_informations(transaction, payload)
         return tastypie.create_response(request, response)
@@ -128,13 +129,17 @@ def create(tastypie, payload, request):
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
 
+def _credit_or_debit_entity(transaction):
+    if transaction.transaction_type == 'DEBIT_COMPTE_ENTITE':
+        _credit_entity(transaction.agent, transaction.amount)
+    else:
+        _debit_entity(transaction.agent, transaction.paid_amount, transaction.grille.fee)
 
 def _create_agent_transaction(payload):
     agent = _get_agent_info(payload)
     _check_agent_balance(agent, payload)
     transaction = create_transaction(payload, agent)
-    _debit_entity(agent, payload.get(
-        'paid_amount'), transaction.grille.fee)
+    _credit_or_debit_entity(transaction)
     return transaction
 
 

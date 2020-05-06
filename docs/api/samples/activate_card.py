@@ -25,5 +25,5 @@ payload = {
     }
 }
 response = requests.post(url, data=json.dumps(payload), headers=headers)
-print (response)
+print(response)
 print(response.json())

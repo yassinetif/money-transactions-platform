@@ -46,3 +46,5 @@ class TestEntityRepository:
     def test_fetch_by_agent_code(self):
         # TODO
         pass
+
+

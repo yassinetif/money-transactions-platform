@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='transaction_type',
-            field=models.CharField(choices=[('CASH_TO_CASH', 'CASH_TO_CASH'), ('RETRAIT_CASH', 'RETRAIT_CASH'), ('ACTIVATION_CARTE', 'ACTIVATION_CARTE'), ('CREATION_WALLET', 'CREATION_WALLET'), ('RECHARGEMENT_COMPTE_ENTITE', 'RECHARGEMENT_COMPTE_ENTITE')], default='CASH_TO_CASH', max_length=30),
+            field=models.CharField(choices=[('CASH_TO_CASH', 'CASH_TO_CASH'), ('RETRAIT_CASH', 'RETRAIT_CASH'), ('ACTIVATION_CARTE', 'ACTIVATION_CARTE'), ('CREATION_WALLET', 'CREATION_WALLET'), ('CREDIT_COMPTE_ENTITE', 'CREDIT_COMPTE_ENTITE')], default='CASH_TO_CASH', max_length=30),
         ),
     ]
