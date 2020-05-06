@@ -68,6 +68,12 @@ def get_source_and_destination_of_cash_to_wallet(payload):
     destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
     return source, destination
 
+
+def get_source_and_destination_of_wallet_to_wallet(payload):
+    source = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
+    destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
+    return source, destination
+
 def get_source_and_destination_of_wallet_to_cash(payload):
     source = None
     destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
@@ -216,7 +222,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
                     'destination_country': destination.country.iso})
 
     transaction = Transaction()
-    transaction.transaction_type = TransactionType.WALLET_TO_CASH.value
+    transaction.transaction_type = TransactionType.WALLET_TO_WALLET.value
     transaction.number = random_code(10)
     transaction.code = random_code(8)
     transaction.agent = AgentRepository.fetch_by_username('AGENT_WALLET')
@@ -230,6 +236,31 @@ def _create_wallet_to_cash_transaction(payload, customer):
     transaction.save()
 
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
+    return transaction
+
+def _create_wallet_to_wallet_transaction(payload, customer):
+
+    _, destination = get_source_and_destination_of_transaction(
+        payload.copy())
+    payload.update({'source_country': customer.country.iso,
+                    'destination_country': destination.country.iso})
+
+    transaction = Transaction()
+    transaction.transaction_type = TransactionType.WALLET_TO_WALLET.value
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
+    transaction.agent = AgentRepository.fetch_by_username('AGENT_WALLET')
+    transaction.amount = payload.get('amount')
+    transaction.paid_amount = payload.get('paid_amount')
+    transaction.source_content_object = customer
+    transaction.destination_content_object = destination
+    transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = customer.country
+    transaction.destination_country = destination.country
+    transaction.save()
+
+    debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
+    credit_customer_account(destination, get_customer_balance(destination), payload.get('amount'))
     return transaction
 
 
@@ -279,49 +310,52 @@ def pay_transaction(payload, agent):
 
 
 def insert_operation(transaction):
-    if transaction.transaction_type == TransactionType.CREDIT_COMPTE_ENTITE.value or \
-        transaction.transaction_type == TransactionType.CASH_TO_WALLET.value or \
-            transaction.transaction_type == TransactionType.DEBIT_COMPTE_ENTITE.value:
+    if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value:
         _insert_credit_compte_entite_operation(transaction)
 
+    elif transaction.transaction_type in [TransactionType.WALLET_TO_WALLET.value]:
+        _insert_wallet_to_wallet_operation(transaction)
+
     else:
-        operation = Operation()
-        operation.comment = _get_operation_comment(transaction)
-        operation.balance_after_operation = transaction.agent.entity.accounts.last()
-        operation.transaction = transaction
+        operation= Operation()
+        operation.comment= _get_operation_comment(transaction)
+        operation.balance_after_operation= transaction.agent.entity.accounts.last()
+        operation.transaction= transaction
         operation.save()
 
 
+
 def _insert_credit_compte_entite_operation(transaction):
-    operation_debit = Operation()
-    operation_debit.comment = _get_operation_comment(transaction)
-    operation_debit.balance_after_operation = transaction.agent.entity.accounts.last()
-    operation_debit.transaction = transaction
+    operation_debit= Operation()
+    operation_debit.comment= _get_operation_comment(transaction)
+    operation_debit.balance_after_operation= transaction.agent.entity.accounts.last()
+    operation_debit.transaction= transaction
     operation_debit.save()
 
-    operation_credit = Operation()
-    operation_credit.comment = _get_operation_comment(transaction, True)
-    operation_credit.balance_after_operation = transaction.destination_content_object.accounts.last()
-    operation_credit.transaction = transaction
+    operation_credit= Operation()
+    operation_credit.comment= _get_operation_comment(transaction, True)
+    operation_credit.balance_after_operation= transaction.destination_content_object.accounts.last()
+    operation_credit.transaction= transaction
     operation_credit.save()
 
 
-def _insert_cash_to_wallet_operation(transaction):
-    operation_debit = Operation()
-    operation_debit.comment = _get_operation_comment(transaction)
-    operation_debit.balance_after_operation = transaction.agent.entity.accounts.last()
-    operation_debit.transaction = transaction
+def _insert_wallet_to_wallet_operation(transaction):
+    operation_debit= Operation()
+    operation_debit.comment= _get_operation_comment(transaction)
+    operation_debit.balance_after_operation= transaction.source.entity.accounts.last()
+    operation_debit.transaction= transaction
     operation_debit.save()
 
-    operation_credit = Operation()
-    operation_credit.comment = _get_operation_comment(transaction, True)
-    operation_credit.balance_after_operation = transaction.destination_content_object.accounts.last()
-    operation_credit.transaction = transaction
+    operation_credit= Operation()
+    operation_credit.comment= _get_operation_comment(transaction, True)
+    operation_credit.balance_after_operation= transaction.destination_content_object.accounts.last()
+    operation_credit.transaction= transaction
     operation_credit.save()
+
 
 def _get_operation_comment(transaction, flag=False):
-    module = import_module('transaction.domain.transaction_domain')
-    method = getattr(module, '_get_operation_comment_of_{0}'.format(transaction.transaction_type.lower()))
+    module= import_module('transaction.domain.transaction_domain')
+    method= getattr(module, '_get_operation_comment_of_{0}'.format(transaction.transaction_type.lower()))
     return method(transaction, flag)
 
 def _get_operation_comment_of_cash_to_cash(transaction, flag=False):
@@ -337,18 +371,18 @@ def _get_operation_comment_of_retrait_cash(transaction, flag=False):
     return 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
 
 def _get_operation_comment_of_credit_compte_entite(transaction, flag=False):
-    comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    comment= 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
     if flag:
-        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+        comment= 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
 
 def _get_operation_comment_of_cash_to_wallet(transaction, flag=False):
     return _get_operation_comment_of_credit_compte_entite(transaction, flag)
 
 def _get_operation_comment_of_debit_compte_entite(transaction, flag=False):
-    comment = 'Débit de {0} : transaction {1}, Débit compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    comment= 'Débit de {0} : transaction {1}, Débit compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
     if flag:
-        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+        comment= 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
 
 
