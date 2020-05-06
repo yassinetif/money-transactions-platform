@@ -33,6 +33,9 @@ class CustomerWalletValidator(Schema):
     phone_number = fields.Str(required=True)
 
 
+class WalletBalanceValidator(Schema):
+    phone_number = fields.Str(required=True)
+
 class CashToCashValidator(Schema):
     source_content_object = fields.Nested(
         CreationWalletValidator(), required=True)

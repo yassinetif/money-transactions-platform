@@ -41,28 +41,38 @@ def currency_change(source_currency, destination_currency, amount):
 
 
 def get_source_and_destination_of_transaction(payload):
-    transaction_type = payload.get('type')
-    if transaction_type == TransactionType.CASH_TO_CASH.value:
-        source = CustomerRepository.fetch_or_create_customer(
-            payload.get('source_content_object'))
-        destination = CustomerRepository.fetch_or_create_customer(
-            payload.get('destination_content_object'))
-    elif transaction_type == TransactionType.ACTIVATION_CARTE.value:
-        source = CustomerRepository.fetch_or_create_customer(
-            payload.get('customer'), True)
-        destination = EntityRepository.fetch_by_agent_code(payload.get('agent').get('code'))
-    elif transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
-        source = None
-        destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
+    module = import_module('transaction.domain.transaction_domain')
+    method = getattr(module, 'get_source_and_destination_of_{0}'.format(payload.get('type').lower()))
+    return method(payload)
 
-    elif transaction_type == TransactionType.CASH_TO_WALLET.value:
-        source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
-        destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
-    elif transaction_type == TransactionType.WALLET_TO_CASH.value:
-        destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
-        source = None
-
+def get_source_and_destination_of_cash_to_cash(payload):
+    source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
+    destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
     return source, destination
+
+def get_source_and_destination_of_activation_carte(payload):
+    source = CustomerRepository.fetch_or_create_customer(payload.get('customer'), True)
+    destination = EntityRepository.fetch_by_agent_code(payload.get('agent').get('code'))
+    return source, destination
+
+def get_source_and_destination_of_credit_compte_entite(payload):
+    source = None
+    destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
+    return source, destination
+
+def get_source_and_destination_of_dedit_compte_entite(payload):
+    return get_source_and_destination_of_credit_compte_entite(payload)
+
+def get_source_and_destination_of_cash_to_wallet(payload):
+    source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
+    destination = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number'))
+    return source, destination
+
+def get_source_and_destination_of_wallet_to_cash(payload):
+    source = None
+    destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
+    return source, destination
+
 
 def debit_entity_account(agent, last_balance, amount):
     debit_entity(agent.entity, last_balance, amount)

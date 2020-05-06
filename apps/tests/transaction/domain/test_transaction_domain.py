@@ -130,7 +130,7 @@ class TestTransactionDomain:
         with pytest.raises(CoreException) as e:
             result = pay_transaction(payload, agent)
             assert result == None
-        assert str(e.value) == 'agent can not be affected to this operation'
+        assert str(e.value) == 'Operation TEST_NUMBER'
 
     def test_pay_transaction_success(self, transaction, other_agent):
         payload = {'code': 'TEST_CODE', 'agent': {'code': 'AUTRE_AGENT'}}
@@ -147,7 +147,7 @@ class TestTransactionDomain:
         with pytest.raises(CoreException) as e:
             result = _can_agent_pay_transaction(transaction, agent)
             assert result == None
-        assert str(e.value) == 'agent can not be affected to this operation'
+        assert str(e.value) == 'Operation TEST_NUMBER'
 
     def test_get_operation_comment_cash_to_cash(self, transaction):
         expected = 'Débit de 15300 : transaction TEST_NUMBER, Transfert d\'argent cash to cash'
