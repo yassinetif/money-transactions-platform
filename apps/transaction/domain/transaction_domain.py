@@ -124,6 +124,7 @@ def _create_activation_carte_transaction(payload, agent):
     transaction.source_content_object = source
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
+    transaction.status = TransactionStatus.SUCCESS.value
     transaction.source_country = agent.entity.country
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
         payload.get('customer').get('country'))
@@ -150,6 +151,7 @@ def _create_credit_compte_entite_transaction(payload, agent):
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = agent.entity.country
     transaction.destination_country = destination.country
+    transaction.status = TransactionStatus.SUCCESS.value
     transaction.save()
 
     credit_entity(destination, get_entity_balance(destination), payload.get('amount'))
@@ -175,6 +177,7 @@ def _create_debit_compte_entite_transaction(payload, agent):
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = agent.entity.country
     transaction.destination_country = destination.country
+    transaction.status = TransactionStatus.SUCCESS.value
     transaction.save()
 
     debit_entity(destination, get_entity_balance(destination), payload.get('amount'))
@@ -199,6 +202,7 @@ def _create_cash_to_wallet_transaction(payload, agent):
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = agent.entity.country
     transaction.destination_country = destination.country
+    transaction.status = TransactionStatus.SUCCESS.value
     transaction.save()
 
     credit_customer_account(destination, get_customer_balance(destination), payload.get('amount'))
@@ -316,34 +320,40 @@ def _insert_cash_to_wallet_operation(transaction):
     operation_credit.save()
 
 def _get_operation_comment(transaction, flag=False):
-    comment = ''
-    if transaction.transaction_type == TransactionType.CASH_TO_CASH.value:
-        comment = 'Débit de {0} : transaction {1}, Transfert d\'argent cash to cash'.format(transaction.paid_amount, transaction.number)
-    elif transaction.transaction_type == TransactionType.ACTIVATION_CARTE.value:
-        comment = 'Débit de {0} : transaction {1}, Activation d\'une carte Monnamon'.format(transaction.paid_amount, transaction.number)
-    elif transaction.transaction_type == TransactionType.WALLET_TO_CASH.value:
-        comment = 'Débit de {0} : transaction {1}, Envoi d\'argent depuis Wallet {2}'.format(
-            transaction.paid_amount, transaction.number, transaction.source_content_object)
-    elif transaction.transaction_type == TransactionType.RETRAIT_CASH.value:
-        comment = 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
-    elif transaction.transaction_type == TransactionType.CREDIT_COMPTE_ENTITE.value or \
-            transaction.transaction_type == TransactionType.CASH_TO_WALLET.value:
-        comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'\
-            .format(transaction.amount, transaction.number, transaction.destination_content_object)
-        if flag:
-            comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'\
-                .format(transaction.amount, transaction.number, transaction.source_content_object)
-    elif transaction.transaction_type == TransactionType.DEBIT_COMPTE_ENTITE.value:
-        comment = 'Débit de {0} : transaction {1}, Débit compte  : {2}'\
-            .format(transaction.amount, transaction.number, transaction.destination_content_object)
-        if flag:
-            comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'\
-                .format(transaction.amount, transaction.number, transaction.source_content_object)
+    module = import_module('transaction.domain.transaction_domain')
+    method = getattr(module, '_get_operation_comment_of_{0}'.format(transaction.transaction_type.lower()))
+    return method(transaction, flag)
 
+def _get_operation_comment_of_cash_to_cash(transaction, flag=False):
+    return 'Débit de {0} : transaction {1}, Transfert d\'argent cash to cash'.format(transaction.paid_amount, transaction.number)
+
+def _get_operation_comment_of_activation_carte(transaction, flag=False):
+    return 'Débit de {0} : transaction {1}, Activation d\'une carte Monnamon'.format(transaction.paid_amount, transaction.number)
+
+def _get_operation_comment_of_wallet_to_cash(transaction, flag=False):
+    return 'Débit de {0} : transaction {1}, Envoi d\'argent depuis Wallet {2}'.format(transaction.paid_amount, transaction.number, transaction.source_content_object)
+
+def _get_operation_comment_of_retrait_cash(transaction, flag=False):
+    return 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
+
+def _get_operation_comment_of_credit_compte_entite(transaction, flag=False):
+    comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    if flag:
+        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
 
-    # TODO : def share_transaction_revenu(transaction: Transaction):
-    # TODO calculation_expression = transaction.corr
+def _get_operation_comment_of_cash_to_wallet(transaction, flag=False):
+    return _get_operation_comment_of_credit_compte_entite(transaction, flag)
+
+def _get_operation_comment_of_debit_compte_entite(transaction, flag=False):
+    comment = 'Débit de {0} : transaction {1}, Débit compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    if flag:
+        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+    return comment
+
+
+# TODO : def share_transaction_revenu(transaction: Transaction):
+# TODO calculation_expression = transaction.corr
 
 
 def _can_agent_pay_transaction(transaction, agent):
