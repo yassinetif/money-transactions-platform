@@ -67,7 +67,7 @@ class Transaction(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Tranaction"
+        verbose_name = "Transaction"
         verbose_name_plural = "Transactions"
 
     def __str__(self):

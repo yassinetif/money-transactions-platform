@@ -310,52 +310,51 @@ def pay_transaction(payload, agent):
 
 
 def insert_operation(transaction):
-    if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value:
+    if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
         _insert_credit_compte_entite_operation(transaction)
 
     elif transaction.transaction_type in [TransactionType.WALLET_TO_WALLET.value]:
         _insert_wallet_to_wallet_operation(transaction)
 
     else:
-        operation= Operation()
-        operation.comment= _get_operation_comment(transaction)
-        operation.balance_after_operation= transaction.agent.entity.accounts.last()
-        operation.transaction= transaction
+        operation = Operation()
+        operation.comment = _get_operation_comment(transaction)
+        operation.balance_after_operation = transaction.agent.entity.accounts.last()
+        operation.transaction = transaction
         operation.save()
 
 
-
 def _insert_credit_compte_entite_operation(transaction):
-    operation_debit= Operation()
-    operation_debit.comment= _get_operation_comment(transaction)
-    operation_debit.balance_after_operation= transaction.agent.entity.accounts.last()
-    operation_debit.transaction= transaction
+    operation_debit = Operation()
+    operation_debit.comment = _get_operation_comment(transaction)
+    operation_debit.balance_after_operation = transaction.agent.entity.accounts.last()
+    operation_debit.transaction = transaction
     operation_debit.save()
 
-    operation_credit= Operation()
-    operation_credit.comment= _get_operation_comment(transaction, True)
-    operation_credit.balance_after_operation= transaction.destination_content_object.accounts.last()
-    operation_credit.transaction= transaction
+    operation_credit = Operation()
+    operation_credit.comment = _get_operation_comment(transaction, True)
+    operation_credit.balance_after_operation = transaction.destination_content_object.accounts.last()
+    operation_credit.transaction = transaction
     operation_credit.save()
 
 
 def _insert_wallet_to_wallet_operation(transaction):
-    operation_debit= Operation()
-    operation_debit.comment= _get_operation_comment(transaction)
-    operation_debit.balance_after_operation= transaction.source.entity.accounts.last()
-    operation_debit.transaction= transaction
+    operation_debit = Operation()
+    operation_debit.comment = _get_operation_comment(transaction)
+    operation_debit.balance_after_operation = transaction.source_content_object.accounts.last()
+    operation_debit.transaction = transaction
     operation_debit.save()
 
-    operation_credit= Operation()
-    operation_credit.comment= _get_operation_comment(transaction, True)
-    operation_credit.balance_after_operation= transaction.destination_content_object.accounts.last()
-    operation_credit.transaction= transaction
+    operation_credit = Operation()
+    operation_credit.comment = _get_operation_comment(transaction, True)
+    operation_credit.balance_after_operation = transaction.destination_content_object.accounts.last()
+    operation_credit.transaction = transaction
     operation_credit.save()
 
 
 def _get_operation_comment(transaction, flag=False):
-    module= import_module('transaction.domain.transaction_domain')
-    method= getattr(module, '_get_operation_comment_of_{0}'.format(transaction.transaction_type.lower()))
+    module = import_module('transaction.domain.transaction_domain')
+    method = getattr(module, '_get_operation_comment_of_{0}'.format(transaction.transaction_type.lower()))
     return method(transaction, flag)
 
 def _get_operation_comment_of_cash_to_cash(transaction, flag=False):
@@ -371,18 +370,24 @@ def _get_operation_comment_of_retrait_cash(transaction, flag=False):
     return 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
 
 def _get_operation_comment_of_credit_compte_entite(transaction, flag=False):
-    comment= 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
     if flag:
-        comment= 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
 
 def _get_operation_comment_of_cash_to_wallet(transaction, flag=False):
     return _get_operation_comment_of_credit_compte_entite(transaction, flag)
 
 def _get_operation_comment_of_debit_compte_entite(transaction, flag=False):
-    comment= 'Débit de {0} : transaction {1}, Débit compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    comment = 'Débit de {0} : transaction {1}, Débit compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
     if flag:
-        comment= 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+    return comment
+
+def _get_operation_comment_of_wallet_to_wallet(transaction, flag=False):
+    comment = 'Débit de {0} : transaction {1}, Envoi d\'argent à  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    if flag:
+        comment = 'Crédit de {0} : transaction {1}, Rechargement reçu de  {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
 
 
