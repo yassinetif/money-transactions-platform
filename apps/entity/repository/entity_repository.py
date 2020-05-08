@@ -8,7 +8,7 @@ class EntityRepository():
     @staticmethod
     def fetch_by_agent(agent):
         try:
-            entity = Entity.objects.get(agent=agent)
+            entity = agent.entity
             entity_dict = entity.to_dict()
             entity_dict.update({'country': entity.country.iso})
             return entity_dict

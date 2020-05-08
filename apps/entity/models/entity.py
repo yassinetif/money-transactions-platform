@@ -16,6 +16,7 @@ class EntityType(Enum):
 
 
 class Entity(MPTTModel):
+
     code = models.CharField(
         unique=True,
         max_length=10,
@@ -48,7 +49,7 @@ class Entity(MPTTModel):
         return self.brand_name
 
     def to_dict(self):
-        return model_to_dict(self, fields=[field.name for field in self._meta.fields])
+        return model_to_dict(self, fields=[field.name for field in self._meta.fields if field.name != 'secret_key'])
 
     class MPTTMeta:
         order_insertion_by = ["brand_name"]

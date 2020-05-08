@@ -41,3 +41,6 @@ class TransactionNotFoundException(CoreException):
 
 class PartnerApiException(CoreException):
     pass
+
+class ApiAuthenticationException(CoreException):
+    pass

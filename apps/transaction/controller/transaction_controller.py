@@ -2,6 +2,8 @@
 from decimal import Decimal
 import json
 from core.errors import CoreException, CustomerException
+from core.utils.http import get_request_token
+
 from core.utils.string import convert_snake_to_camel_case
 from marshmallow import ValidationError
 from importlib import import_module
@@ -14,7 +16,7 @@ from entity.domain.entity_domain import check_entity_balance, get_entity_balance
 from transaction.domain.transaction_domain import debit_entity_account, create_transaction, \
     insert_operation, search_transaction, pay_transaction,\
     credit_entity_account, calculate_transaction_fee
-
+from transaction.decorator.transaction_decorator import agent_code_required
 from shared.models.price import AGENT_TRANSACTIONS
 
 
@@ -115,9 +117,11 @@ def fee(tastypie, payload, request):
 def create(tastypie, payload, request):
     try:
         _validate_transaction_payload(payload.copy())
+        token = get_request_token(request)
         transaction_type = payload.get('type')
         if transaction_type in AGENT_TRANSACTIONS:
-            transaction = _create_agent_transaction(payload)
+            transaction = _create_agent_transaction(payload, token)
+            print ('enfin ici', transaction)
         else:
             transaction = _create_wallet_transaction(payload)
 
@@ -135,7 +139,8 @@ def _credit_or_debit_entity(transaction):
     else:
         _debit_entity(transaction.agent, transaction.paid_amount, transaction.grille.fee)
 
-def _create_agent_transaction(payload):
+@agent_code_required
+def _create_agent_transaction(payload, token):
     agent = _get_agent_info(payload)
     _check_agent_balance(agent, payload)
     transaction = create_transaction(payload, agent)

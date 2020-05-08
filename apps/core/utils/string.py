@@ -1,5 +1,5 @@
 import rstr
-
+import secrets
 
 def random_code(len):
     return rstr.digits(len)
@@ -29,3 +29,6 @@ def convert_partner_cash_to_cash_payload(base_payload, partner_payload):
 
 def convert_snake_to_camel_case(word):
     return ''.join(x.capitalize() or '_' for x in word.split('_'))
+
+def generate_secret_key(len=16):
+    return secrets.token_hex(len)

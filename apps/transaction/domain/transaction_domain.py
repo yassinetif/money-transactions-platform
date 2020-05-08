@@ -310,6 +310,7 @@ def pay_transaction(payload, agent):
 
 
 def insert_operation(transaction):
+    print ('insert_operation' , transaction.transaction_type)
     if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
         _insert_credit_compte_entite_operation(transaction)
 

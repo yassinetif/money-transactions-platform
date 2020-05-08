@@ -41,7 +41,6 @@ class CashToCashValidator(Schema):
         CreationWalletValidator(), required=True)
     destination_content_object = fields.Nested(
         ReceiverCustomerValidator(), required=True)
-    agent = fields.Nested(AgentValidator(), required=True)
     source_country = fields.Str(required=True)
     destination_country = fields.Str(required=True)
     amount = fields.Str(required=True)
@@ -93,7 +92,6 @@ class CashToWalletValidator(Schema):
         CreationWalletValidator(), required=True)
     destination_content_object = fields.Nested(
         CustomerWalletValidator(), required=True)
-    agent = fields.Nested(AgentValidator(), required=True)
     amount = fields.Str(required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)
 

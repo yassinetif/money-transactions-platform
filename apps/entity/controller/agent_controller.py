@@ -3,6 +3,7 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from entity.repository.entity_repository import EntityRepository
 from django.contrib.auth.models import User
+from core.utils.http import create_jwt_token_for
 
 
 def login(tastypie, data, request):
@@ -22,6 +23,7 @@ def login(tastypie, data, request):
                 entity = EntityRepository.fetch_by_agent(agent)
                 bundle.data.update({'entity': entity})
                 bundle.data.update({'reponse_code': '000'})
+                bundle.data.update(create_jwt_token_for(agent, 'agent_api_secret_key'))
 
                 return tastypie.create_response(request, bundle)
             else:
