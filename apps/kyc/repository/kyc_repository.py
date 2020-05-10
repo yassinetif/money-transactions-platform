@@ -13,7 +13,7 @@ class CustomerRepository():
             user_info = {}
             user_info.update({'first_name': data.pop('first_name')})
             user_info.update({'last_name': data.pop('last_name')})
-            user, created = User.objects.update_or_create(username=data.pop('phone_number'), defaults=user_info)
+            user, created = User.objects.update_or_create(username=data.get('phone_number'), defaults=user_info)
 
             payload_country = data.pop('issuer_country', None)
             residence_country = data.pop('country', None)

@@ -19,7 +19,7 @@ class Account(models.Model):
     content_object = GenericForeignKey()
     category = models.CharField(max_length=30, choices=[
                                 (tag.value, tag.value) for tag in AccountType], default=AccountType.PRINCIPAL.value)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    balance = models.DecimalField(max_digits=20, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

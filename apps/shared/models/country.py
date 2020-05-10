@@ -36,7 +36,7 @@ class Change(models.Model):
     name = models.CharField(null=False, blank=False, max_length=100)
     source_currency = models.ForeignKey('Currency', null=True, blank=True, related_name='source_currency', on_delete=models.DO_NOTHING)
     destination_currency = models.ForeignKey('Currency', null=True, blank=True, related_name='destination_currency', on_delete=models.DO_NOTHING)
-    parity = models.DecimalField(max_digits=7, decimal_places=2, default=1)
+    parity = models.DecimalField(max_digits=20, decimal_places=10, default=1)
     status = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

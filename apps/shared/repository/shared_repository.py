@@ -14,6 +14,12 @@ class SharedRepository():
         except Country.DoesNotExist as err:
             raise CountryException('country error', err)
 
+    def fetch_currency_by_country_iso(iso):
+        try:
+            return SharedRepository.fetch_country_by_iso(iso).currency.iso
+        except Country.DoesNotExist as err:
+            raise CountryException('country error', err)
+
     @staticmethod
     def fetch_corridor_by_source_and_destination(transaction_type, source_country, destination_country):
         try:

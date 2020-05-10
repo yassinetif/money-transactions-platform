@@ -29,6 +29,11 @@ class Customer(models.Model):
     def __str__(self):
         return '{0} {1}'.format(self.informations.first_name, self.informations.last_name)
 
+    @property
+    def code(self):
+        print('self.informations.username', self.informations.username)
+        return self.informations.username
+
 
 class Cartera(models.Model):
     customer = models.ForeignKey(Customer, null=False, blank=False, on_delete=models.DO_NOTHING)

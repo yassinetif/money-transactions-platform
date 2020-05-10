@@ -13,37 +13,103 @@ from core.utils.http import post_simple_json_request
 from importlib import import_module
 from decimal import Decimal
 
+CURRENT_MODULE = 'transaction.domain.transaction_domain'
+
+def get_source_and_destination_currencies(source_country, destination_country):
+    source_currency_iso = SharedRepository.fetch_currency_by_country_iso(source_country)
+    destination_currency_iso = SharedRepository.fetch_currency_by_country_iso(destination_country)
+    return source_currency_iso, destination_currency_iso
+
 
 def get_grille_tarifaire(payload):
     amount = payload.get('amount')
     source_country = payload.get('source_country')
     destination_country = payload.get('destination_country')
     transaction_type = payload.get('type')
-    corridor = SharedRepository.fetch_corridor_by_source_and_destination(
-        transaction_type, source_country, destination_country)
-    grille = SharedRepository.fetch_grille_by_corridor(corridor, amount)
+    corridor = SharedRepository.fetch_corridor_by_source_and_destination(transaction_type, source_country, destination_country)
+    source_currency_iso, _ = get_source_and_destination_currencies(source_country, destination_country)
+    converted_amount = currency_change(source_currency_iso, corridor.currency.iso, Decimal(amount))
+    grille = SharedRepository.fetch_grille_by_corridor(corridor, converted_amount)
     return grille
 
 
-def calculate_transaction_fee(payload, entity):
+def calculate_transaction_fee(payload):
     grille = get_grille_tarifaire(payload)
     amount = Decimal(payload.get('amount'))
-    source_currency = entity.country.currency
-    destination_currency = grille.corridor.currency
-    converted_amount = currency_change(source_currency, destination_currency, amount)
+    source_currency_iso, _ = get_source_and_destination_currencies(payload.get('source_country'), payload.get('destination_country'))
+    converted_amount = currency_change(source_currency_iso, grille.corridor.currency.iso, amount)
     fee = SharedRepository.get_fee_by_grille(grille, converted_amount)
-    converted_fee = currency_change(destination_currency, source_currency, fee)
+    converted_fee = currency_change(grille.corridor.currency.iso, source_currency_iso, fee)
     return converted_fee
+
+
+def calculate_transaction_paid_amount_and_fee(payload):
+    fee = calculate_transaction_fee(payload)
+    total = fee + Decimal(payload.get('amount'))
+    return fee, total
+
 
 def currency_change(source_currency, destination_currency, amount):
     parity = SharedRepository.fetch_change_parity_value(source_currency, destination_currency)
     return amount * parity
 
 
+def get_fee_calculation_payload(payload):
+    module = import_module(CURRENT_MODULE)
+    method = getattr(module, 'get_{0}_fee_payload'.format(payload.get('type').lower()))
+    return method(payload)
+
+def get_debit_compte_entite_fee_payload(payload):
+    data = get_credit_compte_entite_fee_payload(payload)
+    return data
+
+def get_wallet_to_wallet_fee_payload(payload):
+    data = {}
+    destination_country = CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number')).country.iso.code
+    data.update({'source_country': payload.get('source_country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': destination_country})
+    data.update({'amount': payload.get('amount')})
+    return data
+def get_credit_compte_entite_fee_payload(payload):
+    data = {}
+    destination_country = EntityRepository.fetch_by_account_number(payload.get('account_number')).country.iso.code
+    data.update({'source_country': payload.get('source_country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': destination_country})
+    data.update({'amount': payload.get('amount')})
+    return data
+
+def get_activation_carte_fee_payload(payload):
+    data = {}
+    data.update({'source_country': payload.get('customer').get('country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': payload.get('customer').get('country')})
+    data.update({'amount': payload.get('amount')})
+    return data
+
+def get_cash_to_cash_fee_payload(payload):
+    data = {}
+    data.update({'source_country': payload.get('source_country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': payload.get('destination_country')})
+    data.update({'amount': payload.get('amount')})
+    return data
+
+def get_cash_to_wallet_fee_payload(payload):
+    data = {}
+    data.update({'source_country': payload.get('source_country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number')).country.iso.code})
+    data.update({'amount': payload.get('amount')})
+    return data
+
+
 def get_source_and_destination_of_transaction(payload):
-    module = import_module('transaction.domain.transaction_domain')
+    module = import_module(CURRENT_MODULE)
     method = getattr(module, 'get_source_and_destination_of_{0}'.format(payload.get('type').lower()))
     return method(payload)
+
 
 def get_source_and_destination_of_cash_to_cash(payload):
     source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
@@ -60,8 +126,10 @@ def get_source_and_destination_of_credit_compte_entite(payload):
     destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
     return source, destination
 
-def get_source_and_destination_of_dedit_compte_entite(payload):
+
+def get_source_and_destination_of_debit_compte_entite(payload):
     return get_source_and_destination_of_credit_compte_entite(payload)
+
 
 def get_source_and_destination_of_cash_to_wallet(payload):
     source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
@@ -89,7 +157,7 @@ def credit_entity_account(agent, last_balance, amount):
 def create_transaction(payload, executer):
     transaction_type = payload.get('type')
     _ = transaction_type.lower()
-    module = import_module('transaction.domain.transaction_domain')
+    module = import_module(CURRENT_MODULE)
     method = getattr(module, '_create_{0}_transaction'.format(_))
     return method(payload, executer)
 
@@ -160,7 +228,9 @@ def _create_credit_compte_entite_transaction(payload, agent):
     transaction.status = TransactionStatus.SUCCESS.value
     transaction.save()
 
-    credit_entity(destination, get_entity_balance(destination), payload.get('amount'))
+    operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
+
+    credit_entity(destination, get_entity_balance(destination), operation_amount)
     return transaction
 
 
@@ -196,6 +266,8 @@ def _create_cash_to_wallet_transaction(payload, agent):
     payload.update({'source_country': agent.entity.country.iso,
                     'destination_country': destination.country.iso})
 
+    operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
+
     transaction = Transaction()
     transaction.transaction_type = TransactionType.CASH_TO_WALLET.value
     transaction.agent = agent
@@ -211,7 +283,7 @@ def _create_cash_to_wallet_transaction(payload, agent):
     transaction.status = TransactionStatus.SUCCESS.value
     transaction.save()
 
-    credit_customer_account(destination, get_customer_balance(destination), payload.get('amount'))
+    credit_customer_account(destination, get_customer_balance(destination), operation_amount)
     return transaction
 
 def _create_wallet_to_cash_transaction(payload, customer):
@@ -260,7 +332,8 @@ def _create_wallet_to_wallet_transaction(payload, customer):
     transaction.save()
 
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
-    credit_customer_account(destination, get_customer_balance(destination), payload.get('amount'))
+    operation_amount = currency_change(customer.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
+    credit_customer_account(destination, get_customer_balance(destination), operation_amount)
     return transaction
 
 
@@ -301,6 +374,8 @@ def pay_transaction(payload, agent):
     transaction.pk = None
     transaction.number = random_code(10)
     transaction.code = random_code(8)
+    transaction.amount = currency_change(parent.agent.entity.country.currency.iso, agent.entity.country.currency.iso, parent.amount)
+    transaction.paid_amount = currency_change(parent.agent.entity.country.currency.iso, agent.entity.country.currency.iso, parent.paid_amount)
     transaction.status = TransactionStatus.SUCCESS.value
     transaction.parent_transaction_number = parent.number
     transaction.transaction_type = TransactionType.RETRAIT_CASH.value
@@ -310,7 +385,6 @@ def pay_transaction(payload, agent):
 
 
 def insert_operation(transaction):
-    print ('insert_operation' , transaction.transaction_type)
     if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
         _insert_credit_compte_entite_operation(transaction)
 
@@ -354,7 +428,7 @@ def _insert_wallet_to_wallet_operation(transaction):
 
 
 def _get_operation_comment(transaction, flag=False):
-    module = import_module('transaction.domain.transaction_domain')
+    module = import_module(CURRENT_MODULE)
     method = getattr(module, '_get_operation_comment_of_{0}'.format(transaction.transaction_type.lower()))
     return method(transaction, flag)
 
@@ -371,9 +445,10 @@ def _get_operation_comment_of_retrait_cash(transaction, flag=False):
     return 'Crédit de {0} : transaction {1}, Retrait d\'argent cash to cash'.format(transaction.amount, transaction.number)
 
 def _get_operation_comment_of_credit_compte_entite(transaction, flag=False):
-    comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.amount, transaction.number, transaction.destination_content_object)
+    comment = 'Débit de {0} : transaction {1}, Rechargement compte  : {2}'.format(transaction.paid_amount, transaction.number, transaction.destination_content_object)
     if flag:
-        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+        comment = 'Crédit de {0} : transaction {1}, Rechargement compte par entité {2}'.format(
+            transaction.paid_amount_with_currency_of_agent_operation, transaction.number, transaction.source_content_object)
     return comment
 
 def _get_operation_comment_of_cash_to_wallet(transaction, flag=False):

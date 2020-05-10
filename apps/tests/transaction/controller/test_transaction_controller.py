@@ -46,11 +46,9 @@ class TestTransactionController:
             assert result is None
         assert str(err.value) == "{'agent': ['Missing data for required field.']}"
 
-    def test_get_agent_info_success(self, dumped_transaction_cash_to_cash_payload, agent):
-        result = _get_agent_info(dumped_transaction_cash_to_cash_payload)
-        assert result == agent
 
     def test_get_agent_info_fail_with_wrong_agent_code(self, transaction_cash_to_cash_payload, agent):
+        transaction_cash_to_cash_payload.update({'agent':{'code':'45454'}})
         with pytest.raises(AgentException) as err:
             result = _get_agent_info(transaction_cash_to_cash_payload)
             assert result != agent

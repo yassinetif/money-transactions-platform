@@ -7,3 +7,11 @@ def agent_code_required(function):
         payload.update({'agent': {'code': decoded_payload.get('code')}})
         return function(payload, token)
     return modified_function
+
+
+def customer_code_required(function):
+    def modified_function(payload, token):
+        decoded_payload = decode_jwt_token(token, 'wallet_api_secret_key')
+        payload.update({'code': decoded_payload.get('code')})
+        return function(payload, token)
+    return modified_function

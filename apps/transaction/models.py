@@ -29,9 +29,9 @@ class Transaction(models.Model):
         max_length=11, default=random_code(8), unique=True, blank=False, null=False)
 
     agent = models.ForeignKey(Agent, on_delete=models.DO_NOTHING)
-    amount = models.DecimalField(max_digits=7, decimal_places=2)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
     paid_amount = models.DecimalField(
-        max_digits=7, decimal_places=2, default=0)
+        max_digits=20, decimal_places=2, default=0)
     limit = models.Q(app_label='entity', model='entity') \
         | models.Q(app_label='kyc', model='customer')
 
@@ -72,6 +72,10 @@ class Transaction(models.Model):
 
     def __str__(self):
         return str(self.number)
+
+    @property
+    def paid_amount_with_currency_of_agent_operation(self):
+        return '{0} {1}'.format(self.paid_amount, self.agent.entity.country.currency.iso)
 
 
 class Operation(models.Model):

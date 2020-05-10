@@ -4,15 +4,20 @@ from django.contrib import admin
 from shared.models.account import Account
 from django.utils.translation import ugettext_lazy as _
 
-
 class AccountAdmin(admin.ModelAdmin):
 
-    list_display = ('account_object_type', 'category', 'balance', 'created')
+    list_display = ('account_object_type', 'category', 'account_object_currency', 'created')
 
     def account_object_type(self, obj):
         return obj.content_object
     account_object_type.allow_tags = True
     account_object_type.short_description = _('Entités / Clients')
+
+    def account_object_currency(self, obj):
+        if obj.content_object.country:
+            return '{0} {1}'.format(obj.balance, obj.content_object.country.currency.iso)
+    account_object_currency.allow_tags = True
+    account_object_currency.short_description = 'Devise'
 
 
 admin.site.register(Account, AccountAdmin)
