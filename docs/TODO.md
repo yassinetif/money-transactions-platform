@@ -25,4 +25,3 @@ ce fichier. Il faudra les supprimer au fur et à mesure qu'ils ont été faits e
 
     - [ ] Rechargement d'une carte monnamon
     - [ ] Reporting
-    - [ ] JWT

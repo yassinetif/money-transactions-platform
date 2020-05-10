@@ -1,5 +1,6 @@
 import rstr
 import secrets
+import babel.numbers
 
 def random_code(len):
     return rstr.digits(len)
@@ -32,3 +33,7 @@ def convert_snake_to_camel_case(word):
 
 def generate_secret_key(len=16):
     return secrets.token_hex(len)
+
+def format_decimal_with_two_digits_after_comma(number):
+    return "%.2f" % number
+

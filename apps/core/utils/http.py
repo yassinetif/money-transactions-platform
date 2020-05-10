@@ -20,7 +20,7 @@ def create_jwt_token_for(obj, secret_key):
     payload = {
         'id': obj.pk,
         'code': obj.code,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)
     }
     token = {'token': jwt.encode(payload, global_config.get(secret_key))}
 
@@ -30,6 +30,7 @@ def create_jwt_token_for(obj, secret_key):
 def decode_jwt_token(token, secret_key):
     try:
         payload = jwt.decode(token, global_config.get(secret_key))
+        print(payload)
         return payload
     except (jwt.ExpiredSignature, jwt.DecodeError, jwt.InvalidTokenError) as e:
         raise ApiAuthenticationException(str(e), 'invalid authorization token')
