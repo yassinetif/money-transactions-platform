@@ -26,6 +26,7 @@ path.append(os.path.join(PROJECT_ROOT, "backend/apps"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "24gh!1b0ivo(=g=+9t3qw5--8jp$!cing4-k549m%*7d(z=e)3"
+OTP_SECRET_KEY = "1cb4fae17f0dbf7ef32ca012e0837049152349b9378151f28557ed91adc55319"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

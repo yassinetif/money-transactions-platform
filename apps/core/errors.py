@@ -13,8 +13,7 @@ logger = logging.getLogger('db')
 class CoreException(Exception):
     def __init__(self, message, errors):
         super().__init__(message)
-        self.errors = errors
-        self.errors = {'response_code': CORE_EXCEPTION_ERROR, 'response_text': self.errors}
+        self.errors = {'response_code': CORE_EXCEPTION_ERROR, 'response_text': errors}
         logger.error(str(message), self.errors, exc_info=1)
 
 

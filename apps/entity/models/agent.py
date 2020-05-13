@@ -2,7 +2,12 @@ from django.db import models
 from core.utils.string import random_code
 from django.contrib.auth.models import User
 from .entity import Entity
+from enum import Enum
 
+
+class AuthenticationType(Enum):
+    DEFAULT = 'DEFAULT'
+    OTP = 'OTP'
 
 class Agent(models.Model):
     code = models.CharField(
@@ -16,6 +21,8 @@ class Agent(models.Model):
     entity = models.ForeignKey(Entity, on_delete=models.DO_NOTHING, null=True, blank=True)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
     address = models.CharField(max_length=100, null=False, blank=False)
+    authentication_type = models.CharField(max_length=30, choices=[
+        (tag.value, tag.value) for tag in AuthenticationType], default='DEFAULT')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

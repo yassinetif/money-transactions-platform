@@ -31,7 +31,6 @@ class Customer(models.Model):
 
     @property
     def code(self):
-        print('self.informations.username', self.informations.username)
         return self.informations.username
 
 
