@@ -2,7 +2,8 @@ from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from django.contrib.auth.models import User
 from tastypie.serializers import Serializer
 from entity.models.agent import Agent
-from entity.controller.agent_controller import login as agent_login
+from entity.controller.agent_controller import login as agent_login,\
+    otp_authentication as otp_auth, otp_renew
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 
@@ -43,13 +44,21 @@ class AgentResource(ModelResource):
             url(r"^(?P<resource_name>%s)/login%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('login'), name="api_login"),
-            url(r'^(?P<resource_name>%s)/logout%s$' %
+            url(r'^(?P<resource_name>%s)/login/otp%s$' %
                 (self._meta.resource_name, trailing_slash()),
-                self.wrap_view('logout'), name='api_logout'),
+                self.wrap_view('otp_authentication'), name='api_otp_authentication'),
+            url(r'^(?P<resource_name>%s)/login/otp/renew%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('otp_authentication'), name='api_otp_authentication'),
         ]
 
     def login(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         data = self.deserialize(request, request.body)
         response = agent_login(self, data, request)
+        return response
+
+    def otp_authentication(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        response = otp_renew(self, request)
         return response

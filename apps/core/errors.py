@@ -43,3 +43,7 @@ class PartnerApiException(CoreException):
 
 class ApiAuthenticationException(CoreException):
     pass
+
+
+class NetworkException(CoreException):
+    pass

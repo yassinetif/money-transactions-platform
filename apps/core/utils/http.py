@@ -3,10 +3,17 @@ import requests
 import datetime
 import jwt
 from shared.global_config import GLOBAL_CONFIG as global_config
-from core.errors import ApiAuthenticationException
-def post_simple_json_request(url, data):
-    headers = {'Content-Type': 'application/json'}
-    response = requests.post(url, data=json.dumps(data), headers=headers).json()
+from core.errors import ApiAuthenticationException, NetworkException
+
+
+def post_simple_json_request(url, data, headers_info=None):
+    try:
+        headers = {'Content-Type': 'application/json'}
+        if headers_info:
+            headers.update(headers_info)
+        response = requests.post(url, data=json.dumps(data), headers=headers).json()
+    except NetworkException as e:
+        raise NetworkException(str(e), 'unable to post data to URL')
     return response
 
 

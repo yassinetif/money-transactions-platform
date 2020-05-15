@@ -1,5 +1,6 @@
 from shared.models.price import Corridor, Grille, Sharing
 from shared.models.country import Country, Currency, Change
+from shared.models.notification import Notification
 from django.contrib import admin
 from shared.models.account import Account
 from django.utils.translation import ugettext_lazy as _
@@ -59,3 +60,10 @@ class ChangeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Change, ChangeAdmin)
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('notification_type', 'content', 'created', 'status')
+
+
+admin.site.register(Notification, NotificationAdmin)
