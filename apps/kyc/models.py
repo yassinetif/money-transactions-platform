@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from shared.models.account import Account
 from shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
+from django.utils.translation import ugettext_lazy as _
 import datetime
 
 
@@ -16,15 +17,15 @@ class Customer(models.Model):
         max_length=10, null=True, blank=True)
     issuer_country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True)
     country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True, related_name='residence_country')
-    identification_document_deleivery_date = models.DateField(" Document deleivery date", default=datetime.date.today)
-    identification_document_expiry_date = models.DateField("Document expiry date", default=datetime.date.today)
+    identification_document_deleivery_date = models.DateField(_('Document deleivery date'), default=datetime.date.today)
+    identification_document_expiry_date = models.DateField(_('Document expiry date'), default=datetime.date.today)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
     address = models.CharField(max_length=100, null=False, blank=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Client"
+        verbose_name = _('Client')
 
     def __str__(self):
         return '{0} {1}'.format(self.informations.first_name, self.informations.last_name)
@@ -43,7 +44,7 @@ class Cartera(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Cartera"
+        verbose_name = _('Cartera')
 
     def __str__(self):
         return '{0}'.format(self.card_identification_number)

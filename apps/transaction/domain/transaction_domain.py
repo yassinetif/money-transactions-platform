@@ -71,6 +71,7 @@ def get_wallet_to_wallet_fee_payload(payload):
     data.update({'destination_country': destination_country})
     data.update({'amount': payload.get('amount')})
     return data
+
 def get_credit_compte_entite_fee_payload(payload):
     data = {}
     destination_country = EntityRepository.fetch_by_account_number(payload.get('account_number')).country.iso.code
@@ -101,6 +102,14 @@ def get_cash_to_wallet_fee_payload(payload):
     data.update({'source_country': payload.get('source_country')})
     data.update({'type': payload.get('type')})
     data.update({'destination_country': CustomerRepository.fetch_customer_by_phone_number(payload.get('destination_content_object').get('phone_number')).country.iso.code})
+    data.update({'amount': payload.get('amount')})
+    return data
+
+def get_wallet_to_cash_fee_payload(payload):
+    data = {}
+    data.update({'source_country': payload.get('source_country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': payload.get('destination_content_object').get('country')})
     data.update({'amount': payload.get('amount')})
     return data
 
@@ -294,7 +303,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
                     'destination_country': destination.country.iso})
 
     transaction = Transaction()
-    transaction.transaction_type = TransactionType.WALLET_TO_WALLET.value
+    transaction.transaction_type = TransactionType.WALLET_TO_CASH.value
     transaction.number = random_code(10)
     transaction.code = random_code(8)
     transaction.agent = AgentRepository.fetch_by_username('AGENT_WALLET')
@@ -388,8 +397,11 @@ def insert_operation(transaction):
     if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
         _insert_credit_compte_entite_operation(transaction)
 
-    elif transaction.transaction_type in [TransactionType.WALLET_TO_WALLET.value]:
+    elif transaction.transaction_type == TransactionType.WALLET_TO_WALLET.value:
         _insert_wallet_to_wallet_operation(transaction)
+
+    elif transaction.transaction_type == TransactionType.WALLET_TO_CASH.value:
+        _insert_wallet_to_wallet_operation(transaction, True)
 
     else:
         operation = Operation()
@@ -413,18 +425,19 @@ def _insert_credit_compte_entite_operation(transaction):
     operation_credit.save()
 
 
-def _insert_wallet_to_wallet_operation(transaction):
+def _insert_wallet_to_wallet_operation(transaction, wallet_to_cash=False):
     operation_debit = Operation()
     operation_debit.comment = _get_operation_comment(transaction)
     operation_debit.balance_after_operation = transaction.source_content_object.accounts.last()
     operation_debit.transaction = transaction
     operation_debit.save()
 
-    operation_credit = Operation()
-    operation_credit.comment = _get_operation_comment(transaction, True)
-    operation_credit.balance_after_operation = transaction.destination_content_object.accounts.last()
-    operation_credit.transaction = transaction
-    operation_credit.save()
+    if wallet_to_cash is False:
+        operation_credit = Operation()
+        operation_credit.comment = _get_operation_comment(transaction, True)
+        operation_credit.balance_after_operation = transaction.destination_content_object.accounts.last()
+        operation_credit.transaction = transaction
+        operation_credit.save()
 
 
 def _get_operation_comment(transaction, flag=False):

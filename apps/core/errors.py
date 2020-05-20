@@ -9,7 +9,7 @@ TRANSACTION_EXCEPTION_ERROR = 600
 CORRIDOR_EXCEPTION_ERROR = 700
 
 
-logger = logging.getLogger('db')
+logger = logging.getLogger('django')
 class CoreException(Exception):
     def __init__(self, message, errors):
         super().__init__(message)
@@ -42,6 +42,10 @@ class PartnerApiException(CoreException):
     pass
 
 class ApiAuthenticationException(CoreException):
+    pass
+
+
+class CallPartnerApiException(CoreException):
     pass
 
 

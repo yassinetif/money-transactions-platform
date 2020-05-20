@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from entity.models.agent import Agent
 from shared.models.price import Grille, TransactionType
@@ -67,8 +68,8 @@ class Transaction(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Transaction"
-        verbose_name_plural = "Transactions"
+        verbose_name = _('Transaction')
+        verbose_name_plural = _('Transactions')
 
     def __str__(self):
         return str(self.number)
@@ -83,10 +84,10 @@ class Operation(models.Model):
     updated = models.DateTimeField(auto_now=True)
     transaction = models.ForeignKey(
         Transaction, null=False, blank=False, on_delete=models.DO_NOTHING)
-    comment = models.TextField('Commentaire', null=True, blank=True)
+    comment = models.TextField(_('Commentaire'), null=True, blank=True)
     balance_after_operation = models.ForeignKey(
         Account, on_delete=models.DO_NOTHING)
 
     class Meta:
-        verbose_name = 'Operation detail'
-        verbose_name_plural = 'Operatons details'
+        verbose_name = _('Operation detail')
+        verbose_name_plural = _('Operations details')

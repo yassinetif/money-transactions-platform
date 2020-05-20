@@ -2,8 +2,7 @@
 import json
 from core.errors import CoreException, CustomerException
 from core.utils.http import get_request_token
-from core.utils.string import format_decimal_with_two_digits_after_comma
-from core.utils.string import convert_snake_to_camel_case
+from core.utils.string import format_decimal_with_two_digits_after_comma, convert_sharing_calculation_expression_to_json, convert_snake_to_camel_case
 from marshmallow import ValidationError
 from importlib import import_module
 from core.utils.validator import SearchTransactionCodeValidator, FeeValidator
@@ -18,7 +17,8 @@ from transaction.domain.transaction_domain import debit_entity_account, create_t
     currency_change, get_fee_calculation_payload
 from transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
 from shared.models.price import AGENT_TRANSACTIONS
-
+from shared.repository.shared_repository import SharedRepository
+from numexpr import evaluate as ev
 
 def _get_validator_class(transaction_type):
     validator = convert_snake_to_camel_case(transaction_type)
@@ -150,6 +150,7 @@ def _create_agent_transaction(payload, token):
     _check_agent_balance(agent, payload)
     transaction = create_transaction(payload, agent)
     _credit_or_debit_entity(transaction)
+    _revenu_sharing(transaction)
     return transaction
 
 @customer_code_required
@@ -161,7 +162,6 @@ def _create_wallet_transaction(payload, token):
     fee_calculation_payload = get_fee_calculation_payload(payload)
     paid_amount = calculate_transaction_paid_amount_and_fee(fee_calculation_payload)[1]
     payload.update({'paid_amount': paid_amount})
-
     _check_customer_balance(customer, payload)
     transaction = create_transaction(payload, customer)
     return transaction
@@ -211,3 +211,26 @@ def _pay_transaction(payload, token):
     transaction = pay_transaction(payload, agent)
     _credit_entity(transaction)
     insert_operation(transaction)
+
+
+def _revenu_sharing(transaction):
+    expression = SharedRepository.fetch_sharing_calculation_expression(transaction)
+    json_expression = convert_sharing_calculation_expression_to_json(expression)
+    fee_value = _get_fee_value(transaction, json_expression.pop('fee'))
+    print(fee_value)
+    print(type(fee_value))
+
+    _calculate_real_revenue_of_each_participant_of_transaction(json_expression, fee_value)
+
+    return json_expression
+
+def _calculate_real_revenue_of_each_participant_of_transaction(json_expression, fee_value):
+    for e, val in json_expression.items():
+        print(e, val)
+        json_expression.update({e: '{0}{1}'.format(val[:1], ev('{0}*{1}'.format(val[1:], fee_value)))})
+    print(json_expression)
+    return json_expression
+
+def _get_fee_value(transaction, fee_expression):
+    fee_expression = fee_expression.replace('FEE', str(transaction.grille.fee))
+    return str(float(ev(fee_expression)))

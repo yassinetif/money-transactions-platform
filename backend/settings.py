@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from sys import path
+from django.utils.translation import ugettext_lazy as _
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +39,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'fluent_dashboard',
+
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,7 +53,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_countries",
     "mptt",
-    "django_db_logger",
     "core",
     "api",
     "entity",
@@ -69,8 +76,7 @@ ROOT_URLCONF = "backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
+        'DIRS': (os.path.join(PROJECT_ROOT, "backend/templates")),
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -78,6 +84,11 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            'loaders': (
+                'admin_tools.template_loaders.Loader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ),
         },
     },
 ]
@@ -109,30 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(asctime)s %(message)s'
-        },
-    },
-    'handlers': {
-        'db_log': {
-            'level': 'DEBUG',
-            'class': 'django_db_logger.db_log_handler.DatabaseLogHandler'
-        },
-    },
-    'loggers': {
-        'db': {
-            'handlers': ['db_log'],
-            'level': 'DEBUG'
-        }
-    }
-}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -152,6 +140,82 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "backend/static")
 
 # DB LOGGER
 DJANGO_DB_LOGGER_ENABLE_FORMATTER = True
+
+# FLUENT - DASHBOARD
+ADMIN_TOOLS_INDEX_DASHBOARD = 'fluent_dashboard.dashboard.FluentIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'fluent_dashboard.dashboard.FluentAppIndexDashboard'
+ADMIN_TOOLS_THEMING_CSS = 'css/theme.css'
+FLUENT_DASHBOARD_DEFAULT_MODULE = 'admin_tools.dashboard.modules.AppList'
+FLUENT_DASHBOARD_APP_GROUPS = (
+
+    (_('Users'), {
+        'models': (
+            'django.contrib.auth.models.User',
+        ),
+    }),
+
+    (_('Entities and Agents'), {
+        'models': (
+            'entity.models.entity.*',
+            'entity.models.agent.*',
+            'shared.models.account*',
+        ),
+    }),
+
+    (_('Customers , Carteras, Monnamon cards '), {
+        'models': (
+            'kyc.models.*',
+        ),
+    }),
+
+    (_('Corridor and Pricing'), {
+        'models': (
+            'shared.models.price.*',
+        ),
+    }),
+
+    (_('Country and currency'), {
+        'models': (
+            'shared.models.country.*',
+        ),
+    }),
+
+    (_('Transactions'), {
+        'models': (
+            'transaction.models.*',
+        ),
+    }),
+
+    (_('Logging'), {
+        'models': (
+            'django_db_logger.models.*',
+            'shared.models.notification.*',
+        ),
+    }),
+)
+
+
+FLUENT_DASHBOARD_APP_ICONS = {
+    'entity/agent': 'users7.png',
+    'entity/entity': 'main-page.png',
+    'entity/entitysettings': 'cogwheels9.png',
+
+    'shared/corridor': 'globe16.png',
+
+    'transaction/transaction': 'right-arrow7.png',
+    'transaction/operation': 'stats2.png',
+
+    'shared/country': 'world90.png',
+    'shared/change': 'share.png',
+    'shared/notification': 'file.png',
+    'shared/account': 'img/balance.png',
+
+    'kyc/customer': 'multiple25.png',
+
+    'django_db_logger/statuslog': 'archive52.png',
+
+}

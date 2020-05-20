@@ -1,5 +1,6 @@
 from django.db import models
 from enum import Enum
+from django.utils.translation import ugettext_lazy as _
 
 
 class NotificationType(Enum):
@@ -20,4 +21,4 @@ class Notification(models.Model):
         return str(self.notification_type)
 
     class Meta:
-        verbose_name = "Notifications Log"
+        verbose_name = _('Notifications Log')

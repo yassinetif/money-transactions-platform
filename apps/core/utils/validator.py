@@ -84,12 +84,9 @@ class CashToWalletValidator(Schema):
     amount = fields.Str(required=True)
 
 class WalletToCashValidator(Schema):
-    source_content_object = fields.Nested(
-        CustomerWalletValidator(), required=True)
     destination_content_object = fields.Nested(
         ReceiverCustomerValidator(), required=True)
     amount = fields.Str(required=True)
-    paid_amount = fields.Decimal(required=True, as_string=True)
 
 class WalletToWalletValidator(Schema):
     destination_content_object = fields.Nested(

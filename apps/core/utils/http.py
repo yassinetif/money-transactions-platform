@@ -4,6 +4,7 @@ import datetime
 import jwt
 from shared.global_config import GLOBAL_CONFIG as global_config
 from core.errors import ApiAuthenticationException, NetworkException
+from django.utils.translation import ugettext_lazy as _
 
 
 def post_simple_json_request(url, data, headers_info=None):

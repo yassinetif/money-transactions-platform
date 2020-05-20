@@ -1,5 +1,6 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from django.utils.translation import ugettext_lazy as _
 from shared.models.account import Account
 from shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
@@ -54,15 +55,19 @@ class Entity(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ["brand_name"]
 
+    class Meta:
+        verbose_name = _('Entity')
+        verbose_name_plural = _('Entities')
+
 
 class EntitySettings(models.Model):
     entity = models.ForeignKey('Entity', null=True, blank=True, on_delete=models.DO_NOTHING)
-    check_entity_balance = models.BooleanField(default=True, help_text='Check Entity balance before processing operation')
-    overdraft_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Overdraft amount')
+    check_entity_balance = models.BooleanField(default=True, help_text=_('Check Entity balance before processing operation'))
+    overdraft_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text=_('Overdraft amount'))
 
     def __str__(self):
         return self.entity.brand_name
 
     class Meta:
-        verbose_name = 'Entity setting'
-        verbose_name_plural = 'Entity settings'
+        verbose_name = _('Entity setting')
+        verbose_name_plural = _('Entities settings')

@@ -3,7 +3,7 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from entity.repository.agent_repository import AgentRepository
 from entity.repository.entity_repository import EntityRepository
 from django.contrib.auth.models import User
-from core.utils.http import create_jwt_token_for
+from core.utils.http import create_jwt_token_for, get_request_token, decode_jwt_token
 from core.utils.string import verify_totp, generate_totp
 from services.controller.sms_controller import send_otp_sms
 from core.utils.routines import execute_routine
@@ -50,9 +50,12 @@ def otp_authentication(tastypie, data, request):
 
 def otp_renew(tastypie, request):
     try:
+        agent_code = decode_jwt_token(get_request_token(request), 'agent_api_secret_key')
+        agent = AgentRepository.fetch_by_code(agent_code.get('code'))
         otp = generate_totp()
-        execute_routine(send_otp_sms, ['XXX', otp])
+        execute_routine(send_otp_sms, [agent.phone_number, otp])
 
         return tastypie.create_response(request, {'response_text': 'OK', 'response_code': '000'})
-    except Exception:
-        return tastypie.create_response(request, {'response_text': 'wrong OTP', 'response_code': '100'}, HttpForbidden)
+    except Exception as e:
+        print(e)
+        return tastypie.create_response(request, {'response_text': 'Unable to renew OTP', 'response_code': '100'}, HttpForbidden)

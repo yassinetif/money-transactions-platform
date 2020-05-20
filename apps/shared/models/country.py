@@ -1,5 +1,6 @@
 from django.db import models
 from django_countries.fields import CountryField
+from django.utils.translation import ugettext_lazy as _
 
 
 class Currency(models.Model):
@@ -28,8 +29,8 @@ class Country(models.Model):
         return self.iso.code
 
     class Meta:
-        verbose_name = "Country"
-        verbose_name_plural = "Countries"
+        verbose_name = _('Country')
+        verbose_name_plural = _('Countries')
 
 
 class Change(models.Model):
@@ -45,5 +46,5 @@ class Change(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "Change"
-        verbose_name_plural = "Changes"
+        verbose_name = _('Change')
+        verbose_name_plural = _('Changes')

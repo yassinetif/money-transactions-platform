@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from core.utils.string import random_code
 from django.contrib.auth.models import User
 from .entity import Entity
@@ -30,5 +31,5 @@ class Agent(models.Model):
         return self.informations.username
 
     class Meta:
-        verbose_name = "Agent"
-        verbose_name_plural = "Agents"
+        verbose_name = _("Agent")
+        verbose_name_plural = _("Agents")

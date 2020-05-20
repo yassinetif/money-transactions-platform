@@ -2,6 +2,10 @@ import rstr
 import secrets
 import oath
 from backend.settings import OTP_SECRET_KEY
+from django.core.exceptions import ValidationError
+from decimal import Decimal
+from django.utils.translation import ugettext_lazy as _
+
 
 def random_code(len):
     return rstr.digits(len)
@@ -44,3 +48,35 @@ def generate_totp(period=60):
 
 def verify_totp(totp):
     return oath.accept_totp(OTP_SECRET_KEY, totp, format='dec6', period=60)[0]
+
+
+def validate_calculation_expression(expression):
+    try:
+        sharing_expression = expression.split('=>')[1]
+        for sharing_plan in sharing_expression.split("#"):
+            revenue = 0
+            for _s in sharing_plan.split(';'):
+                expr = _s.split(':')
+                sens = expr[2]
+                if sens == '-':
+                    revenue -= Decimal(expr[1])
+                else:
+                    revenue += Decimal(expr[1])
+            if revenue != 1:
+                raise ValidationError(_('Sum must equal 1 . Value {0}'.format(revenue)))
+    except Exception as err:
+        raise ValidationError(err)
+
+def convert_sharing_calculation_expression_to_json(expression):
+    result = {}
+    _expression = expression.split('=>')
+    sharing_expression = _expression[1]
+    for sharing_plan in sharing_expression.split("#"):
+        for _s in sharing_plan.split(';'):
+            expr = _s.split(':')
+            entity = expr[0]
+            sens = expr[2]
+            value = expr[1]
+            result.update({entity: '{}{}'.format(sens, value)})
+    result.update({'fee': _expression[0]})
+    return result

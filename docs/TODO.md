@@ -5,15 +5,17 @@
 Les changements à apporter, les bonnes idées ou encore les dettes techniques font parti de 
 ce fichier. Il faudra les supprimer au fur et à mesure qu'ils ont été faits et testés. 
 
-- [ ] Avant de créditer ou de débiter s'assure que l'opération se fasse dans la devise appropriée
+- [ ]  Refactoriser les classes Repositories
+- [ ]  Réfléchir au stockage des credentials des partenaires
+- [ ]  Tracer les actions des utilisateurs de la page Admin
+- [ ]  Refactorer les logs erreurs et les exceptions
+- [ ]  Revenue sharing
+- [ ]  get or none Manager à écrire
 
-- [ ] Revoir validateur CashToCashValidator : Accepter que certains champs ne soient pas remplis
-    -`[x] partial = True`
-
-- [x] Finir les intégrations des partenaires à partir de `payer_network` 
+- [ ] Finir les intégrations des partenaires à partir de `payer_network` 
     - [ ] World Remit 
     - [ ] Small World 
-    - [ ] Orang
+    - [ ] Orange money
 
 - [ ]  Intialiser l'entité Provider avec un script qui ferait : 
     - [ ] Création du compte entité provider
@@ -23,5 +25,5 @@ ce fichier. Il faudra les supprimer au fur et à mesure qu'ils ont été faits e
 
 ###	API WEB INTERFACE
 
-    - [ ] Rechargement d'une carte monnamon
-    - [ ] Reporting
+- [ ] Rechargement d'une carte monnamon
+- [ ] Reporting
