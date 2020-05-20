@@ -12,8 +12,10 @@ click==7.1.1
 configobj==5.0.6
 cryptography==2.9.2
 Django==3.0.4
+django-admin-tools==0.9.0
 django-countries==6.0
 django-currencies==0.10.1
+django-fluent-dashboard==1.0.1
 django-js-asset==1.2.2
 django-mptt==0.11.0
 django-tastypie==0.14.3
@@ -27,6 +29,8 @@ marshmallow==3.5.1
 mccabe==0.6.1
 mock==4.0.2
 more-itertools==8.2.0
+numexpr==2.7.1
+numpy==1.18.4
 oath==1.4.3
 packaging==20.3
 pathspec==0.7.0
@@ -49,6 +53,7 @@ python-mimeparse==1.6.0
 pytz==2019.3
 regex==2020.2.20
 requests==2.23.0
+rope==0.17.0
 rstr==2.2.6
 secrets==1.0.2
 six==1.14.0
