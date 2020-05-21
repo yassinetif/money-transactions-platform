@@ -1,1 +1,1 @@
-default_app_config = 'entity.apps.EntityConfig'
+default_app_config = 'apps.entity.apps.EntityConfig'
