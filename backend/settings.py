@@ -14,14 +14,12 @@ import os
 from sys import path
 from django.utils.translation import ugettext_lazy as _
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
 # Add apps  to the PROJECT_ROOT
 path.append(os.path.join(PROJECT_ROOT, "backend/apps"))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -52,14 +50,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_countries",
-    "mptt",
     "django_db_logger",
+    "mptt",
     "core",
     "api",
     "entity",
     "kyc",
     "shared",
     "transaction",
+
 ]
 
 MIDDLEWARE = [
