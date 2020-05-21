@@ -4,7 +4,7 @@ from tastypie.serializers import Serializer
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from apps.transaction.controller.customer_controller import create_customer_with_card,\
-    create_customer_with_wallet, get_wallet_balance, wallet_login
+    create_customer_with_wallet, get_wallet_balance, wallet_login, define_wallet_password
 
 class CustomerResource(ModelResource):
 
@@ -44,6 +44,9 @@ class CustomerResource(ModelResource):
             url(r"^(?P<resource_name>%s)/wallet/login%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('wallet_login'), name="api_wallet_login"),
+            url(r"^(?P<resource_name>%s)/wallet/password%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('wallet_password'), name="api_wallet_password"),
         ]
 
     def activate_card(self, request, **kwargs):
@@ -68,4 +71,10 @@ class CustomerResource(ModelResource):
         self.method_check(request, allowed=['post'])
         payload = self.deserialize(request, request.body)
         response = wallet_login(self, payload, request)
+        return response
+
+    def wallet_password(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        payload = self.deserialize(request, request.body)
+        response = define_wallet_password(self, payload, request)
         return response

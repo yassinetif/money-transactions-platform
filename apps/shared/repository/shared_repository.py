@@ -12,7 +12,7 @@ class SharedRepository():
         try:
             return Country.objects.get(iso=iso)
         except Country.DoesNotExist as err:
-            raise CountryException('XXX error', err)
+            raise CountryException('country not found in the error', err)
 
     def fetch_currency_by_country_iso(iso):
         try:
@@ -56,15 +56,18 @@ class SharedRepository():
 
     @staticmethod
     def fetch_sharing_calculation_expression(transaction):
-        corridor = transaction.grille.corridor
-        result = None
-        if transaction.transaction_type in AGENT_TRANSACTIONS:
-            try:
-                sharing = Sharing.objects.get(corridor=corridor, calculation_expression__contains=transaction.agent.entity.brand_name)
-            except Sharing.DoesNotExist:
-                sharing = Sharing.objects.get(corridor=corridor, is_standard=True)
-            result = sharing.calculation_expression
-        return result
+        try:
+            corridor = transaction.grille.corridor
+            result = None
+            if transaction.transaction_type in AGENT_TRANSACTIONS:
+                try:
+                    sharing = Sharing.objects.get(corridor=corridor, calculation_expression__contains=transaction.agent.entity.brand_name)
+                except Sharing.DoesNotExist:
+                    sharing = Sharing.objects.get(corridor=corridor, is_standard=True)
+                result = sharing.calculation_expression
+            return result
+        except Exception as err:
+            raise CoreException(err, 'unable to validate this transaction please contact customer service')
 
     @staticmethod
     def initialize_account(instance, created, is_card_activation):

@@ -20,6 +20,7 @@ class Customer(models.Model):
     identification_document_deleivery_date = models.DateField(_('Document deleivery date'), default=datetime.date.today)
     identification_document_expiry_date = models.DateField(_('Document expiry date'), default=datetime.date.today)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
+    status = models.BooleanField(default=False)
     address = models.CharField(max_length=100, null=False, blank=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

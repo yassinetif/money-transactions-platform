@@ -6,7 +6,7 @@ from apps.entity.repository.agent_repository import AgentRepository
 from apps.entity.domain.entity_domain import debit_entity, credit_entity, get_entity_balance
 from apps.kyc.domain.customer_domain import credit_customer_account, get_customer_balance, debit_customer_account
 from apps.shared.models.price import TransactionType
-from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
+from apps.transaction.models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
 from apps.transaction.repository.transaction_repository import TransactionRepository
 from apps.core.utils.string import random_code, convert_enum_to_tuple
 from apps.core.utils.http import post_simple_json_request

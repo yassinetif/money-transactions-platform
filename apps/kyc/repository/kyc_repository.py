@@ -30,8 +30,7 @@ class CustomerRepository():
 
             SharedRepository.initialize_account(customer, created, is_card_activation)
             return customer
-        except Exception as err:
-            print(err)
+        except Exception:
             raise CustomerException('CustomerException', 'unable to create this customer in the system')
 
     @staticmethod

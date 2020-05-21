@@ -1,5 +1,5 @@
 
-from .transaction_controller import _validate_transaction_payload, _get_agent_info,\
+from apps.transaction.controller.transaction_controller import _validate_transaction_payload, _get_agent_info,\
     _check_agent_balance, create_transaction, _debit_entity, insert_operation
 from apps.transaction.domain.transaction_domain import calculate_transaction_paid_amount_and_fee,\
     get_fee_calculation_payload
@@ -11,9 +11,12 @@ from marshmallow import ValidationError
 from apps.transaction.decorator.transaction_decorator import agent_code_required
 from apps.core.utils.http import get_request_token
 from apps.core.utils.string import format_decimal_with_two_digits_after_comma
-
 from django.contrib.auth.models import User
 from apps.core.utils.http import create_jwt_token_for
+from apps.core.utils.routines import execute_routine
+from apps.core.utils.string import generate_totp, verify_totp
+from apps.services.controller.sms_controller import send_otp_sms
+
 
 def create_customer_with_card(tastypie, payload, request):
     try:
@@ -50,8 +53,12 @@ def create_customer_with_wallet(tastypie, payload, request):
         data = payload.copy()
         data.update({'type': 'CREATION_WALLET'})
         _validate_transaction_payload(data)
-        payload.update({'response_code': '000'})
         CustomerRepository.fetch_or_create_customer(payload)
+        payload.update({'response_code': '000'})
+
+        otp = generate_totp()
+        execute_routine(send_otp_sms, [payload.get('phone_number'), otp])
+
         return tastypie.create_response(request, payload)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
@@ -97,3 +104,29 @@ def wallet_login(tastypie, data, request):
             return tastypie.create_response(request, {'response_text': 'Inactive Wallet', 'response_code': '100'}, HttpUnauthorized)
     except User.DoesNotExist:
         return tastypie.create_response(request, {'response_text': 'unknwonw user', 'response_code': '100'}, HttpForbidden)
+
+
+def define_wallet_password(tastypie, data, request):
+
+    phone_number = data['phone_number']
+    password = data['password']
+    otp = data['otp']
+
+    result = result = verify_totp(otp)
+    if result is False:
+        return tastypie.create_response(request, {'response_text': 'wrong OTP', 'response_code': '100'}, HttpUnauthorized)
+    try:
+        customer = CustomerRepository.fetch_customer_by_phone_number(phone_number)
+        customer.informations.set_password(password)
+        customer.informations.save()
+        customer.status = True
+        customer.save()
+
+        bundle = tastypie.build_bundle(obj=customer, request=request)
+        bundle = tastypie.full_dehydrate(bundle)
+        bundle.data.update({'reponse_code': '000'})
+        bundle.data.update(create_jwt_token_for(customer, 'wallet_api_secret_key'))
+
+        return tastypie.create_response(request, bundle)
+    except Exception:
+        return tastypie.create_response(request, {'response_text': 'unable to define password ', 'response_code': '100'}, HttpForbidden)

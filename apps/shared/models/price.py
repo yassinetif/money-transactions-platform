@@ -27,7 +27,7 @@ class FeeType(Enum):
 class Sharing(models.Model):
     calculation_expression = models.CharField(max_length=200,
                                               validators=[validate_calculation_expression],
-                                              help_text='FRAIS/2=>PROVIDER:0.2:+;BANQUE:0.4:-')
+                                              help_text='FEE/2=>PROVIDER:0.2:+;BANQUE:0.4:-')
     is_standard = models.BooleanField(help_text=_('Tell if this is the standard sharing to use for this corridor'), default=False)
     corridor = models.ForeignKey('Corridor', on_delete=models.CASCADE, null=True, blank=True)
 
