@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     "mptt",
     "apps.core",
     "apps.api",
-    "entity",
+    "apps.entity",
     "apps.kyc",
     "shared",
     "apps.transaction",
