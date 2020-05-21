@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
-from api import urls
+from apps.api import urls
 from django.contrib.staticfiles import views
 from django.urls import re_path
 
