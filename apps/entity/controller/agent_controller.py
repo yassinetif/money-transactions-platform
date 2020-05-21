@@ -5,7 +5,7 @@ from apps.entity.repository.entity_repository import EntityRepository
 from django.contrib.auth.models import User
 from apps.core.utils.http import create_jwt_token_for, get_request_token, decode_jwt_token
 from apps.core.utils.string import verify_totp, generate_totp
-from services.controller.sms_controller import send_otp_sms
+from apps.services.controller.sms_controller import send_otp_sms
 from apps.core.utils.routines import execute_routine
 def login(tastypie, data, request):
 
