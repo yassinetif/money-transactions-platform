@@ -217,18 +217,13 @@ def _revenu_sharing(transaction):
     expression = SharedRepository.fetch_sharing_calculation_expression(transaction)
     json_expression = convert_sharing_calculation_expression_to_json(expression)
     fee_value = _get_fee_value(transaction, json_expression.pop('fee'))
-    print(fee_value)
-    print(type(fee_value))
-
     _calculate_real_revenue_of_each_participant_of_transaction(json_expression, fee_value)
 
     return json_expression
 
 def _calculate_real_revenue_of_each_participant_of_transaction(json_expression, fee_value):
     for e, val in json_expression.items():
-        print(e, val)
         json_expression.update({e: '{0}{1}'.format(val[:1], ev('{0}*{1}'.format(val[1:], fee_value)))})
-    print(json_expression)
     return json_expression
 
 def _get_fee_value(transaction, fee_expression):

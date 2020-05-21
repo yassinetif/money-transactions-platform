@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from apps.core.utils.string import random_code
+from django import forms
 from django.contrib.auth.models import User
 from apps.entity.models.entity import Entity
 from enum import Enum
@@ -30,7 +31,17 @@ class Agent(models.Model):
     def __str__(self):
         return self.informations.username
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.code = random_code(6)
+        super(Agent, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name = _("Agent")
         verbose_name_plural = _("Agents")
         app_label = 'entity'
+
+class AgentForm(forms.ModelForm):
+    class Meta:
+        model = Agent
+        exclude = ('code',)

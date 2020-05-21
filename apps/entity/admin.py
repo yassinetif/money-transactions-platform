@@ -1,6 +1,6 @@
 from django.contrib import admin
 from apps.entity.models.entity import Entity, EntitySettings, EntityForm
-from apps.entity.models.agent import Agent
+from apps.entity.models.agent import Agent, AgentForm
 
 
 class EntityAdmin(admin.ModelAdmin):
@@ -13,6 +13,7 @@ class EntitySettingsAdmin(admin.ModelAdmin):
 
 
 class AgentAdmin(admin.ModelAdmin):
+    form = AgentForm
     list_display = ('code', 'informations', 'entity', 'phone_number', 'address')
 
 
