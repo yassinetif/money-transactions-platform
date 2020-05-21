@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from apps.core.utils.string import random_code
 from django.contrib.auth.models import User
-from .entity import Entity
+from apps.entity.models.entity import Entity
 from enum import Enum
 
 
