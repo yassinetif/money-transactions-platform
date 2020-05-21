@@ -31,7 +31,7 @@ OTP_SECRET_KEY = "1cb4fae17f0dbf7ef32ca012e0837049152349b9378151f28557ed91adc553
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     "django_db_logger",
     "mptt",
     "apps.core",
-    "apps.api",
     "apps.entity",
     "apps.kyc",
     "apps.shared",
