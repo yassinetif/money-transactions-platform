@@ -5,10 +5,14 @@ from backend.settings import OTP_SECRET_KEY
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.utils.translation import ugettext_lazy as _
-
+import os
+import binascii
 
 def random_code(len):
     return rstr.digits(len)
+
+def random_code_and_number_for_entity():
+    return int(binascii.hexlify(os.urandom(3)), 16)
 
 
 def convert_enum_to_tuple(enum):

@@ -1,9 +1,10 @@
 from django.contrib import admin
-from apps.entity.models.entity import Entity, EntitySettings
+from apps.entity.models.entity import Entity, EntitySettings, EntityForm
 from apps.entity.models.agent import Agent
 
 
 class EntityAdmin(admin.ModelAdmin):
+    form = EntityForm
     list_display = ('code', 'account_number', 'category', 'brand_name', 'country', 'address')
 
 

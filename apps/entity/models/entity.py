@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.translation import ugettext_lazy as _
 from apps.shared.models.account import Account
@@ -52,6 +53,20 @@ class Entity(MPTTModel):
     def to_dict(self):
         return model_to_dict(self, fields=[field.name for field in self._meta.fields if field.name != 'secret_key'])
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.code = random_code(6)
+            self.account_number = '{}{}'.format(self.country.iso.code, random_code(9))
+        super(Entity, self).save(*args, **kwargs)
+        self.initialize_accounts()
+
+    def initialize_accounts(self):
+        if self.accounts.count() == 0:
+            Account.objects.create(content_object=self,
+                                   category='PRINCIPAL', balance=0)
+            Account.objects.create(content_object=self,
+                                   category='COMMISSION', balance=0)
+
     class MPTTMeta:
         order_insertion_by = ["brand_name"]
 
@@ -59,6 +74,12 @@ class Entity(MPTTModel):
         verbose_name = _('Entity')
         verbose_name_plural = _('Entities')
         app_label = 'entity'
+
+
+class EntityForm(forms.ModelForm):
+    class Meta:
+        model = Entity
+        exclude = ('code', 'account_number')
 
 
 class EntitySettings(models.Model):
