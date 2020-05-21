@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     "apps.api",
     "apps.entity",
     "apps.kyc",
-    "shared",
+    "apps.shared",
     "apps.transaction",
 
 ]
