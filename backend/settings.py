@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     "django_db_logger",
     "mptt",
     "apps.core",
-    "api",
+    "apps.api",
     "entity",
     "apps.kyc",
     "shared",
