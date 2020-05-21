@@ -183,40 +183,40 @@ FLUENT_DASHBOARD_APP_GROUPS = (
 
     (_('Entities and Agents'), {
         'models': (
-            'entity.models.entity.*',
-            'entity.models.agent.*',
-            'shared.models.account*',
+            'apps.entity.models.entity.*',
+            'apps.entity.models.agent.*',
+            'apps.shared.models.account*',
         ),
     }),
 
     (_('Customers , Carteras, Monnamon cards '), {
         'models': (
-            'kyc.models.*',
+            'apps.kyc.models.*',
         ),
     }),
 
     (_('Corridor and Pricing'), {
         'models': (
-            'shared.models.price.*',
+            'apps.shared.models.price.*',
         ),
     }),
 
     (_('Country and currency'), {
         'models': (
-            'shared.models.country.*',
+            'apps.shared.models.country.*',
         ),
     }),
 
     (_('Transactions'), {
         'models': (
-            'transaction.models.*',
+            'apps.transaction.models.*',
         ),
     }),
 
     (_('Logging'), {
         'models': (
             'django_db_logger.models.*',
-            'shared.models.notification.*',
+            'apps.shared.models.notification.*',
         ),
     }),
 )

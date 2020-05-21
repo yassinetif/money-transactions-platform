@@ -57,3 +57,11 @@ Vérifier la version de python sur le serveur
     pip3 install -r requirements.txt
     pip3 install pyOpenSSL
     ```
+
+## Etape 5 : Lancement du backend
+-   ```
+    pyhton manage.py migrate
+    pyhton manage.py createsuperuser
+    pyhton manage.py collectstatic
+    pyhton manage.py runserver 0.0.0.0:8000
+    ```
