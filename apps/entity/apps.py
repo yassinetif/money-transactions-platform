@@ -10,5 +10,5 @@ class EntityConfig(AppConfig):
     verbose_name_plural = _("Partners")
 
     def ready(self):
-        from entity import signals
+        from apps.entity import signals
         logger.info(signals)
