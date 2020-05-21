@@ -1,5 +1,5 @@
 
-from core.utils.http import decode_jwt_token
+from apps.core.utils.http import decode_jwt_token
 
 def agent_code_required(function):
     def modified_function(payload, token):

@@ -1,6 +1,6 @@
 from decimal import Decimal
-from shared.models.account import Account, AccountType
-from core.errors import CustomerException
+from apps.shared.models.account import Account, AccountType
+from apps.core.errors import CustomerException
 
 
 def check_customer_balance(customer, amount):

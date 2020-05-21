@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from core.utils.string import random_code
+from apps.core.utils.string import random_code
 from django.contrib.auth.models import User
 from .entity import Entity
 from enum import Enum
@@ -33,3 +33,4 @@ class Agent(models.Model):
     class Meta:
         verbose_name = _("Agent")
         verbose_name_plural = _("Agents")
+        app_label = 'entity'

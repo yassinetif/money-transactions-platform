@@ -22,3 +22,4 @@ class Notification(models.Model):
 
     class Meta:
         verbose_name = _('Notifications Log')
+        app_label = 'shared'

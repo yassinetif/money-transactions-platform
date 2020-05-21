@@ -16,6 +16,7 @@ class Currency(models.Model):
     class Meta:
         verbose_name = "Currency"
         verbose_name_plural = "Currencies"
+        app_label = 'shared'
 
 
 class Country(models.Model):
@@ -31,6 +32,7 @@ class Country(models.Model):
     class Meta:
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
+        app_label = 'shared'
 
 
 class Change(models.Model):
@@ -48,3 +50,4 @@ class Change(models.Model):
     class Meta:
         verbose_name = _('Change')
         verbose_name_plural = _('Changes')
+        app_label = 'shared'

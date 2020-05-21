@@ -28,3 +28,4 @@ class Account(models.Model):
 
     class Meta:
         verbose_name = "Account"
+        app_label = 'shared'

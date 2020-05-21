@@ -1,19 +1,19 @@
 
 from .transaction_controller import _validate_transaction_payload, _get_agent_info,\
     _check_agent_balance, create_transaction, _debit_entity, insert_operation
-from transaction.domain.transaction_domain import calculate_transaction_paid_amount_and_fee,\
+from apps.transaction.domain.transaction_domain import calculate_transaction_paid_amount_and_fee,\
     get_fee_calculation_payload
-from kyc.domain.customer_domain import get_customer_balance
+from apps.kyc.domain.customer_domain import get_customer_balance
 from tastypie.http import HttpUnauthorized, HttpForbidden
-from kyc.repository.kyc_repository import CustomerRepository
-from core.errors import CoreException
+from apps.kyc.repository.kyc_repository import CustomerRepository
+from apps.core.errors import CoreException
 from marshmallow import ValidationError
-from transaction.decorator.transaction_decorator import agent_code_required
-from core.utils.http import get_request_token
-from core.utils.string import format_decimal_with_two_digits_after_comma
+from apps.transaction.decorator.transaction_decorator import agent_code_required
+from apps.core.utils.http import get_request_token
+from apps.core.utils.string import format_decimal_with_two_digits_after_comma
 
 from django.contrib.auth.models import User
-from core.utils.http import create_jwt_token_for
+from apps.core.utils.http import create_jwt_token_for
 
 def create_customer_with_card(tastypie, payload, request):
     try:

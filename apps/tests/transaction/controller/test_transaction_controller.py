@@ -5,9 +5,9 @@ from tests.fixtures.entity_fixture import entity, agent
 from tests.fixtures.shared_fixture import country, grille_tarifaire, corridor
 from tests.fixtures.kyc_fixture import customer
 from tests.fixtures.transaction_fixture import transaction_cash_to_cash_payload, transaction, dumped_transaction_cash_to_cash_payload
-from transaction.controller.transaction_controller import _validate_transaction_payload, _dump_transaction_payload,\
+from apps.transaction.controller.transaction_controller import _validate_transaction_payload, _dump_transaction_payload,\
     _validate_search_transaction_by_code_payload, _get_agent_info, _check_agent_balance
-from core.errors import AgentException, CoreException
+from apps.core.errors import AgentException, CoreException
 
 
 @pytest.mark.django_db

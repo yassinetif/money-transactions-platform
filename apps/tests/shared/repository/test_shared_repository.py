@@ -1,7 +1,7 @@
 import pytest
 from tests.fixtures.shared_fixture import country, corridor, grille_tarifaire, grille_tarifaire_percent
-from shared.repository.shared_repository import SharedRepository
-from core.errors import CountryException, CorridorException, GrilleException
+from apps.shared.repository.shared_repository import SharedRepository
+from apps.core.errors import CountryException, CorridorException, GrilleException
 
 
 @pytest.mark.django_db

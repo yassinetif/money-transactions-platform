@@ -1,8 +1,8 @@
 import pytest
-from entity.models .entity import Entity
-from entity.models.agent import Agent
+from apps.entity.models .entity import Entity
+from apps.entity.models.agent import Agent
 from django.contrib.auth.models import User
-from shared.models.country import Country
+from apps.shared.models.country import Country
 
 
 @pytest.fixture

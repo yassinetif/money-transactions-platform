@@ -1,5 +1,5 @@
-from transaction.models import Transaction, TransactionStatus
-from core.errors import TransactionNotFoundException
+from apps.transaction.models import Transaction, TransactionStatus
+from apps.core.errors import TransactionNotFoundException
 
 
 class TransactionRepository():

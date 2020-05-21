@@ -2,8 +2,8 @@ import json
 import requests
 import datetime
 import jwt
-from shared.global_config import GLOBAL_CONFIG as global_config
-from core.errors import ApiAuthenticationException, NetworkException
+from apps.shared.global_config import GLOBAL_CONFIG as global_config
+from apps.core.errors import ApiAuthenticationException, NetworkException
 from django.utils.translation import ugettext_lazy as _
 
 

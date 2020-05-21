@@ -1,23 +1,23 @@
 
 import json
-from core.errors import CoreException, CustomerException
-from core.utils.http import get_request_token
-from core.utils.string import format_decimal_with_two_digits_after_comma, convert_sharing_calculation_expression_to_json, convert_snake_to_camel_case
+from apps.core.errors import CoreException, CustomerException
+from apps.core.utils.http import get_request_token
+from apps.core.utils.string import format_decimal_with_two_digits_after_comma, convert_sharing_calculation_expression_to_json, convert_snake_to_camel_case
 from marshmallow import ValidationError
 from importlib import import_module
-from core.utils.validator import SearchTransactionCodeValidator, FeeValidator
+from apps.core.utils.validator import SearchTransactionCodeValidator, FeeValidator
 from tastypie.http import HttpUnauthorized, HttpForbidden
-from entity.repository.agent_repository import AgentRepository
-from kyc.repository.kyc_repository import CustomerRepository
-from kyc.domain.customer_domain import check_customer_balance, get_customer_balance, debit_customer_account
-from entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
-from transaction.domain.transaction_domain import debit_entity_account, create_transaction, \
+from apps.entity.repository.agent_repository import AgentRepository
+from apps.kyc.repository.kyc_repository import CustomerRepository
+from apps.kyc.domain.customer_domain import check_customer_balance, get_customer_balance, debit_customer_account
+from apps.entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
+from apps.transaction.domain.transaction_domain import debit_entity_account, create_transaction, \
     insert_operation, search_transaction, pay_transaction,\
     credit_entity_account, calculate_transaction_paid_amount_and_fee,\
     currency_change, get_fee_calculation_payload
-from transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
-from shared.models.price import AGENT_TRANSACTIONS
-from shared.repository.shared_repository import SharedRepository
+from apps.transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
+from apps.shared.models.price import AGENT_TRANSACTIONS
+from apps.shared.repository.shared_repository import SharedRepository
 from numexpr import evaluate as ev
 
 def _get_validator_class(transaction_type):

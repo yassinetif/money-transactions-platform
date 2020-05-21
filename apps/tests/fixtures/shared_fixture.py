@@ -1,6 +1,6 @@
 import pytest
-from shared.models.country import Country
-from shared.models.price import Corridor, Grille, FeeType
+from apps.shared.models.country import Country
+from apps.shared.models.price import Corridor, Grille, FeeType
 
 
 @pytest.fixture

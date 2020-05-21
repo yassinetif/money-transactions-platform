@@ -1,6 +1,6 @@
 from decimal import Decimal
-from shared.models.account import Account, AccountType
-from core.errors import CoreException
+from apps.shared.models.account import Account, AccountType
+from apps.core.errors import CoreException
 
 
 def check_entity_balance(agent, amount):

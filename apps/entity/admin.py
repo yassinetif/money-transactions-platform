@@ -1,6 +1,6 @@
 from django.contrib import admin
-from entity.models.entity import Entity, EntitySettings
-from entity.models.agent import Agent
+from apps.entity.models.entity import Entity, EntitySettings
+from apps.entity.models.agent import Agent
 
 
 class EntityAdmin(admin.ModelAdmin):

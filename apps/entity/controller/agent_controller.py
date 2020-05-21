@@ -1,12 +1,12 @@
 
 from tastypie.http import HttpUnauthorized, HttpForbidden
-from entity.repository.agent_repository import AgentRepository
-from entity.repository.entity_repository import EntityRepository
+from apps.entity.repository.agent_repository import AgentRepository
+from apps.entity.repository.entity_repository import EntityRepository
 from django.contrib.auth.models import User
-from core.utils.http import create_jwt_token_for, get_request_token, decode_jwt_token
-from core.utils.string import verify_totp, generate_totp
+from apps.core.utils.http import create_jwt_token_for, get_request_token, decode_jwt_token
+from apps.core.utils.string import verify_totp, generate_totp
 from services.controller.sms_controller import send_otp_sms
-from core.utils.routines import execute_routine
+from apps.core.utils.routines import execute_routine
 def login(tastypie, data, request):
 
     username = data['username']

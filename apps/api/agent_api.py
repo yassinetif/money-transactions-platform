@@ -1,8 +1,8 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from django.contrib.auth.models import User
 from tastypie.serializers import Serializer
-from entity.models.agent import Agent
-from entity.controller.agent_controller import login as agent_login,\
+from apps.entity.models.agent import Agent
+from apps.entity.controller.agent_controller import login as agent_login,\
     otp_authentication as otp_auth, otp_renew as otp_renew_code
 from django.conf.urls import url
 from tastypie.utils import trailing_slash

@@ -1,9 +1,9 @@
 from unittest.mock import patch
 import pytest
 from tests.fixtures.entity_fixture import entity_payload, entity, agent
-from entity.domain.entity_domain import check_entity_balance,\
+from apps.entity.domain.entity_domain import check_entity_balance,\
     get_entity_balance_by_agent, get_entity_balance, credit_entity, debit_entity
-from core.errors import CoreException
+from apps.core.errors import CoreException
 
 
 class TestEntityDomain:

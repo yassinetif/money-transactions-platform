@@ -1,10 +1,10 @@
 import pytest
 from tests.fixtures.transaction_fixture import transaction
-from transaction.repository.transaction_repository import TransactionRepository
+from apps.transaction.repository.transaction_repository import TransactionRepository
 from tests.fixtures.entity_fixture import entity, agent
 from tests.fixtures.kyc_fixture import customer
 from tests.fixtures.shared_fixture import country
-from core.errors import TransactionNotFoundException
+from apps.core.errors import TransactionNotFoundException
 
 
 @pytest.mark.django_db

@@ -1,15 +1,15 @@
-from core.errors import CoreException
-from shared.repository.shared_repository import SharedRepository
-from kyc.repository.kyc_repository import CustomerRepository
-from entity.repository.entity_repository import EntityRepository
-from entity.repository.agent_repository import AgentRepository
-from entity.domain.entity_domain import debit_entity, credit_entity, get_entity_balance
-from kyc.domain.customer_domain import credit_customer_account, get_customer_balance, debit_customer_account
-from shared.models.price import TransactionType
+from apps.core.errors import CoreException
+from apps.shared.repository.shared_repository import SharedRepository
+from apps.kyc.repository.kyc_repository import CustomerRepository
+from apps.entity.repository.entity_repository import EntityRepository
+from apps.entity.repository.agent_repository import AgentRepository
+from apps.entity.domain.entity_domain import debit_entity, credit_entity, get_entity_balance
+from apps.kyc.domain.customer_domain import credit_customer_account, get_customer_balance, debit_customer_account
+from apps.shared.models.price import TransactionType
 from ..models import Transaction, Operation, TransactionStatus, TransactionCodePrefix
-from transaction.repository.transaction_repository import TransactionRepository
-from core.utils.string import random_code, convert_enum_to_tuple
-from core.utils.http import post_simple_json_request
+from apps.transaction.repository.transaction_repository import TransactionRepository
+from apps.core.utils.string import random_code, convert_enum_to_tuple
+from apps.core.utils.http import post_simple_json_request
 from importlib import import_module
 from decimal import Decimal
 

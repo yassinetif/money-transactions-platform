@@ -1,5 +1,5 @@
-from entity.models.agent import Agent
-from core.errors import AgentException
+from apps.entity.models.agent import Agent
+from apps.core.errors import AgentException
 
 class AgentRepository():
 

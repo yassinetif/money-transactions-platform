@@ -1,8 +1,8 @@
-from shared.models.price import Corridor, Grille, Sharing
-from shared.models.country import Country, Currency, Change
-from shared.models.notification import Notification
+from apps.shared.models.price import Corridor, Grille, Sharing
+from apps.shared.models.country import Country, Currency, Change
+from apps.shared.models.notification import Notification
 from django.contrib import admin
-from shared.models.account import Account
+from apps.shared.models.account import Account
 from django.utils.translation import ugettext_lazy as _
 
 class AccountAdmin(admin.ModelAdmin):

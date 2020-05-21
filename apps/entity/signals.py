@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from shared.models.account import Account, AccountType
-from entity.models.entity import Entity
+from apps.shared.models.account import Account, AccountType
+from apps.entity.models.entity import Entity
 
 
 @receiver(post_save, sender=Entity)

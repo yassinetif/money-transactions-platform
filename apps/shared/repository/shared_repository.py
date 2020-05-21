@@ -1,8 +1,8 @@
-from shared.models.country import Country, Change
-from shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS, Sharing
+from apps.shared.models.country import Country, Change
+from apps.shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS, Sharing
 from django.db.models import Q
-from core.errors import CorridorException, GrilleException, CountryException, CoreException
-from shared.models.account import Account, AccountType
+from apps.core.errors import CorridorException, GrilleException, CountryException, CoreException
+from apps.shared.models.account import Account, AccountType
 
 
 class SharedRepository():

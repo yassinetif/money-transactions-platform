@@ -1,7 +1,7 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
-from transaction.models import Transaction
+from apps.transaction.models import Transaction
 from tastypie.serializers import Serializer
-from transaction.controller.transaction_controller import create as create_transaction,\
+from apps.transaction.controller.transaction_controller import create as create_transaction,\
     search as search_transaction, pay as pay_transaction, fee as transaction_fee
 from django.conf.urls import url
 from tastypie.utils import trailing_slash

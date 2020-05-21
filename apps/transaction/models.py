@@ -2,11 +2,11 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from entity.models.agent import Agent
-from shared.models.price import Grille, TransactionType
-from shared.models.account import Account
-from shared.models.country import Country
-from core.utils.string import random_code
+from apps.entity.models.agent import Agent
+from apps.shared.models.price import Grille, TransactionType
+from apps.shared.models.account import Account
+from apps.shared.models.country import Country
+from apps.core.utils.string import random_code
 from enum import Enum
 
 
@@ -70,6 +70,7 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = _('Transaction')
         verbose_name_plural = _('Transactions')
+        app_label = 'transaction'
 
     def __str__(self):
         return str(self.number)
@@ -91,3 +92,4 @@ class Operation(models.Model):
     class Meta:
         verbose_name = _('Operation detail')
         verbose_name_plural = _('Operations details')
+        app_label = 'transaction'

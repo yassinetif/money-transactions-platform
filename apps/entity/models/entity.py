@@ -1,10 +1,10 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.translation import ugettext_lazy as _
-from shared.models.account import Account
-from shared.models.country import Country
+from apps.shared.models.account import Account
+from apps.shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
-from core.utils.string import random_code
+from apps.core.utils.string import random_code
 from django.forms.models import model_to_dict
 from enum import Enum
 
@@ -58,6 +58,7 @@ class Entity(MPTTModel):
     class Meta:
         verbose_name = _('Entity')
         verbose_name_plural = _('Entities')
+        app_label = 'entity'
 
 
 class EntitySettings(models.Model):
@@ -71,3 +72,4 @@ class EntitySettings(models.Model):
     class Meta:
         verbose_name = _('Entity setting')
         verbose_name_plural = _('Entities settings')
+        app_label = 'entity'

@@ -1,10 +1,10 @@
 import pytest
 from tests.fixtures.entity_fixture import agent, entity, entity_child
 from tests.fixtures.shared_fixture import country
-from entity.repository.entity_repository import EntityRepository
-from core.errors import AgentException
+from apps.entity.repository.entity_repository import EntityRepository
+from apps.core.errors import AgentException
 from django.contrib.auth.models import User
-from entity.models.agent import Agent
+from apps.entity.models.agent import Agent
 
 
 @pytest.mark.django_db

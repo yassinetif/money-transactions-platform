@@ -1,5 +1,5 @@
 from django.contrib import admin
-from transaction.models import Transaction, Operation
+from apps.transaction.models import Transaction, Operation
 from django.utils.translation import ugettext_lazy as _
 
 

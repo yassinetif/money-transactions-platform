@@ -1,6 +1,6 @@
 import pytest
 from django.contrib.auth.models import User
-from kyc.models import Customer
+from apps.kyc.models import Customer
 from tests.fixtures.shared_fixture import country
 
 @pytest.fixture

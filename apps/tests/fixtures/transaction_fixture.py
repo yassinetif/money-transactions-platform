@@ -1,6 +1,6 @@
 
 import pytest
-from transaction.models import Transaction
+from apps.transaction.models import Transaction
 from tests.fixtures.entity_fixture import entity, agent
 from tests.fixtures.kyc_fixture import customer
 from tests.fixtures.shared_fixture import country

@@ -1,9 +1,9 @@
 from django.urls import path
 from django.conf.urls import include
 from tastypie.api import Api
-from api.agent_api import AgentResource
-from api.transaction_api import TransactionResource
-from api.customer_api import CustomerResource
+from apps.api.agent_api import AgentResource
+from apps.api.transaction_api import TransactionResource
+from apps.api.customer_api import CustomerResource
 
 v1_api = Api(api_name='v1')
 

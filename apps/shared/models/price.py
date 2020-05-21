@@ -1,8 +1,8 @@
 from django.db import models
-from shared.models.country import Country, Currency
+from apps.shared.models.country import Country, Currency
 from django.utils.translation import ugettext_lazy as _
 from enum import Enum
-from core.utils.string import validate_calculation_expression
+from apps.core.utils.string import validate_calculation_expression
 
 class TransactionType(Enum):
     CASH_TO_CASH = 'CASH_TO_CASH'
@@ -33,6 +33,7 @@ class Sharing(models.Model):
 
     class Meta:
         verbose_name = _('Revenue Sharing')
+        app_label = 'shared'
 
 
 class Corridor(models.Model):
@@ -51,9 +52,11 @@ class Corridor(models.Model):
     currency = models.ForeignKey(Currency, null=True, blank=True, on_delete=models.DO_NOTHING)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
 
     class Meta:
         verbose_name = _('Corridor')
+        app_label = 'shared'
 
 
 class Grille(models.Model):
@@ -67,3 +70,4 @@ class Grille(models.Model):
 
     class Meta:
         verbose_name = _('Pricing')
+        app_label = 'shared'

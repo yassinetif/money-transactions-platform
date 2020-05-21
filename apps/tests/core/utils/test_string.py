@@ -1,4 +1,4 @@
-from core.utils.string import convert_partner_cash_to_cash_payload, convert_snake_to_camel_case
+from apps.core.utils.string import convert_partner_cash_to_cash_payload, convert_snake_to_camel_case
 from tests.fixtures.api_fixtures import partner_payload, cash_to_cash_base_payload
 
 

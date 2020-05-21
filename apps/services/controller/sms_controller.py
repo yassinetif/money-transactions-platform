@@ -1,6 +1,6 @@
 
-from core.utils.http import post_simple_json_request
-from core.errors import CallPartnerApiException
+from apps.core.utils.http import post_simple_json_request
+from apps.core.errors import CallPartnerApiException
 
 def send_otp_sms(to, text):
     try:

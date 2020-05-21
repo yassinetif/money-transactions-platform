@@ -1,6 +1,6 @@
-from transaction.domain import partners_config
-from core.errors import PartnerApiException
-from core.utils.string import convert_partner_cash_to_cash_payload
+from apps.transaction.domain import partners_config
+from apps.core.errors import PartnerApiException
+from apps.core.utils.string import convert_partner_cash_to_cash_payload
 import requests
 
 

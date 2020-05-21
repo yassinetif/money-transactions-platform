@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from shared.models.account import Account
-from shared.models.country import Country
+from apps.shared.models.account import Account
+from apps.shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.translation import ugettext_lazy as _
 import datetime
@@ -26,6 +26,8 @@ class Customer(models.Model):
 
     class Meta:
         verbose_name = _('Client')
+        app_label = 'kyc'
+
 
     def __str__(self):
         return '{0} {1}'.format(self.informations.first_name, self.informations.last_name)
@@ -45,6 +47,7 @@ class Cartera(models.Model):
 
     class Meta:
         verbose_name = _('Cartera')
+        app_label = 'kyc'
 
     def __str__(self):
         return '{0}'.format(self.card_identification_number)

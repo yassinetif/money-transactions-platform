@@ -1,5 +1,5 @@
 from django.contrib import admin
-from kyc.models import Customer, Cartera
+from apps.kyc.models import Customer, Cartera
 
 
 class CustomerAdmin(admin.ModelAdmin):

@@ -1,7 +1,7 @@
-from kyc.models import Customer
+from apps.kyc.models import Customer
 from django.contrib.auth.models import User
-from core.errors import CustomerException
-from shared.repository.shared_repository import SharedRepository
+from apps.core.errors import CustomerException
+from apps.shared.repository.shared_repository import SharedRepository
 
 
 class CustomerRepository():

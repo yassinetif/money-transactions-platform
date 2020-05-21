@@ -1,5 +1,5 @@
-from entity.models.entity import Entity
-from core.errors import EntityException
+from apps.entity.models.entity import Entity
+from apps.core.errors import EntityException
 
 ERR = 'Entity does not exist'
 ERR_TEXT = 'unable to find entity for this agent'

@@ -1,9 +1,9 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
-from kyc.models import Customer
+from apps.kyc.models import Customer
 from tastypie.serializers import Serializer
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
-from transaction.controller.customer_controller import create_customer_with_card,\
+from apps.transaction.controller.customer_controller import create_customer_with_card,\
     create_customer_with_wallet, get_wallet_balance, wallet_login
 
 class CustomerResource(ModelResource):

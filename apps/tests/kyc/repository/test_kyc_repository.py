@@ -1,8 +1,8 @@
 import pytest
-from kyc.repository.kyc_repository import CustomerRepository
+from apps.kyc.repository.kyc_repository import CustomerRepository
 from tests.fixtures.kyc_fixture import customer
 from tests.fixtures.shared_fixture import country
-from core.errors import CustomerException
+from apps.core.errors import CustomerException
 
 
 @pytest.mark.django_db

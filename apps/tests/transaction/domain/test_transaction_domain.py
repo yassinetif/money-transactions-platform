@@ -4,11 +4,11 @@ from tests.fixtures.shared_fixture import grille_tarifaire, corridor, country
 from tests.fixtures.entity_fixture import entity, agent, entity_child, other_agent
 from tests.fixtures.kyc_fixture import customer
 from tests.fixtures.transaction_fixture import transaction_cash_to_cash_payload, transaction
-from transaction.domain.transaction_domain import get_grille_tarifaire, debit_entity_account,\
+from apps.transaction.domain.transaction_domain import get_grille_tarifaire, debit_entity_account,\
     credit_entity_account, create_transaction, get_partner_module_name, search_transaction,\
     pay_transaction, _can_agent_pay_transaction, _get_operation_comment
-from shared.models.price import FeeType
-from core.errors import GrilleException, CoreException, CountryException, TransactionNotFoundException
+from apps.shared.models.price import FeeType
+from apps.core.errors import GrilleException, CoreException, CountryException, TransactionNotFoundException
 
 
 @pytest.mark.django_db
