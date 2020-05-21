@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     "django_countries",
     "django_db_logger",
     "mptt",
-    "core",
+    "apps.core",
     "api",
     "entity",
     "apps.kyc",
