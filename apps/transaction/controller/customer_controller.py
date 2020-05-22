@@ -59,7 +59,6 @@ def create_customer_with_wallet(tastypie, payload, request):
         otp = generate_totp()
         print('create_customer_with_wallet OTP', otp)
         execute_routine(send_otp_sms, [payload.get('phone_number'), otp])
-
         return tastypie.create_response(request, payload)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
@@ -105,7 +104,6 @@ def wallet_login(tastypie, data, request):
             return tastypie.create_response(request, {'response_text': 'Inactive Wallet', 'response_code': '100'}, HttpUnauthorized)
     except User.DoesNotExist:
         return tastypie.create_response(request, {'response_text': 'unknwonw user', 'response_code': '100'}, HttpForbidden)
-
     except Exception as err:
         return tastypie.create_response(request, {'response_text': err, 'response_code': '100'}, HttpForbidden)
 

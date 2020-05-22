@@ -1,4 +1,5 @@
 from apps.shared.models.country import Country, Change
+from apps.shared.models.notification import Notification
 from apps.shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS, Sharing
 from django.db.models import Q
 from apps.core.errors import CorridorException, GrilleException, CountryException, CoreException
@@ -77,3 +78,6 @@ class SharedRepository():
             if is_card_activation:
                 Account.objects.create(content_object=instance,
                                        category=AccountType.CARTE_MONNAMON.value, balance=0)
+
+    def save_notification(notification_type, content, receiver, status=True):
+        Notification.objects.create(notification_type=notification_type, content=content, content_receiver=receiver, status=status)

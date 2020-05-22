@@ -63,7 +63,8 @@ admin.site.register(Change, ChangeAdmin)
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ('notification_type', 'content', 'created', 'status')
+    search_fields = ('content_receiver',)
+    list_display = ('notification_type', 'content', 'content_receiver', 'created', 'status')
 
 
 admin.site.register(Notification, NotificationAdmin)
