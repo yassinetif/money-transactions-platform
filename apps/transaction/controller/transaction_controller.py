@@ -8,6 +8,7 @@ from importlib import import_module
 from apps.core.utils.validator import SearchTransactionCodeValidator, FeeValidator
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from apps.entity.repository.agent_repository import AgentRepository
+from apps.entity.repository.entity_repository import EntityRepository
 from apps.kyc.repository.kyc_repository import CustomerRepository
 from apps.kyc.domain.customer_domain import check_customer_balance, get_customer_balance, debit_customer_account
 from apps.entity.domain.entity_domain import check_entity_balance, get_entity_balance_by_agent
@@ -16,9 +17,11 @@ from apps.transaction.domain.transaction_domain import debit_entity_account, cre
     credit_entity_account, calculate_transaction_paid_amount_and_fee,\
     currency_change, get_fee_calculation_payload
 from apps.transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
+from apps.transaction.repository.transaction_repository import TransactionRepository
 from apps.shared.models.price import AGENT_TRANSACTIONS
 from apps.shared.repository.shared_repository import SharedRepository
 from numexpr import evaluate as ev
+from decimal import Decimal
 
 def _get_validator_class(transaction_type):
     validator = convert_snake_to_camel_case(transaction_type)
@@ -217,7 +220,8 @@ def _revenu_sharing(transaction):
     expression = SharedRepository.fetch_sharing_calculation_expression(transaction)
     json_expression = convert_sharing_calculation_expression_to_json(expression)
     fee_value = _get_fee_value(transaction, json_expression.pop('fee'))
-    _calculate_real_revenue_of_each_participant_of_transaction(json_expression, fee_value)
+    json_expression = _calculate_real_revenue_of_each_participant_of_transaction(json_expression, fee_value)
+    _dispatch_revenu_in_accounts(transaction, json_expression)
 
     return json_expression
 
@@ -229,3 +233,11 @@ def _calculate_real_revenue_of_each_participant_of_transaction(json_expression, 
 def _get_fee_value(transaction, fee_expression):
     fee_expression = fee_expression.replace('FEE', str(transaction.grille.fee))
     return str(float(ev(fee_expression)))
+
+def _dispatch_revenu_in_accounts(transaction, json_expression):
+    if transaction.transaction_type in AGENT_TRANSACTIONS:
+        for e, value in json_expression.items():
+            entity = EntityRepository.fetch_entity_by_type_and_hierarchy(transaction.agent.entity, e)
+            amount = currency_change(transaction.grille.corridor.currency,
+                                     entity.country.currency, Decimal(value))
+            TransactionRepository.save_entity_commission(transaction, entity, amount)

@@ -230,6 +230,7 @@ FLUENT_DASHBOARD_APP_ICONS = {
 
     'transaction/transaction': 'right-arrow7.png',
     'transaction/operation': 'stats2.png',
+    'transaction/revenusharingresult': 'img/sharing.png',
 
     'shared/country': 'world90.png',
     'shared/change': 'share.png',

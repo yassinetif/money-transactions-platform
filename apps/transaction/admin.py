@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.transaction.models import Transaction, Operation
+from apps.transaction.models import Transaction, Operation, RevenuSharingResult
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -50,3 +50,16 @@ class OperationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Operation, OperationAdmin)
+
+
+class RevenuSharingResultAdmin(admin.ModelAdmin):
+    list_display = ('created', 'entity', 'transaction', 'transaction_type', 'amount')
+    search_fields = ('transaction__number',)
+
+    def transaction_type(self, obj):
+        return obj.transaction.transaction_type
+    transaction_type.allow_tags = True
+    transaction_type.short_description = _('Type')
+
+
+admin.site.register(RevenuSharingResult, RevenuSharingResultAdmin)

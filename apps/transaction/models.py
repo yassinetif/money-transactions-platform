@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from apps.entity.models.agent import Agent
+from apps.entity.models.entity import Entity
 from apps.shared.models.price import Grille, TransactionType
 from apps.shared.models.account import Account
 from apps.shared.models.country import Country
@@ -85,11 +86,25 @@ class Operation(models.Model):
     updated = models.DateTimeField(auto_now=True)
     transaction = models.ForeignKey(
         Transaction, null=False, blank=False, on_delete=models.DO_NOTHING)
-    comment = models.TextField(_('Commentaire'), null=True, blank=True)
+    comment = models.TextField(_('Comment'), null=True, blank=True)
     balance_after_operation = models.ForeignKey(
         Account, on_delete=models.DO_NOTHING)
 
     class Meta:
         verbose_name = _('Operation detail')
         verbose_name_plural = _('Operations details')
+        app_label = 'transaction'
+
+
+class RevenuSharingResult(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    transaction = models.ForeignKey(
+        Transaction, null=False, blank=False, on_delete=models.DO_NOTHING)
+    entity = models.ForeignKey(
+        Entity, null=False, blank=False, on_delete=models.DO_NOTHING)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
+
+    class Meta:
+        verbose_name = verbose_name_plural = _('Revenu Sharing result')
         app_label = 'transaction'

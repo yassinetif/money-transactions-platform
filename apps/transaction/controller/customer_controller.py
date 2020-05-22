@@ -91,7 +91,7 @@ def wallet_login(tastypie, data, request):
         if user and user.is_active:
             result = user.check_password(password)
             if result:
-                wallet = CustomerRepository.fetch_customer_by_phone_number(user)
+                wallet = CustomerRepository.fetch_customer_by_phone_number(user, status=True)
                 bundle = tastypie.build_bundle(obj=wallet, request=request)
                 bundle = tastypie.full_dehydrate(bundle)
                 bundle.data.update({'reponse_code': '000'})
@@ -104,6 +104,9 @@ def wallet_login(tastypie, data, request):
             return tastypie.create_response(request, {'response_text': 'Inactive Wallet', 'response_code': '100'}, HttpUnauthorized)
     except User.DoesNotExist:
         return tastypie.create_response(request, {'response_text': 'unknwonw user', 'response_code': '100'}, HttpForbidden)
+
+    except Exception as err:
+        return tastypie.create_response(request, {'response_text': err, 'response_code': '100'}, HttpForbidden)
 
 
 def define_wallet_password(tastypie, data, request):
