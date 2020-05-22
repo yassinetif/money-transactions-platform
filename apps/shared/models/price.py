@@ -60,8 +60,8 @@ class Corridor(models.Model):
 
 class Grille(models.Model):
     corridor = models.ForeignKey('Corridor', on_delete=models.CASCADE)
-    minimum_amount = models.DecimalField(max_digits=7, decimal_places=2)
-    maximum_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    minimum_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    maximum_amount = models.DecimalField(max_digits=15, decimal_places=2)
     fee_type = models.CharField(max_length=15, choices=[
         (tag.value, tag.value) for tag in FeeType])
     fee = models.DecimalField(max_digits=7, decimal_places=2)
