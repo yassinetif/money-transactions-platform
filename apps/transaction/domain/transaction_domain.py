@@ -13,7 +13,7 @@ from apps.core.utils.http import post_simple_json_request
 from importlib import import_module
 from decimal import Decimal
 
-CURRENT_MODULE = 'transaction.domain.transaction_domain'
+CURRENT_MODULE = 'apps.transaction.domain.transaction_domain'
 
 def get_source_and_destination_currencies(source_country, destination_country):
     source_currency_iso = SharedRepository.fetch_currency_by_country_iso(source_country)

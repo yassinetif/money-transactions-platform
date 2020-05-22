@@ -56,6 +56,12 @@ class RevenuSharingResultAdmin(admin.ModelAdmin):
     list_display = ('created', 'entity', 'transaction', 'transaction_type', 'amount')
     search_fields = ('transaction__number',)
 
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     def transaction_type(self, obj):
         return obj.transaction.transaction_type
     transaction_type.allow_tags = True

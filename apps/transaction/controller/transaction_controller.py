@@ -25,7 +25,7 @@ from decimal import Decimal
 
 def _get_validator_class(transaction_type):
     validator = convert_snake_to_camel_case(transaction_type)
-    module = import_module('core.utils.validator')
+    module = import_module('apps.core.utils.validator')
     klass = getattr(module, '{}Validator'.format(validator))
     return klass()
 
