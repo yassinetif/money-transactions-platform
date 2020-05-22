@@ -85,7 +85,7 @@ class EntityForm(forms.ModelForm):
 class EntitySettings(models.Model):
     entity = models.ForeignKey('Entity', null=True, blank=True, on_delete=models.DO_NOTHING)
     check_entity_balance = models.BooleanField(default=True, help_text=_('Check Entity balance before processing operation'))
-    overdraft_amount = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text=_('Overdraft amount'))
+    overdraft_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0, help_text=_('Overdraft amount'))
 
     def __str__(self):
         return self.entity.brand_name
