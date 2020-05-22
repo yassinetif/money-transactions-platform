@@ -238,6 +238,7 @@ FLUENT_DASHBOARD_APP_ICONS = {
     'shared/account': 'img/balance.png',
 
     'kyc/customer': 'multiple25.png',
+    'kyc/cartera': 'img/cartera.jpeg',
 
     'django_db_logger/statuslog': 'archive52.png',
 
