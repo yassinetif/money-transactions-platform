@@ -46,12 +46,12 @@ def generate_secret_key(len=16):
 def format_decimal_with_two_digits_after_comma(number):
     return "%.2f" % number
 
-def generate_totp(period=60):
+def generate_totp(period=3600):
     totp = oath.totp(OTP_SECRET_KEY, format='dec6', period=period)
     return totp
 
 def verify_totp(totp):
-    return oath.accept_totp(OTP_SECRET_KEY, totp, format='dec6', period=60)[0]
+    return oath.accept_totp(OTP_SECRET_KEY, totp, format='dec6', period=3600)[0]
 
 
 def validate_calculation_expression(expression):
