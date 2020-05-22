@@ -57,6 +57,7 @@ def create_customer_with_wallet(tastypie, payload, request):
         payload.update({'response_code': '000'})
 
         otp = generate_totp()
+        print('create_customer_with_wallet OTP', otp)
         execute_routine(send_otp_sms, [payload.get('phone_number'), otp])
 
         return tastypie.create_response(request, payload)
