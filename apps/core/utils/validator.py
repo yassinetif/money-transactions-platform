@@ -8,6 +8,7 @@ class AgentValidator(Schema):
 class CreationWalletValidator(Schema):
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
+    email = fields.Str(required=False, null=True)
     phone_number = fields.Str(required=True)
     address = fields.Str(required=True)
     identification_type = fields.Str(required=True)

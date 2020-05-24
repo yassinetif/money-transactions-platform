@@ -13,6 +13,7 @@ class CustomerRepository():
             user_info = {}
             user_info.update({'first_name': data.pop('first_name')})
             user_info.update({'last_name': data.pop('last_name')})
+            user_info.update({'email': data.pop('email')})
             user, created = User.objects.update_or_create(username=data.get('phone_number'), defaults=user_info)
 
             payload_country = data.pop('issuer_country', None)
@@ -30,8 +31,9 @@ class CustomerRepository():
 
             SharedRepository.initialize_account(customer, created, is_card_activation)
             return customer
-        except Exception:
-            raise CustomerException('CustomerException', 'unable to create this customer in the system')
+        except Exception as err:
+            print(err)
+            raise CustomerException(str(err), 'unable to create this customer in the system')
 
     @staticmethod
     def fetch_customer_by_phone_number(phone_number, status=True):
