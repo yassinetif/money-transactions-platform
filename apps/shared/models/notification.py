@@ -20,6 +20,9 @@ class Notification(models.Model):
     def __str__(self):
         return str(self.notification_type)
 
+    def save(self, *args, **kwargs):
+        super(Notification, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name = _('Notifications Log')
         app_label = 'shared'

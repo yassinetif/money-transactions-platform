@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_countries",
     "django_db_logger",
     "mptt",
+    "django_q",
     "apps.core",
     "apps.entity",
     "apps.kyc",
@@ -242,4 +243,16 @@ FLUENT_DASHBOARD_APP_ICONS = {
 
     'django_db_logger/statuslog': 'archive52.png',
 
+}
+
+
+# ORM broker connection for django-q
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 4,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
 }

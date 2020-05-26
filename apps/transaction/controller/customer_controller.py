@@ -13,9 +13,19 @@ from apps.core.utils.http import get_request_token
 from apps.core.utils.string import format_decimal_with_two_digits_after_comma
 from django.contrib.auth.models import User
 from apps.core.utils.http import create_jwt_token_for
-from apps.core.utils.routines import execute_routine
 from apps.core.utils.string import generate_totp, verify_totp
-from apps.services.controller.sms_controller import send_otp_sms
+from apps.services.tasks import sms_task
+from core.utils.validator import WalletLoginValidator
+
+
+def _validate_login_payload(payload):
+    try:
+        _validator = WalletLoginValidator()
+        _validator.load(payload)
+    except ValidationError as err:
+        raise ValidationError(str(err))
+    except KeyError:
+        raise ValidationError('please specify username and password')
 
 
 def create_customer_with_card(tastypie, payload, request):
@@ -57,8 +67,8 @@ def create_customer_with_wallet(tastypie, payload, request):
         payload.update({'response_code': '000'})
 
         otp = generate_totp()
-        print('create_customer_with_wallet OTP', otp)
-        execute_routine(send_otp_sms, [payload.get('phone_number'), otp])
+        sms_task.run(payload.get('phone_number'), otp)
+
         return tastypie.create_response(request, payload)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
@@ -82,11 +92,13 @@ def get_wallet_balance(tastypie, payload, request):
 
 
 def wallet_login(tastypie, data, request):
-
-    phone_number = data['phone_number']
-    password = data['password']
-
     try:
+
+        _validate_login_payload(data)
+
+        phone_number = data['phone_number']
+        password = data['password']
+
         user = User.objects.get(username=phone_number)
         if user and user.is_active:
             result = user.check_password(password)

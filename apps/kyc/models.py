@@ -29,7 +29,6 @@ class Customer(models.Model):
         verbose_name = _('Client')
         app_label = 'kyc'
 
-
     def __str__(self):
         return '{0} {1}'.format(self.informations.first_name, self.informations.last_name)
 

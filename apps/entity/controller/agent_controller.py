@@ -5,8 +5,9 @@ from apps.entity.repository.entity_repository import EntityRepository
 from django.contrib.auth.models import User
 from apps.core.utils.http import create_jwt_token_for, get_request_token, decode_jwt_token
 from apps.core.utils.string import verify_totp, generate_totp
-from apps.services.controller.sms_controller import send_otp_sms
-from apps.core.utils.routines import execute_routine
+from apps.services.tasks import sms_task
+
+
 def login(tastypie, data, request):
 
     username = data['username']
@@ -53,9 +54,8 @@ def otp_renew(tastypie, request):
         agent_code = decode_jwt_token(get_request_token(request), 'agent_api_secret_key')
         agent = AgentRepository.fetch_by_code(agent_code.get('code'))
         otp = generate_totp()
-        execute_routine(send_otp_sms, [agent.phone_number, otp])
+        sms_task.run(agent.phone_number, otp)
 
         return tastypie.create_response(request, {'response_text': 'OK', 'response_code': '000'})
-    except Exception as e:
-        print(e)
+    except Exception:
         return tastypie.create_response(request, {'response_text': 'Unable to renew OTP', 'response_code': '100'}, HttpForbidden)

@@ -93,3 +93,8 @@ class WalletToWalletValidator(Schema):
     destination_content_object = fields.Nested(
         CustomerWalletValidator(), required=True)
     amount = fields.Str(required=True)
+
+
+class WalletLoginValidator(Schema):
+    phone_number = fields.Str(required=True)
+    password = fields.Str(required=True)

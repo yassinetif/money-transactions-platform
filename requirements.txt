@@ -1,9 +1,11 @@
 appdirs==1.4.3
+arrow==0.15.6
 asgiref==3.2.5
 attrs==19.3.0
 autopep8==1.5
 Babel==2.8.0
 beautifulsoup4==4.8.2
+blessed==1.17.5
 bs4==0.0.1
 certifi==2019.11.28
 cffi==1.14.0
@@ -19,6 +21,8 @@ django-db-logger==0.1.9
 django-fluent-dashboard==1.0.1
 django-js-asset==1.2.2
 django-mptt==0.11.0
+django-picklefield==2.1.1
+django-q==1.2.1
 django-tastypie==0.14.3
 entrypoints==0.3
 flake8==3.7.9
