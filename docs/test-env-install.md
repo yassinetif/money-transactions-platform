@@ -65,3 +65,8 @@ Vérifier la version de python sur le serveur
     pyhton manage.py collectstatic
     pyhton manage.py runserver 0.0.0.0:8000
     ```
+
+## Etape 6 : Lancement du gestionnaire de file d'attente
+-   ```
+    pyhton manage.py qcluster
+    ```

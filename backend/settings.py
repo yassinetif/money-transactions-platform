@@ -217,6 +217,7 @@ FLUENT_DASHBOARD_APP_GROUPS = (
         'models': (
             'django_db_logger.models.*',
             'apps.shared.models.notification.*',
+            'django_q.models.*',
         ),
     }),
 )
@@ -242,6 +243,8 @@ FLUENT_DASHBOARD_APP_ICONS = {
     'kyc/cartera': 'img/cartera.jpeg',
 
     'django_db_logger/statuslog': 'archive52.png',
+
+    'django_q/': 'cogwheels9.png',
 
 }
 
