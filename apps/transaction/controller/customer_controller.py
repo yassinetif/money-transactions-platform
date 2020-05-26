@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from apps.core.utils.http import create_jwt_token_for
 from apps.core.utils.string import generate_totp, verify_totp
 from apps.services.tasks import sms_task
-from core.utils.validator import WalletLoginValidator
+from apps.core.utils.validator import WalletLoginValidator
 
 
 def _validate_login_payload(payload):
