@@ -107,6 +107,8 @@ def wallet_login(tastypie, data, request):
                 bundle = tastypie.build_bundle(obj=wallet, request=request)
                 bundle = tastypie.full_dehydrate(bundle)
                 bundle.data.update({'response_code': '000'})
+                bundle.data.update({'first_name': wallet.informations.first_name})
+                bundle.data.update({'last_name': wallet.informations.last_name})
                 bundle.data.update(create_jwt_token_for(wallet, 'wallet_api_secret_key'))
 
                 return tastypie.create_response(request, bundle)
