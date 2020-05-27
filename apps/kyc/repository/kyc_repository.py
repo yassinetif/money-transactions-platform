@@ -37,7 +37,7 @@ class CustomerRepository():
     @staticmethod
     def fetch_customer_by_phone_number(phone_number, status=True):
         try:
-            return Customer.objects.get(informations__username=phone_number, status=status)
+            return Customer.objects.get(informations__username=phone_number)
         except Customer.DoesNotExist:
             raise CustomerException('unable to find customer with phone number {}'.format(phone_number), 'CustomerException {}'.format(phone_number))
         except Exception:
