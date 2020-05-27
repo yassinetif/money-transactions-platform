@@ -74,7 +74,7 @@ APG = {
                     'customerAddress': 'customer.address',
                     'customerCountry': 'customer.country',
                     'customerDocumentExpiryDate': 'customer.identification_document_expiry_date',
-                    'customerDocumentIssueDate': 'customer.identification_document_deleivery_date',
+                    'customerDocumentIssueDate': 'customer.identification_document_delivery_date',
                     'customerDocumentNumber': 'customer.identification_number',
                     'customerFirstName': 'customer.first_name',
                     'customerLastName': 'customer.last_name',

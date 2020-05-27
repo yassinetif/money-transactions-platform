@@ -4,7 +4,7 @@ from apps.kyc.models import Customer, Cartera
 
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('informations', 'country', 'phone_number', 'identification_type',
-                    'identification_number', 'issuer_country', 'identification_document_deleivery_date',
+                    'identification_number', 'issuer_country', 'identification_document_delivery_date',
                     'identification_document_expiry_date', 'address')
 
 
