@@ -202,7 +202,7 @@ def pay(tastypie, payload, request):
         _validate_transaction_payload(payload.copy())
         token = get_request_token(request)
         _pay_transaction(payload, token)
-        return tastypie.create_response(request, {'reponse_code': '000'})
+        return tastypie.create_response(request, {'response_code': '000'})
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err.messages), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:

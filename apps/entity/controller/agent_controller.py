@@ -24,7 +24,7 @@ def login(tastypie, data, request):
 
                 entity = EntityRepository.fetch_by_agent(agent)
                 bundle.data.update({'entity': entity})
-                bundle.data.update({'reponse_code': '000'})
+                bundle.data.update({'response_code': '000'})
                 bundle.data.update(create_jwt_token_for(agent, 'agent_api_secret_key'))
 
                 # TODO : Send sms asyncrhonously

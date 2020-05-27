@@ -106,7 +106,7 @@ def wallet_login(tastypie, data, request):
                 wallet = CustomerRepository.fetch_customer_by_phone_number(user, status=True)
                 bundle = tastypie.build_bundle(obj=wallet, request=request)
                 bundle = tastypie.full_dehydrate(bundle)
-                bundle.data.update({'reponse_code': '000'})
+                bundle.data.update({'response_code': '000'})
                 bundle.data.update(create_jwt_token_for(wallet, 'wallet_api_secret_key'))
 
                 return tastypie.create_response(request, bundle)
@@ -138,7 +138,7 @@ def define_wallet_password(tastypie, data, request):
 
         bundle = tastypie.build_bundle(obj=customer, request=request)
         bundle = tastypie.full_dehydrate(bundle)
-        bundle.data.update({'reponse_code': '000'})
+        bundle.data.update({'response_code': '000'})
         bundle.data.update(create_jwt_token_for(customer, 'wallet_api_secret_key'))
 
         return tastypie.create_response(request, bundle)
