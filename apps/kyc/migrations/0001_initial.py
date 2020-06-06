@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('identification_type', models.CharField(blank=True, max_length=10, null=True)),
                 ('identification_number', models.CharField(blank=True, max_length=10, null=True)),
-                ('identification_document_delivery_date', models.DateField(default=datetime.date.today, verbose_name='Document deleivery date')),
+                ('identification_document_deleivery_date', models.DateField(default=datetime.date.today, verbose_name='Document deleivery date')),
                 ('identification_document_expiry_date', models.DateField(default=datetime.date.today, verbose_name='Document expiry date')),
                 ('phone_number', models.CharField(max_length=10)),
                 ('address', models.CharField(max_length=100)),
