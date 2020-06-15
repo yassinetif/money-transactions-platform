@@ -1,4 +1,4 @@
-from apps.shared.models.price import Corridor, Grille, Sharing
+from apps.shared.models.price import Corridor, Grille, Sharing, MotifEnvoi, SourceRevenu
 from apps.shared.models.country import Country, Currency, Change
 from apps.shared.models.notification import Notification
 from django.contrib import admin
@@ -68,3 +68,16 @@ class NotificationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Notification, NotificationAdmin)
+
+class MotifEnvoiAdmin(admin.ModelAdmin):
+    list_display = ('code', 'libelle')
+
+
+admin.site.register(MotifEnvoi, MotifEnvoiAdmin)
+
+
+class SourceRevenuAdmin(admin.ModelAdmin):
+    list_display = ('code', 'libelle')
+
+
+admin.site.register(SourceRevenu, SourceRevenuAdmin)

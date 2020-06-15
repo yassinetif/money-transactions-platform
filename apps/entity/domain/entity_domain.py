@@ -29,4 +29,3 @@ def debit_entity(entity, last_balance, amount):
         raise CoreException('unable to debit entity', 'transaction failed')
     Account.objects.create(content_object=entity,
                            category=AccountType.PRINCIPAL.value, balance=last_balance-Decimal(amount))
-

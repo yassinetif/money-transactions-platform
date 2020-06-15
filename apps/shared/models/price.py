@@ -3,7 +3,7 @@ from apps.shared.models.country import Country, Currency
 from django.utils.translation import ugettext_lazy as _
 from enum import Enum
 from apps.core.utils.string import validate_calculation_expression
-
+from django.utils.text import slugify
 class TransactionType(Enum):
     CASH_TO_CASH = 'CASH_TO_CASH'
     CASH_TO_WALLET = 'CASH_TO_WALLET'
@@ -71,3 +71,41 @@ class Grille(models.Model):
     class Meta:
         verbose_name = _('Pricing')
         app_label = 'shared'
+
+
+class MotifEnvoi(models.Model):
+    code = models.CharField(
+        unique=True,
+        max_length=10,
+        null=False,
+        blank=False,
+    )
+    libelle = models.CharField(max_length=100, null=False, blank=False)
+
+    class Meta:
+        verbose_name = _('Motif Envoi')
+        app_label = 'shared'
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.code = slugify(self.libelle)
+        super(MotifEnvoi, self).save(*args, **kwargs)
+
+
+class SourceRevenu(models.Model):
+    code = models.CharField(
+        unique=True,
+        max_length=10,
+        null=False,
+        blank=False,
+    )
+    libelle = models.CharField(max_length=100, null=False, blank=False)
+
+    class Meta:
+        verbose_name = _('Source de revenus')
+        app_label = 'shared'
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.code = slugify(self.libelle)
+        super(SourceRevenu, self).save(*args, **kwargs)
