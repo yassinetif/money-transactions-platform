@@ -24,6 +24,7 @@ class Customer(models.Model):
     address = models.CharField(max_length=100, null=False, blank=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    relations = models.ManyToManyField('self', null=False, blank=False)
 
     class Meta:
         verbose_name = _('Client')
