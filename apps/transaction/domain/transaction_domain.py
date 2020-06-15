@@ -156,6 +156,10 @@ def get_source_and_destination_of_wallet_to_cash(payload):
     destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
     return source, destination
 
+def create_relation_between(source, destination):
+    source.relations.add(destination)
+    source.save()
+
 
 def debit_entity_account(agent, last_balance, amount):
     debit_entity(agent.entity, last_balance, amount)
@@ -189,6 +193,7 @@ def _create_cash_to_cash_transaction(payload, agent):
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
         payload.get('destination_country'))
     transaction.save()
+    create_relation_between(source, destination)
     return transaction
 
 def _create_activation_carte_transaction(payload, agent):
@@ -317,6 +322,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
     transaction.save()
 
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
+    create_relation_between(customer, destination)
     return transaction
 
 def _create_wallet_to_wallet_transaction(payload, customer):
@@ -343,6 +349,7 @@ def _create_wallet_to_wallet_transaction(payload, customer):
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
     operation_amount = currency_change(customer.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
     credit_customer_account(destination, get_customer_balance(destination), operation_amount)
+    create_relation_between(customer, destination)
     return transaction
 
 

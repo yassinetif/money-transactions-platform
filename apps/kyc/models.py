@@ -4,7 +4,7 @@ from apps.shared.models.account import Account
 from apps.shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.translation import ugettext_lazy as _
-import datetime
+from django.utils import timezone
 
 
 class Customer(models.Model):
@@ -17,8 +17,8 @@ class Customer(models.Model):
         max_length=10, null=True, blank=True)
     issuer_country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True)
     country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True, related_name='residence_country')
-    identification_document_delivery_date = models.DateField(_('Document deleivery date'), default=datetime.date.today)
-    identification_document_expiry_date = models.DateField(_('Document expiry date'), default=datetime.date.today)
+    identification_document_delivery_date = models.DateField(_('Document delivery date'), default=timezone.now)
+    identification_document_expiry_date = models.DateField(_('Document expiry date'), default=timezone.now)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
     status = models.BooleanField(default=False)
     address = models.CharField(max_length=100, null=False, blank=False)
