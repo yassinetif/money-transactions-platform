@@ -20,6 +20,12 @@ class AccountAdmin(admin.ModelAdmin):
     account_object_currency.allow_tags = True
     account_object_currency.short_description = 'Devise'
 
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 admin.site.register(Account, AccountAdmin)
 
