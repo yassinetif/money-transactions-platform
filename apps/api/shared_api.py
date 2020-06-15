@@ -13,15 +13,6 @@ class MotifEnvoiResource(ModelResource):
         serializer = Serializer(
             formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
-    def determine_format(self, request):
-        """
-        Used to determine the desired format from the request.format
-        attribute.
-        """
-        if (hasattr(request, 'format') and request.format in self._meta.serializer.formats):
-            return self._meta.serializer.get_mime_for_format(request.format)
-        return super(MotifEnvoiResource, self).determine_format(request)
-
 
 class SourceRevenuResource(ModelResource):
     class Meta:
@@ -32,11 +23,3 @@ class SourceRevenuResource(ModelResource):
         serializer = Serializer(
             formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
-    def determine_format(self, request):
-        """
-        Used to determine the desired format from the request.format
-        attribute.
-        """
-        if (hasattr(request, 'format') and request.format in self._meta.serializer.formats):
-            return self._meta.serializer.get_mime_for_format(request.format)
-        return super(MotifEnvoiResource, self).determine_format(request)
