@@ -26,6 +26,8 @@ def login(tastypie, data, request):
                 bundle.data.update({'entity': entity})
                 bundle.data.update({'response_code': '000'})
                 bundle.data.update(create_jwt_token_for(agent, 'agent_api_secret_key'))
+                bundle.data.update({'first_name': user.first_name})
+                bundle.data.update({'last_name': user.last_name})
 
                 # TODO : Send sms asyncrhonously
 

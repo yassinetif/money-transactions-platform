@@ -1,6 +1,6 @@
 from apps.shared.models.country import Country, Change
 from apps.shared.models.notification import Notification
-from apps.shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS, Sharing
+from apps.shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS, Sharing, MotifEnvoi, SourceRevenu
 from django.db.models import Q
 from apps.core.errors import CorridorException, GrilleException, CountryException, CoreException
 from apps.shared.models.account import Account, AccountType
@@ -15,6 +15,7 @@ class SharedRepository():
         except Country.DoesNotExist as err:
             raise CountryException('country not found in the error', err)
 
+    @staticmethod
     def fetch_currency_by_country_iso(iso):
         try:
             return SharedRepository.fetch_country_by_iso(iso).currency.iso
@@ -79,5 +80,13 @@ class SharedRepository():
                 Account.objects.create(content_object=instance,
                                        category=AccountType.CARTE_MONNAMON.value, balance=0)
 
+    @staticmethod
     def save_notification(notification_type, content, receiver, status=True):
         Notification.objects.create(notification_type=notification_type, content=content, content_receiver=receiver, status=status)
+
+    @staticmethod
+    def fetch_motif_envoi_by_code(code_motif_envoi):
+        try:
+            return MotifEnvoi.objects.get(code=code_motif_envoi)
+        except MotifEnvoi.DoesNotExist as err:
+            raise CoreException('unable to find change for currencies', err)

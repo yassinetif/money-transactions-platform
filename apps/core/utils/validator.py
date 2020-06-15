@@ -46,6 +46,8 @@ class CashToCashValidator(Schema):
     destination_country = fields.Str(required=True)
     amount = fields.Str(required=True)
     payer_network = fields.Str(required=False, null=True)
+    motif_envoi = fields.Str(required=True)
+    source_revenu = fields.Str(required=True)
 
 
 class RetraitCashValidator(Schema):
