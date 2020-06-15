@@ -13,6 +13,9 @@ class MotifEnvoiResource(ModelResource):
         serializer = Serializer(
             formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
+    def determine_format(self, request):
+        return 'application/json'
+
 
 class SourceRevenuResource(ModelResource):
     class Meta:
@@ -23,3 +26,5 @@ class SourceRevenuResource(ModelResource):
         serializer = Serializer(
             formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
+    def determine_format(self, request):
+        return 'application/json'
