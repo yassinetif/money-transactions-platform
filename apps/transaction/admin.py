@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_type', 'number', 'agent', 'entity', 'transaction_amount',
-                    'transaction_paid_amount', 'transaction_fee', 'source_country', 'destination_country', 'status', 'created')
+                    'transaction_paid_amount', 'transaction_fee', 'source_country', 'destination_country', 'other_informations', 'status', 'created')
     list_filter = ('created', 'status',)
     search_fields = ['agent__entity__brand_name']
     date_hierarchy = 'created'

@@ -157,8 +157,9 @@ def get_source_and_destination_of_wallet_to_cash(payload):
     return source, destination
 
 def create_relation_between(source, destination):
-    source.relations.add(destination)
-    source.save()
+    if destination not in source.relations.all():
+        source.relations.add(destination)
+        source.save()
 
 
 def debit_entity_account(agent, last_balance, amount):
@@ -192,6 +193,29 @@ def _create_cash_to_cash_transaction(payload, agent):
         payload.get('source_country'))
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
         payload.get('destination_country'))
+    transaction.save()
+    create_relation_between(source, destination)
+    return transaction
+
+
+def _create_cash_to_bank_account_transaction(payload, agent):
+    source, destination = get_source_and_destination_of_transaction(
+        payload.copy())
+    transaction = Transaction()
+    transaction.transaction_type = TransactionType.CASH_TO_CASH.value
+    transaction.agent = agent
+    transaction.number = random_code(10)
+    transaction.code = random_code(8)
+    transaction.amount = payload.get('amount')
+    transaction.paid_amount = payload.get('paid_amount')
+    transaction.source_content_object = source
+    transaction.destination_content_object = destination
+    transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = SharedRepository.fetch_country_by_iso(
+        payload.get('source_country'))
+    transaction.destination_country = SharedRepository.fetch_country_by_iso(
+        payload.get('destination_country'))
+    transaction.other_informations = 'BANQUE : {}, RIB : {}'.format(payload.get('bank_name'), payload.get('rib'))
     transaction.save()
     create_relation_between(source, destination)
     return transaction
@@ -485,10 +509,6 @@ def _get_operation_comment_of_wallet_to_wallet(transaction, flag=False):
     if flag:
         comment = 'Crédit de {0} : transaction {1}, Rechargement reçu de  {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
-
-
-# TODO : def share_transaction_revenu(transaction: Transaction):
-# TODO calculation_expression = transaction.corr
 
 
 def _can_agent_pay_transaction(transaction, agent):

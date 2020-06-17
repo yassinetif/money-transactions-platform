@@ -50,6 +50,21 @@ class CashToCashValidator(Schema):
     source_revenu = fields.Str(required=True)
 
 
+class CashToBankAccountValidator(Schema):
+    source_content_object = fields.Nested(
+        CreationWalletValidator(), required=True)
+    destination_content_object = fields.Nested(
+        ReceiverCustomerValidator(), required=True)
+    source_country = fields.Str(required=True)
+    destination_country = fields.Str(required=True)
+    amount = fields.Str(required=True)
+    payer_network = fields.Str(required=False, null=True)
+    motif_envoi = fields.Str(required=True)
+    source_revenu = fields.Str(required=True)
+    bank_name = fields.Str(required=True)
+    rib = fields.Str(required=True)
+
+
 class RetraitCashValidator(Schema):
     code = fields.Str(required=True)
     paid_amount = fields.Decimal(required=True, as_string=True)

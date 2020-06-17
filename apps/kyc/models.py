@@ -33,6 +33,14 @@ class Customer(models.Model):
     def __str__(self):
         return '{0} {1}'.format(self.informations.first_name, self.informations.last_name)
 
+    def __detail__(self):
+        return {
+            'first_name': self.informations.first_name,
+            'last_name': self.informations.last_name,
+            'phone_number': self.phone_number,
+            'identification_number': self.identification_number,
+        }
+
     @property
     def code(self):
         return self.informations.username

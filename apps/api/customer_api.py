@@ -1,10 +1,11 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+from tastypie import fields
 from apps.kyc.models import Customer
-from tastypie.serializers import Serializer
+
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from apps.transaction.controller.customer_controller import create_customer_with_card,\
-    create_customer_with_wallet, get_wallet_balance, wallet_login, define_wallet_password
+    create_customer_with_wallet, get_wallet_balance, wallet_login, define_wallet_password, customer_beneficiaries
 
 class CustomerResource(ModelResource):
 
@@ -16,19 +17,12 @@ class CustomerResource(ModelResource):
         filtering = {
             'slug': ALL,
             'user': ALL_WITH_RELATIONS,
+            'relations': ALL_WITH_RELATIONS,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
-        serializer = Serializer(
-            formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
     def determine_format(self, request):
-        """
-        Used to determine the desired format from the request.format
-        attribute.
-        """
-        if (hasattr(request, 'format') and request.format in self._meta.serializer.formats):
-            return self._meta.serializer.get_mime_for_format(request.format)
-        return super(CustomerResource, self).determine_format(request)
+        return 'application/json'
 
     def prepend_urls(self):
         return [
@@ -47,6 +41,9 @@ class CustomerResource(ModelResource):
             url(r"^(?P<resource_name>%s)/wallet/password%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('wallet_password'), name="api_wallet_password"),
+            url(r"^(?P<resource_name>%s)/wallet/beneficiaries%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('beneficiaries'), name="api_beneficiaries"),
         ]
 
     def activate_card(self, request, **kwargs):
@@ -77,4 +74,10 @@ class CustomerResource(ModelResource):
         self.method_check(request, allowed=['post'])
         payload = self.deserialize(request, request.body)
         response = define_wallet_password(self, payload, request)
+        return response
+
+    def beneficiaries(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        phone_number = request.GET['phone_number']
+        response = customer_beneficiaries(self, phone_number, request)
         return response

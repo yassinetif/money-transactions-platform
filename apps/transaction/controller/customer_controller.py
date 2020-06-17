@@ -146,3 +146,28 @@ def define_wallet_password(tastypie, data, request):
         return tastypie.create_response(request, bundle)
     except Exception:
         return tastypie.create_response(request, {'response_text': 'unable to define password ', 'response_code': '100'}, HttpForbidden)
+
+def customer_beneficiaries(tastypie, phone_number, request):
+
+    try:
+        customer = CustomerRepository.fetch_customer_by_phone_number(phone_number)
+        relations = customer.relations.all()
+        beneficiaries = []
+
+        bundle = tastypie.build_bundle(obj=customer, request=request)
+        bundle = tastypie.full_dehydrate(bundle)
+        bundle.data.update({'response_code': '000'})
+        for beneficiary in relations:
+            data = {
+                'first_name': beneficiary.informations.first_name,
+                'last_name': beneficiary.informations.last_name,
+                'phone_number': beneficiary.informations.username,
+                'address': beneficiary.address
+            }
+            beneficiaries.append(data)
+        bundle.data.update({'beneficiaries': beneficiaries})
+
+        return tastypie.create_response(request, bundle)
+    except Exception as err:
+        print (err)
+        return tastypie.create_response(request, {'response_text': 'no beneficiairies ', 'response_code': '100'}, HttpForbidden)

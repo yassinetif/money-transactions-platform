@@ -43,3 +43,12 @@ class CustomerRepository():
             raise CustomerException('unable to find customer with phone number {}'.format(phone_number), 'CustomerException {}'.format(phone_number))
         except Exception:
             raise CustomerException('CustomerException', 'unable to find this customer in the system')
+
+    @staticmethod
+    def fetch_customer_beneficiary_by_phone_number(phone_number):
+        try:
+            return Customer.objects.get(informations__username=phone_number).relations().all()
+        except Customer.DoesNotExist:
+            raise CustomerException('unable to find customer with phone number {}'.format(phone_number), 'CustomerException {}'.format(phone_number))
+        except Exception:
+            raise CustomerException('CustomerException', 'unable to find this customer in the system')

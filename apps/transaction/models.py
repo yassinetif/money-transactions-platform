@@ -65,6 +65,8 @@ class Transaction(models.Model):
     parent_transaction_number = models.CharField(
         max_length=11, default=random_code(10), blank=True, null=True)
 
+    other_informations = models.TextField(blank=True, null=True)
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
