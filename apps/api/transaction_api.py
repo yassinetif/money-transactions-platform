@@ -50,6 +50,7 @@ class TransactionResource(ModelResource):
     def create(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         payload = self.deserialize(request, request.body)
+        print(payload)
         response = create_transaction(self, payload, request)
         return response
 
