@@ -97,6 +97,15 @@ def get_cash_to_cash_fee_payload(payload):
     data.update({'amount': payload.get('amount')})
     return data
 
+
+def get_cash_to_bank_account_fee_payload(payload):
+    data = {}
+    data.update({'source_country': payload.get('source_country')})
+    data.update({'type': payload.get('type')})
+    data.update({'destination_country': payload.get('destination_country')})
+    data.update({'amount': payload.get('amount')})
+    return data
+
 def get_cash_to_wallet_fee_payload(payload):
     data = {}
     data.update({'source_country': payload.get('source_country')})
