@@ -42,3 +42,13 @@ class EntityRepository():
             return entity
         except Exception as err:
             raise CoreException(err, 'unable to fetch right entity')
+
+    @staticmethod
+    def to_json(agent_code):
+        try:
+            entity = Entity.objects.get(agent__code=agent_code)
+            data = {}
+            data.update({'brand_name': entity.brand_name})
+            return data
+        except Entity.DoesNotExist:
+            raise EntityException(ERR, {'response_code': '100', 'response_text': ERR})

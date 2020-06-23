@@ -130,7 +130,8 @@ def create(tastypie, payload, request):
             transaction = _create_wallet_transaction(payload, token)
 
         insert_operation(transaction)
-        response = _addtitional_transactions_informations(transaction, payload)
+        _response = _addtitional_transactions_informations(transaction, payload)
+        response = _add_agent_informations(transaction, _response)
         return tastypie.create_response(request, response)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
@@ -156,6 +157,14 @@ def _create_agent_transaction(payload, token):
     _credit_or_debit_entity(transaction)
     _revenu_sharing(transaction)
     return transaction
+
+
+def _add_agent_informations(transaction, payload):
+    transaction_type = payload.get('type')
+    if transaction_type in AGENT_TRANSACTIONS:
+        agent_informations = AgentRepository.to_json(payload.get('agent').get('code'))
+        payload.update({'agent': agent_informations})
+    return payload
 
 @customer_code_required
 def _create_wallet_transaction(payload, token):

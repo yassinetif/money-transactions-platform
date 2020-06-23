@@ -3,6 +3,7 @@
     "python.formatting.provider": "autopep8",
     "python.linting.enabled": true,
     "cornflakes.linter.executablePath": "/usr/local/bin/flake8",
-    "python.jediEnabled": true
+    "python.jediEnabled": true,
+    "python.languageServer": "Jedi"
 
 }
