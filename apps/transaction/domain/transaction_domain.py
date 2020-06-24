@@ -192,7 +192,7 @@ def _create_cash_to_cash_transaction(payload, agent):
     transaction.transaction_type = TransactionType.CASH_TO_CASH.value
     transaction.agent = agent
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = source
@@ -214,7 +214,7 @@ def _create_cash_to_bank_account_transaction(payload, agent):
     transaction.transaction_type = TransactionType.CASH_TO_CASH.value
     transaction.agent = agent
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = source
@@ -239,7 +239,7 @@ def _create_activation_carte_transaction(payload, agent):
     transaction.transaction_type = TransactionType.ACTIVATION_CARTE.value
     transaction.agent = agent
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = source
@@ -264,7 +264,7 @@ def _create_credit_compte_entite_transaction(payload, agent):
     transaction.transaction_type = TransactionType.CREDIT_COMPTE_ENTITE.value
     transaction.agent = agent
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = agent.entity
@@ -292,7 +292,7 @@ def _create_debit_compte_entite_transaction(payload, agent):
     transaction.transaction_type = TransactionType.DEBIT_COMPTE_ENTITE.value
     transaction.agent = agent
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = agent.entity
@@ -319,7 +319,7 @@ def _create_cash_to_wallet_transaction(payload, agent):
     transaction.transaction_type = TransactionType.CASH_TO_WALLET.value
     transaction.agent = agent
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
     transaction.source_content_object = source
@@ -343,7 +343,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
     transaction = Transaction()
     transaction.transaction_type = TransactionType.WALLET_TO_CASH.value
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.agent = AgentRepository.fetch_by_username('AGENT_WALLET')
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
@@ -368,7 +368,7 @@ def _create_wallet_to_wallet_transaction(payload, customer):
     transaction = Transaction()
     transaction.transaction_type = TransactionType.WALLET_TO_WALLET.value
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.agent = AgentRepository.fetch_by_username('AGENT_WALLET')
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
@@ -422,7 +422,7 @@ def pay_transaction(payload, agent):
 
     transaction.pk = None
     transaction.number = random_code(10)
-    transaction.code = random_code(8)
+    transaction.code = random_code(9)
     transaction.amount = currency_change(parent.agent.entity.country.currency.iso, agent.entity.country.currency.iso, parent.amount)
     transaction.paid_amount = currency_change(parent.agent.entity.country.currency.iso, agent.entity.country.currency.iso, parent.paid_amount)
     transaction.status = TransactionStatus.SUCCESS.value

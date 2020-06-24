@@ -94,7 +94,7 @@ def _credit_entity(transaction):
 def _addtitional_transactions_informations(transaction, payload):
     info = {'transaction_number': transaction.number, 'receipt_code': transaction.code}
     payload.update(info)
-    payload.update({'response_code': '000'})
+    payload.update({'response_code': '000', 'date': transaction.created})
     return payload
 
 
