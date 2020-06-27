@@ -31,7 +31,12 @@ admin.site.register(Account, AccountAdmin)
 
 
 class CountryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('iso', 'code', 'status')
+
+    def code(self, obj):
+        return obj.iso.code
+    code.allow_tags = True
+    code.short_description = _('Code')
 
 
 admin.site.register(Country, CountryAdmin)

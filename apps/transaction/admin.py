@@ -1,11 +1,13 @@
 from django.contrib import admin
 from apps.transaction.models import Transaction, Operation, RevenuSharingResult
 from django.utils.translation import ugettext_lazy as _
-
+from django.contrib.contenttypes.models import ContentType
+from apps.kyc.models import Customer
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('transaction_type', 'number', 'agent', 'entity', 'transaction_amount',
-                    'transaction_paid_amount', 'transaction_fee', 'source_country', 'destination_country', 'other_informations', 'status', 'created')
+    list_display = ('transaction_type', 'code', 'agent', 'entity', 'transaction_amount',
+                    'transaction_paid_amount', 'transaction_fee', 'source',
+                    'source_country', 'beneficiary', 'destination_country', 'other_informations', 'status', 'created')
     list_filter = ('created', 'status',)
     search_fields = ['agent__entity__brand_name']
     date_hierarchy = 'created'
@@ -35,6 +37,20 @@ class TransactionAdmin(admin.ModelAdmin):
         return '{} {} '.format(obj.paid_amount, obj.source_country.currency.iso)
     transaction_paid_amount.allow_tags = True
     transaction_paid_amount.short_description = _('Paid amount')
+
+    def source(self, obj):
+        if obj.source_content_type == ContentType.objects.get_for_model(Customer)\
+                and obj.source_content_object:
+            return '{0} {1}'.format(obj.source_content_object.informations.first_name, obj.source_content_object.informations.last_name)
+    source.allow_tags = True
+    source.short_description = 'Source'
+
+    def beneficiary(self, obj):
+        if obj.destination_content_type == ContentType.objects.get_for_model(Customer)\
+                and obj.source_content_object:
+            return '{0} {1}'.format(obj.destination_content_object.informations.first_name, obj.destination_content_object.informations.last_name)
+    beneficiary.allow_tags = True
+    beneficiary.short_description = 'Benef.'
 
 
 admin.site.register(Transaction, TransactionAdmin)

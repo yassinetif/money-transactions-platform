@@ -15,21 +15,13 @@ class TransactionResource(ModelResource):
         detail_allowed_methods = ['get', 'post', 'put', 'delete']
         resource_name = 'transaction'
         filtering = {
-            'slug': ALL,
-            'user': ALL_WITH_RELATIONS,
+            'transaction_type': ALL,
+            'status': ALL,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
-        serializer = Serializer(
-            formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
     def determine_format(self, request):
-        """
-        Used to determine the desired format from the request.format
-        attribute.
-        """
-        if (hasattr(request, 'format') and request.format in self._meta.serializer.formats):
-            return self._meta.serializer.get_mime_for_format(request.format)
-        return super(TransactionResource, self).determine_format(request)
+        return 'application/json'
 
     def prepend_urls(self):
         return [
