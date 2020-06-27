@@ -9,7 +9,7 @@ class TransactionAdmin(admin.ModelAdmin):
                     'transaction_paid_amount', 'transaction_fee', 'source',
                     'source_country', 'beneficiary', 'destination_country', 'other_informations', 'status', 'created')
     list_filter = ('created', 'status',)
-    search_fields = ['agent__entity__brand_name']
+    search_fields = ['agent__entity__brand_name','transaction_type','code','source_country__iso','destination_country__iso']
     date_hierarchy = 'created'
 
     def has_add_permission(self, request):
