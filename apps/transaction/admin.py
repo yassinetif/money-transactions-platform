@@ -8,7 +8,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_type', 'code', 'agent', 'entity', 'transaction_amount',
                     'transaction_paid_amount', 'transaction_fee', 'source',
                     '_source_country', 'beneficiary', '_destination_country', 'other_informations', 'status', 'created')
-    list_filter = ('created', 'status',)
+    list_filter = ('created', 'status', 'transaction_type')
     search_fields = ['agent__entity__brand_name', 'transaction_type', 'code']
     date_hierarchy = 'created'
 
