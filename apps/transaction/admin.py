@@ -7,9 +7,9 @@ from apps.kyc.models import Customer
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_type', 'code', 'agent', 'entity', 'transaction_amount',
                     'transaction_paid_amount', 'transaction_fee', 'source',
-                    'source_country', 'beneficiary', 'destination_country', 'other_informations', 'status', 'created')
+                    '_source_country', 'beneficiary', 'destination_country', 'other_informations', 'status', 'created')
     list_filter = ('created', 'status',)
-    search_fields = ['agent__entity__brand_name','transaction_type','code','source_country__iso','destination_country__iso']
+    search_fields = ['agent__entity__brand_name', 'transaction_type', 'code']
     date_hierarchy = 'created'
 
     def has_add_permission(self, request):
@@ -51,6 +51,16 @@ class TransactionAdmin(admin.ModelAdmin):
             return '{0} {1}'.format(obj.destination_content_object.informations.first_name, obj.destination_content_object.informations.last_name)
     beneficiary.allow_tags = True
     beneficiary.short_description = 'Benef.'
+
+    def _source_country(self, obj):
+        return '{}'.format(obj.source_country.iso.name, obj.source_country.currency.iso)
+    _source_country.allow_tags = True
+    _source_country.short_description = _('Src. country')
+
+    def _destination_country(self, obj):
+        return '{}'.format(obj.source_country.iso.name, obj.source_country.currency.iso)
+    _destination_country.allow_tags = True
+    _destination_country.short_description = _('Dest. country')
 
 
 admin.site.register(Transaction, TransactionAdmin)
