@@ -165,6 +165,13 @@ def get_source_and_destination_of_wallet_to_cash(payload):
     destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
     return source, destination
 
+
+def get_source_and_destination_of_cash_to_bank_account(payload):
+    source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
+    destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
+    return source, destination
+
+
 def create_relation_between(source, destination):
     if destination not in source.relations.all():
         source.relations.add(destination)
