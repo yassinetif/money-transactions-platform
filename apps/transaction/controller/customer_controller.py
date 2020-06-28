@@ -157,6 +157,7 @@ def customer_beneficiaries(tastypie, phone_number, request):
         bundle = tastypie.build_bundle(obj=customer, request=request)
         bundle = tastypie.full_dehydrate(bundle)
         bundle.data.update({'response_code': '000'})
+        bundle.data.update({'customer': {'first_name': customer.informations.first_name, 'last_name': customer.informations.last_name}})
         for beneficiary in relations:
             data = {
                 'first_name': beneficiary.informations.first_name,
@@ -169,5 +170,5 @@ def customer_beneficiaries(tastypie, phone_number, request):
 
         return tastypie.create_response(request, bundle)
     except Exception as err:
-        print (err)
+        print(err)
         return tastypie.create_response(request, {'response_text': 'no beneficiairies ', 'response_code': '100'}, HttpForbidden)

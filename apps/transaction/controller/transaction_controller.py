@@ -149,7 +149,7 @@ def _create_agent_transaction(payload, token):
     agent = _get_agent_info(payload)
     payload.update({'source_country': agent.entity.country.iso.code})
     fee_calculation_payload = get_fee_calculation_payload(payload)
-    fee, paid_amount = calculate_transaction_paid_amount_and_fee(fee_calculation_payload)[1]
+    fee, paid_amount = calculate_transaction_paid_amount_and_fee(fee_calculation_payload)
 
     payload.update({'paid_amount': format_decimal_with_two_digits_after_comma(paid_amount)})
     payload.update({'fee': format_decimal_with_two_digits_after_comma(fee)})

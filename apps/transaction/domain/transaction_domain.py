@@ -44,8 +44,11 @@ def calculate_transaction_fee(payload):
 
 
 def calculate_transaction_paid_amount_and_fee(payload):
+    print('je suis ici')
     fee = calculate_transaction_fee(payload)
+    print('je suis ici aussi')
     total = fee + Decimal(payload.get('amount'))
+    print('je suis ici ')
     return fee, total
 
 
