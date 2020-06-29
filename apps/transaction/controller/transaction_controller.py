@@ -98,7 +98,10 @@ def _addtitional_transactions_informations(transaction, payload):
     payload.update({'destination_currency': transaction.destination_country.currency.iso})
     payload.update({'source_currency': transaction.source_country.currency.iso})
     payload.update({'operation_amount': transaction.operation_amount})
-    payload.update({'parity': SharedRepository.fetch_change_parity_value(transaction.source_country.currency, transaction.destination_country.currency)})
+    payload.update({'source_revenu': transaction.source_revenu.libelle})
+    payload.update({'motif_envoi': transaction.motif_envoi.libelle})
+    payload.update({'parity': SharedRepository.fetch_change_parity_value(transaction.source_country.currency,
+                                                                         transaction.destination_country.currency)})
 
     return payload
 

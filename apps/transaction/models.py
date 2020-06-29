@@ -29,7 +29,7 @@ class Transaction(models.Model):
     number = models.CharField(
         max_length=11, default=random_code(10), unique=True, blank=False, null=False)
     code = models.CharField(
-        max_length=11, default=random_code(8), unique=True, blank=False, null=False)
+        max_length=11, default=random_code(9), unique=True, blank=False, null=False)
 
     agent = models.ForeignKey(Agent, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
