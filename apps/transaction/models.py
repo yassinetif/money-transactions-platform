@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from apps.entity.models.agent import Agent
 from apps.entity.models.entity import Entity
 from apps.shared.models.price import Grille, TransactionType
+from apps.shared.models.price import MotifEnvoi, SourceRevenu
 from apps.shared.models.account import Account
 from apps.shared.models.country import Country
 from apps.core.utils.string import random_code
@@ -66,6 +67,12 @@ class Transaction(models.Model):
         max_length=11, default=random_code(10), blank=True, null=True)
 
     other_informations = models.TextField(blank=True, null=True)
+
+    source_revenu = models.ForeignKey(
+        SourceRevenu, null=True, blank=True, on_delete=models.DO_NOTHING, related_name='transaction_source_revenu')
+
+    motif_envoi = models.ForeignKey(
+        MotifEnvoi, null=True, blank=True, on_delete=models.DO_NOTHING, related_name='transaction_motif_envoi')
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
