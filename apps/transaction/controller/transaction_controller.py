@@ -97,6 +97,9 @@ def _addtitional_transactions_informations(transaction, payload):
     payload.update({'response_code': '000', 'date': transaction.created})
     payload.update({'destination_currency': transaction.destination_country.currency.iso})
     payload.update({'source_currency': transaction.source_country.currency.iso})
+    payload.update({'operation_amount': transaction.operation_amount})
+    payload.update({'parity': SharedRepository.fetch_change_parity_value(transaction.source_country.currency, transaction.destination_country.currency)})
+
     return payload
 
 
