@@ -95,7 +95,8 @@ def _addtitional_transactions_informations(transaction, payload):
     info = {'transaction_number': transaction.number, 'receipt_code': transaction.code}
     payload.update(info)
     payload.update({'response_code': '000', 'date': transaction.created})
-    payload.update({'rate': transaction.grille.corridor.currency.iso})
+    payload.update({'destination_currency': transaction.destination_country.currency.iso})
+    payload.update({'source_currency': transaction.source_country.currency.iso})
     return payload
 
 
