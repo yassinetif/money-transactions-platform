@@ -38,6 +38,9 @@ class Transaction(models.Model):
     limit = models.Q(app_label='entity', model='entity') \
         | models.Q(app_label='kyc', model='customer')
 
+    paid_amount_in_destination_currency = models.DecimalField(
+        max_digits=20, decimal_places=2, default=0)
+
     source_content_type = models.ForeignKey(
         ContentType, related_name="source_content_type", null=False, blank=False, limit_choices_to=limit, on_delete=models.DO_NOTHING)
     source_object_id = models.PositiveIntegerField()

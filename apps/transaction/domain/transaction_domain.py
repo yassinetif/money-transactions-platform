@@ -274,6 +274,8 @@ def _create_credit_compte_entite_transaction(payload, agent):
     payload.update({'source_country': agent.entity.country.iso,
                     'destination_country': destination.country.iso})
 
+    operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
+
     transaction = Transaction()
     transaction.transaction_type = TransactionType.CREDIT_COMPTE_ENTITE.value
     transaction.agent = agent
@@ -287,9 +289,8 @@ def _create_credit_compte_entite_transaction(payload, agent):
     transaction.source_country = agent.entity.country
     transaction.destination_country = destination.country
     transaction.status = TransactionStatus.SUCCESS.value
+    transaction.paid_amount_in_destination_currency = operation_amount
     transaction.save()
-
-    operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
 
     credit_entity(destination, get_entity_balance(destination), operation_amount)
     return transaction
@@ -301,6 +302,8 @@ def _create_debit_compte_entite_transaction(payload, agent):
     _can_agent_execute_transaction(agent.entity, destination)
     payload.update({'source_country': agent.entity.country.iso,
                     'destination_country': destination.country.iso})
+
+    operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
 
     transaction = Transaction()
     transaction.transaction_type = TransactionType.DEBIT_COMPTE_ENTITE.value
@@ -315,6 +318,7 @@ def _create_debit_compte_entite_transaction(payload, agent):
     transaction.source_country = agent.entity.country
     transaction.destination_country = destination.country
     transaction.status = TransactionStatus.SUCCESS.value
+    transaction.paid_amount_in_destination_currency = operation_amount
     transaction.save()
 
     debit_entity(destination, get_entity_balance(destination), payload.get('amount'))
@@ -342,6 +346,7 @@ def _create_cash_to_wallet_transaction(payload, agent):
     transaction.source_country = agent.entity.country
     transaction.destination_country = destination.country
     transaction.status = TransactionStatus.SUCCESS.value
+    transaction.paid_amount_in_destination_currency = operation_amount
     transaction.save()
 
     credit_customer_account(destination, get_customer_balance(destination), operation_amount)
@@ -353,6 +358,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
         payload.copy())
     payload.update({'source_country': customer.country.iso,
                     'destination_country': destination.country.iso})
+    operation_amount = currency_change(customer.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
 
     transaction = Transaction()
     transaction.transaction_type = TransactionType.WALLET_TO_CASH.value
@@ -366,6 +372,7 @@ def _create_wallet_to_cash_transaction(payload, customer):
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = customer.country
     transaction.destination_country = destination.country
+    transaction.paid_amount_in_destination_currency = operation_amount
     transaction.save()
 
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
@@ -378,6 +385,7 @@ def _create_wallet_to_wallet_transaction(payload, customer):
         payload.copy())
     payload.update({'source_country': customer.country.iso,
                     'destination_country': destination.country.iso})
+    operation_amount = currency_change(customer.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
 
     transaction = Transaction()
     transaction.transaction_type = TransactionType.WALLET_TO_WALLET.value
@@ -391,10 +399,11 @@ def _create_wallet_to_wallet_transaction(payload, customer):
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = customer.country
     transaction.destination_country = destination.country
+    transaction.paid_amount_in_destination_currency = operation_amount
+
     transaction.save()
 
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
-    operation_amount = currency_change(customer.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
     credit_customer_account(destination, get_customer_balance(destination), operation_amount)
     create_relation_between(customer, destination)
     return transaction
