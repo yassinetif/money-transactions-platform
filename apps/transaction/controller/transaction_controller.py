@@ -231,7 +231,6 @@ def pay(tastypie, payload, request):
 def _pay_transaction(payload, token):
     agent = _get_agent_info(payload)
     transaction = pay_transaction(payload, agent)
-    import pdb; pdb.set_trace()
     _credit_entity(transaction)
     insert_operation(transaction)
 
