@@ -212,6 +212,8 @@ def _create_cash_to_cash_transaction(payload, agent):
         payload.get('source_country'))
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
         payload.get('destination_country'))
+    transaction.source_revenu = SharedRepository.fetch_source_revenu_libelle_by_code(payload.get('source_revenu'))
+    transaction.motif_envoi = SharedRepository.fetch_motif_envoi_libelle_by_code(payload.get('motif_envoi'))
     transaction.save()
     create_relation_between(source, destination)
     return transaction
@@ -235,6 +237,8 @@ def _create_cash_to_bank_account_transaction(payload, agent):
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
         payload.get('destination_country'))
     transaction.other_informations = 'BANQUE : {}, RIB : {}'.format(payload.get('bank_name'), payload.get('rib'))
+    transaction.source_revenu = SharedRepository.fetch_source_revenu_libelle_by_code(payload.get('source_revenu'))
+    transaction.motif_envoi = SharedRepository.fetch_motif_envoi_libelle_by_code(payload.get('motif_envoi'))
     transaction.save()
     create_relation_between(source, destination)
     return transaction

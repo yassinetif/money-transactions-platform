@@ -1,9 +1,10 @@
+from apps.shared.models.account import Account, AccountType
+from apps.core.errors import CorridorException, GrilleException, CountryException, CoreException
+from django.db.models import Q
 from apps.shared.models.country import Country, Change
 from apps.shared.models.notification import Notification
-from apps.shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS, Sharing, MotifEnvoi, SourceRevenu
-from django.db.models import Q
-from apps.core.errors import CorridorException, GrilleException, CountryException, CoreException
-from apps.shared.models.account import Account, AccountType
+from apps.shared.models.price import Corridor, Grille, FeeType, AGENT_TRANSACTIONS,\
+    Sharing, MotifEnvoi, SourceRevenu
 
 
 class SharedRepository():
@@ -85,8 +86,15 @@ class SharedRepository():
         Notification.objects.create(notification_type=notification_type, content=content, content_receiver=receiver, status=status)
 
     @staticmethod
-    def fetch_motif_envoi_by_code(code_motif_envoi):
+    def fetch_motif_envoi_libelle_by_code(code_motif_envoi):
         try:
             return MotifEnvoi.objects.get(code=code_motif_envoi)
-        except MotifEnvoi.DoesNotExist as err:
-            raise CoreException('unable to find change for currencies', err)
+        except MotifEnvoi.DoesNotExist:
+            return None
+
+    @staticmethod
+    def fetch_source_revenu_libelle_by_code(code_source_revenu):
+        try:
+            return SourceRevenu.objects.get(code=code_source_revenu)
+        except SourceRevenu.DoesNotExist:
+            return None
