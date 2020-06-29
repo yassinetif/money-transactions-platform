@@ -87,7 +87,7 @@ def _debit_customer(customer, amount, fee=0):
 def _credit_entity(transaction):
     last_balance = get_entity_balance_by_agent(transaction.agent)
     changed_amount = currency_change(transaction.grille.corridor.currency,
-                                     transaction.destination_content_object.country.currency, transaction.amount)
+                                     transaction.destination_country.currency, transaction.amount)
     credit_entity_account(transaction.agent, last_balance, changed_amount)
 
 
@@ -231,6 +231,7 @@ def pay(tastypie, payload, request):
 def _pay_transaction(payload, token):
     agent = _get_agent_info(payload)
     transaction = pay_transaction(payload, agent)
+    import pdb; pdb.set_trace()
     _credit_entity(transaction)
     insert_operation(transaction)
 
