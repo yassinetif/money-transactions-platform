@@ -33,6 +33,7 @@ class Transaction(models.Model):
 
     agent = models.ForeignKey(Agent, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
+    operation_amount = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     paid_amount = models.DecimalField(
         max_digits=20, decimal_places=2, default=0)
     limit = models.Q(app_label='entity', model='entity') \
