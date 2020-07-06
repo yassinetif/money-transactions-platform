@@ -2,6 +2,7 @@ from tastypie.resources import ModelResource
 from tastypie.serializers import Serializer
 
 from apps.shared.models.price import MotifEnvoi, SourceRevenu
+from apps.shared.models.country import Country
 
 
 class MotifEnvoiResource(ModelResource):
@@ -16,13 +17,24 @@ class MotifEnvoiResource(ModelResource):
     def determine_format(self, request):
         return 'application/json'
 
-
 class SourceRevenuResource(ModelResource):
     class Meta:
         queryset = SourceRevenu.objects.all()
         list_allowed_methods = ['get', 'post']
         detail_allowed_methods = ['get', 'post', 'put', 'delete']
         resource_name = 'shared/sourcerevenu'
+        serializer = Serializer(
+            formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
+
+    def determine_format(self, request):
+        return 'application/json'
+
+class CountryResource(ModelResource):
+    class Meta:
+        queryset = Country.objects.all()
+        list_allowed_methods = ['get', 'post']
+        detail_allowed_methods = ['get', 'post', 'put', 'delete']
+        resource_name = 'shared/countries'
         serializer = Serializer(
             formats=['json', 'jsonp', 'xml', 'yaml', 'plist'])
 
