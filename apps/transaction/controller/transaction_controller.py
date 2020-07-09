@@ -119,7 +119,7 @@ def fee(tastypie, payload, request):
     try:
         FeeValidator().load(payload)
         total_fee, total_amount = calculate_transaction_paid_amount_and_fee(payload)
-        response = {'response_code': '000', 'fee': format_decimal_with_two_digits_after_comma(total_fee), 'tota_amount': format_decimal_with_two_digits_after_comma(total_amount)}
+        response = {'response_code': '000', 'fee': format_decimal_with_two_digits_after_comma(total_fee), 'total_amount': format_decimal_with_two_digits_after_comma(total_amount)}
         return tastypie.create_response(request, response)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
