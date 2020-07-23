@@ -173,7 +173,7 @@ def _add_agent_informations(transaction, payload):
     if transaction_type in AGENT_TRANSACTIONS:
         agent_informations = AgentRepository.to_json(payload.get('agent').get('code'))
         payload.update({'agent': agent_informations})
-        payload.update({'payer': {'brand_name':'Monamon','logo':''}})
+        payload.update({'payer': {'brand_name': 'Monamon', 'logo': ''}})
     return payload
 
 @customer_code_required
