@@ -7,6 +7,7 @@ from apps.shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.core.utils.string import random_code
 from django.forms.models import model_to_dict
+from apps.core.utils.string import entity_logo_directory_path
 from enum import Enum
 
 
@@ -47,6 +48,7 @@ class Entity(MPTTModel):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     is_payer = models.BooleanField(default=False)
+    avatar = models.ImageField(upload_to=entity_logo_directory_path, blank=True)
 
     def __str__(self):
         return self.brand_name

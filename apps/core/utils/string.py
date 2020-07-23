@@ -5,6 +5,8 @@ from backend.settings import OTP_SECRET_KEY
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
+
 import os
 import binascii
 
@@ -84,3 +86,6 @@ def convert_sharing_calculation_expression_to_json(expression):
             result.update({entity: '{}{}'.format(sens, value)})
     result.update({'fee': _expression[0]})
     return result
+
+def entity_logo_directory_path(instance, filename):
+    return 'entity_{0}/logo'.format(slugify(instance.brand_name))
