@@ -5,7 +5,13 @@ from apps.entity.models.agent import Agent, AgentForm
 
 class EntityAdmin(admin.ModelAdmin):
     form = EntityForm
-    list_display = ('code', 'account_number', 'category', 'brand_name', 'country', 'address')
+    list_display = ('image_tag', 'code', 'account_number', 'category', 'brand_name', 'country', 'address')
+
+    def image_tag(self):
+        from django.utils.html import escape
+        return u'<img src="%s" />' % escape(self.logo.url)
+    image_tag.short_description = 'Logo'
+    image_tag.allow_tags = True
 
 
 class EntitySettingsAdmin(admin.ModelAdmin):
