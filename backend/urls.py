@@ -3,8 +3,8 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
 from apps.api import urls
-from django.contrib.staticfiles import views
-from django.urls import re_path
+from django.conf import settings
+from django.conf.urls.static import static
 
 admin.site.site_header = 'Money transfer admin'
 admin.site.site_title = 'Money transfer admin'
@@ -16,4 +16,8 @@ urlpatterns = [
     path('admin_tools/', include('admin_tools.urls')),
     path('admin/', admin.site.urls),
     path('', include(urls)),
-    re_path(r'^static/(?P<path>.*)$', views.serve), ]
+]
+
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

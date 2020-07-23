@@ -165,6 +165,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "backend/static")
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, "backend/media")
+
 # DB LOGGER
 DJANGO_DB_LOGGER_ENABLE_FORMATTER = True
 
