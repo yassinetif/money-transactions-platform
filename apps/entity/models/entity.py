@@ -46,6 +46,7 @@ class Entity(MPTTModel):
     status = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    is_payer = models.BooleanField(default=False)
 
     def __str__(self):
         return self.brand_name

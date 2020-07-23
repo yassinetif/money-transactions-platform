@@ -50,7 +50,7 @@ Vérifier la version de python sur le serveur
 -   ```
     apt install git
     mkdir src && cd src
-    git clone https://github.com/Kodelines/money-transactions-platform.git
+    git clone https://github.com/williamsko/money-transactions-platform.git
     ```
 
 

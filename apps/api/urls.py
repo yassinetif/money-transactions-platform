@@ -2,6 +2,7 @@ from django.urls import path
 from django.conf.urls import include
 from tastypie.api import Api
 from apps.api.agent_api import AgentResource
+from apps.api.entity_api import EntityResource
 from apps.api.transaction_api import TransactionResource
 from apps.api.customer_api import CustomerResource
 from apps.api.shared_api import MotifEnvoiResource, SourceRevenuResource, CountryResource
@@ -9,6 +10,8 @@ from apps.api.shared_api import MotifEnvoiResource, SourceRevenuResource, Countr
 
 v1_api = Api(api_name='v1')
 
+# Entity
+v1_api.register(EntityResource())
 
 # Agent
 v1_api.register(AgentResource())
