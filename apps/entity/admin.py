@@ -9,7 +9,7 @@ class EntityAdmin(admin.ModelAdmin):
 
     def image_tag(self, obj):
         from django.utils.html import escape
-        return u'<img src="%s" />' % escape(obj.logo.url)
+        return u'<img src="%s" />' % escape(obj.avatar.url)
     image_tag.short_description = 'Logo'
     image_tag.allow_tags = True
 
