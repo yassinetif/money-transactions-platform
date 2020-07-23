@@ -1,6 +1,7 @@
 from django.contrib import admin
 from apps.entity.models.entity import Entity, EntitySettings, EntityForm
 from apps.entity.models.agent import Agent, AgentForm
+from django.utils.html import format_html
 
 
 class EntityAdmin(admin.ModelAdmin):
@@ -8,9 +9,8 @@ class EntityAdmin(admin.ModelAdmin):
     list_display = ('image_tag', 'code', 'account_number', 'category', 'brand_name', 'country', 'address')
 
     def image_tag(self, obj):
-        from django.utils.html import escape
         if obj.avatar:
-            return u'<img src="%s" />' % escape(obj.avatar.url)
+            return format_html('<img src="{}" />'.format(obj.avatar.url))
         else:
             return None
     image_tag.short_description = 'Logo'
