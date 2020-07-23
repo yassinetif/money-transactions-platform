@@ -10,7 +10,7 @@ class EntityAdmin(admin.ModelAdmin):
 
     def image_tag(self, obj):
         if obj.avatar:
-            return format_html('<img src="{}"  height=100 width=100/>'.format(obj.avatar.url))
+            return format_html('<img src="{}"  height=80 width=80/>'.format(obj.avatar.url))
         else:
             return None
     image_tag.short_description = 'Logo'
