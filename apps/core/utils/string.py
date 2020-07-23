@@ -88,4 +88,4 @@ def convert_sharing_calculation_expression_to_json(expression):
     return result
 
 def entity_logo_directory_path(instance, filename):
-    return 'entity_{0}/logo'.format(slugify(instance.brand_name))
+    return 'entity_{0}/logo.png'.format(slugify(instance.brand_name))
