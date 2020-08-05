@@ -12,6 +12,15 @@ class TransactionRepository():
             raise TransactionNotFoundException(
                 'unavailable transaction code', 'Transaction code  : {0} not found or already paid'.format(code))
 
+    @staticmethod
     def save_entity_commission(transaction, entity, amount):
         RevenuSharingResult.objects.create(transaction=transaction,
                                            entity=entity, amount=amount)
+
+    @staticmethod
+    def retreive_transaction_by_number(number):
+        try:
+            return Transaction.objects.get(number=number)
+        except Transaction.DoesNotExist:
+            raise TransactionNotFoundException(
+                'unavailable transaction code', 'Transaction code  : {0} not found or already paid'.format(number))

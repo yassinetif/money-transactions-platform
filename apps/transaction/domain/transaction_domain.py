@@ -455,6 +455,10 @@ def pay_transaction(payload, agent):
     transaction.save()
     return transaction
 
+def get_parent_transaction_payload(transaction):
+    _ = TransactionRepository.retreive_transaction_by_number(transaction.parent_transaction_number)
+    return _.payload
+
 
 def insert_operation(transaction):
     if transaction.transaction_type in [TransactionType.CREDIT_COMPTE_ENTITE.value, TransactionType.CASH_TO_WALLET.value, TransactionType.DEBIT_COMPTE_ENTITE.value]:
@@ -472,6 +476,10 @@ def insert_operation(transaction):
         operation.balance_after_operation = transaction.agent.entity.accounts.last()
         operation.transaction = transaction
         operation.save()
+
+def save_transaction_response_payload(transaction, response):
+    transaction.payload = response
+    transaction.save()
 
 
 def _insert_credit_compte_entite_operation(transaction):

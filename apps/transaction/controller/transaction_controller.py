@@ -15,7 +15,8 @@ from apps.entity.domain.entity_domain import check_entity_balance, get_entity_ba
 from apps.transaction.domain.transaction_domain import debit_entity_account, create_transaction, \
     insert_operation, search_transaction, pay_transaction,\
     credit_entity_account, calculate_transaction_paid_amount_and_fee,\
-    currency_change, get_fee_calculation_payload
+    currency_change, get_fee_calculation_payload, save_transaction_response_payload, \
+    get_parent_transaction_payload
 from apps.transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
 from apps.transaction.repository.transaction_repository import TransactionRepository
 from apps.shared.models.price import AGENT_TRANSACTIONS
@@ -140,11 +141,13 @@ def create(tastypie, payload, request):
         insert_operation(transaction)
         _response = _addtitional_transactions_informations(transaction, payload)
         response = _add_agent_informations(transaction, _response)
+        save_transaction_response_payload(transaction, response)
         return tastypie.create_response(request, response)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
+
 
 def _credit_or_debit_entity(transaction):
     if transaction.transaction_type == 'DEBIT_COMPTE_ENTITE':
@@ -221,8 +224,10 @@ def pay(tastypie, payload, request):
     try:
         _validate_transaction_payload(payload.copy())
         token = get_request_token(request)
-        _pay_transaction(payload, token)
-        return tastypie.create_response(request, {'response_code': '000'})
+        transaction = _pay_transaction(payload, token)
+        response = get_parent_transaction_payload(transaction)
+
+        return tastypie.create_response(request, response)
     except ValidationError as err:
         return tastypie.create_response(request, {'response_text': str(err.messages), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
@@ -234,6 +239,7 @@ def _pay_transaction(payload, token):
     transaction = pay_transaction(payload, agent)
     _credit_entity(transaction)
     insert_operation(transaction)
+    return transaction
 
 
 def _revenu_sharing(transaction):
