@@ -52,3 +52,11 @@ class EntityRepository():
             return data
         except Entity.DoesNotExist:
             raise EntityException(ERR, {'response_code': '100', 'response_text': ERR})
+
+    @staticmethod
+    def fetch_entity_id(id):
+        try:
+            entity = Entity.objects.get(id=id)
+            return entity.to_dict()
+        except Entity.DoesNotExist:
+            raise EntityException(ERR, {'response_code': '100', 'response_text': ERR})

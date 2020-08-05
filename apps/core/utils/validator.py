@@ -48,6 +48,7 @@ class CashToCashValidator(Schema):
     payer_network = fields.Str(required=False, null=True)
     motif_envoi = fields.Str(required=True)
     source_revenu = fields.Str(required=True)
+    payer = fields.Str(required=True)
 
 
 class CashToBankAccountValidator(Schema):
