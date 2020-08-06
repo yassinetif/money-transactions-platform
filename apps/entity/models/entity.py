@@ -54,7 +54,7 @@ class Entity(MPTTModel):
         return self.brand_name
 
     def to_dict(self):
-        return model_to_dict(self, fields=[field.name for field in self._meta.fields if field.name != 'secret_key'])
+        return model_to_dict(self, fields=[field.name for field in self._meta.fields if field.name != 'secret_key' and field.name != 'avatar'])
 
     def save(self, *args, **kwargs):
         if self.pk is None:
