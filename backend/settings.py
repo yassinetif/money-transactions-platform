@@ -262,3 +262,6 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default'
 }
+
+# CUSTOM SETTINGS
+BACKEND_BASE_URL = 'http://217.69.6.52/'

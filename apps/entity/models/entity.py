@@ -7,6 +7,7 @@ from apps.shared.models.country import Country
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.core.utils.string import random_code
 from django.forms.models import model_to_dict
+from django.conf import settings
 from apps.core.utils.string import entity_logo_directory_path
 from enum import Enum
 
@@ -73,7 +74,7 @@ class Entity(MPTTModel):
     @property
     def logo(self):
         if self.avatar:
-            return self.avatar.url
+            return f'{settings.BACKEND_BASE_URL}self.avatar.url'
         else:
             return None
 
