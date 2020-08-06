@@ -139,8 +139,9 @@ def create(tastypie, payload, request):
             transaction = _create_wallet_transaction(payload, token)
 
         insert_operation(transaction)
-        _response = _addtitional_transactions_informations(transaction, payload)
-        response = _add_agent_informations(transaction, _response)
+        _ = _addtitional_transactions_informations(transaction, payload)
+        _response = _add_agent_informations(transaction, _)
+        response = _add_payer_informations(transaction, _response)
         save_transaction_response_payload(transaction, response)
         return tastypie.create_response(request, response)
     except ValidationError as err:
@@ -176,7 +177,13 @@ def _add_agent_informations(transaction, payload):
     if transaction_type in AGENT_TRANSACTIONS:
         agent_informations = AgentRepository.to_json(payload.get('agent').get('code'))
         payload.update({'agent': agent_informations})
-        payload.update({'payer': EntityRepository.fetch_entity_id(payload.get('payer'))})
+    return payload
+
+def _add_payer_informations(transaction, payload):
+    if 'payer' in payload:
+        payload.update({'payer': EntityRepository.fetch_by_entity_code(payload.get('payer'))})
+    else:
+        payload.update({'payer': EntityRepository.fetch_by_entity_type('PROVIDER')})
     return payload
 
 @customer_code_required

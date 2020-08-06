@@ -70,6 +70,13 @@ class Entity(MPTTModel):
             Account.objects.create(content_object=self,
                                    category='COMMISSION', balance=0)
 
+    @property
+    def logo(self):
+        if self.avatar:
+            return self.avatar.url
+        else:
+            return None
+
     class MPTTMeta:
         order_insertion_by = ["brand_name"]
 
