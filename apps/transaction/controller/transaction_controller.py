@@ -180,10 +180,15 @@ def _add_agent_informations(transaction, payload):
     return payload
 
 def _add_payer_informations(transaction, payload):
+    entity_tuple = None
     if 'payer' in payload:
-        payload.update({'payer': EntityRepository.fetch_by_entity_code(payload.get('payer'))})
+        entity_tuple = EntityRepository.fetch_by_entity_code(payload.get('payer'))
     else:
-        payload.update({'payer': EntityRepository.fetch_by_entity_type('PROVIDER')})
+        entity_tuple = EntityRepository.fetch_by_entity_type('PROVIDER')
+
+    payload.update({'payer': entity_tuple[1]})
+    payload.get('payer').update({'logo': entity_tuple[0].logo})
+
     return payload
 
 @customer_code_required

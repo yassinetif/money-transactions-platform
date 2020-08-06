@@ -57,9 +57,7 @@ class EntityRepository():
     def fetch_by_entity_code(code):
         try:
             entity = Entity.objects.get(code=code)
-            data = entity.to_dict()
-            data.get('payer').update({'logo': entity.logo})
-            return data
+            return entity, entity.to_dict()
         except Entity.DoesNotExist:
             raise EntityException(ERR, {'response_code': '100', 'response_text': ERR})
 
@@ -67,8 +65,6 @@ class EntityRepository():
     def fetch_by_entity_type(type):
         try:
             entity = Entity.objects.get(category=type)
-            data = entity.to_dict()
-            data.get('payer').update({'logo': entity.logo})
-            return data
+            return entity, entity.to_dict()
         except Entity.DoesNotExist:
             raise EntityException(ERR, {'response_code': '100', 'response_text': ERR})
