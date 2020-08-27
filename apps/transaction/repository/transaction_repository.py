@@ -1,6 +1,8 @@
 from apps.transaction.models import Transaction, TransactionStatus, RevenuSharingResult
 from apps.core.errors import TransactionNotFoundException
 from datetime import datetime
+from django.db.models import Count
+
 class TransactionRepository():
 
     @staticmethod
@@ -30,3 +32,9 @@ class TransactionRepository():
             return RevenuSharingResult.objects.filter(entity=entity, created=datetime.today())
         except Transaction.DoesNotExist:
             return None
+
+    @staticmethod
+    def retreive_transactions_stat_by_type_giving_entity_agent(agent):
+        transactions = Transaction.objects.filter(agent=agent, created=datetime.today()).\
+            values('transaction_type').annotate(dcount=Count('transaction_type'))
+        return transactions

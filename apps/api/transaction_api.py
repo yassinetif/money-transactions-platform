@@ -2,7 +2,7 @@ from tastypie.resources import ModelResource, ALL
 from apps.transaction.models import Transaction
 from apps.transaction.controller.transaction_controller import create as create_transaction,\
     search as search_transaction, pay as pay_transaction, fee as transaction_fee, \
-    get_entity_financial_situation
+    get_entity_financial_situation, get_agent_transactions_stats
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 
@@ -40,6 +40,9 @@ class TransactionResource(ModelResource):
             url(r'^(?P<resource_name>%s)/agent/finance/situation%s$' %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('balance_situation'), name='api_balance_situation'),
+            url(r'^(?P<resource_name>%s)/agent/stats%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('agent_transactions_stats'), name='api_agent_transactions_stat'),
         ]
 
     def create(self, request, **kwargs):
@@ -69,4 +72,9 @@ class TransactionResource(ModelResource):
     def balance_situation(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         response = get_entity_financial_situation(self, request)
+        return response
+
+    def agent_transactions_stats(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        response = get_agent_transactions_stats(self, request)
         return response
