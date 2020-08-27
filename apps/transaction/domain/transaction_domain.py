@@ -563,3 +563,13 @@ def _can_agent_execute_transaction(source, destination):
                             ' action prohibited by the system')
     else:
         return True
+
+
+def get_entity_commission(entity):
+    commissions = TransactionRepository.fetch_revenu_sharing_results(entity)
+    if commissions:
+        total_commission = 0
+        for commission in commissions:
+            total_commission += commission.amount
+        return total_commission
+    return 0

@@ -1,5 +1,4 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
-from tastypie import fields
 from apps.kyc.models import Customer
 
 from django.conf.urls import url

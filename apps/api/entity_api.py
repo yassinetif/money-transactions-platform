@@ -1,8 +1,6 @@
-from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+from tastypie.resources import ModelResource, ALL
 from tastypie.serializers import Serializer
 from apps.entity.models.entity import Entity
-from django.conf.urls import url
-from tastypie.utils import trailing_slash
 
 
 class EntityResource(ModelResource):

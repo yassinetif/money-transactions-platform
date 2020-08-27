@@ -1,7 +1,6 @@
 from apps.transaction.models import Transaction, TransactionStatus, RevenuSharingResult
 from apps.core.errors import TransactionNotFoundException
-
-
+from datetime import datetime
 class TransactionRepository():
 
     @staticmethod
@@ -24,3 +23,10 @@ class TransactionRepository():
         except Transaction.DoesNotExist:
             raise TransactionNotFoundException(
                 'unavailable transaction code', 'Transaction code  : {0} not found or already paid'.format(number))
+
+    @staticmethod
+    def fetch_revenu_sharing_results(entity):
+        try:
+            return RevenuSharingResult.objects.filter(entity=entity, created=datetime.today())
+        except Transaction.DoesNotExist:
+            return None

@@ -1,7 +1,7 @@
 
 import json
 from apps.core.errors import CoreException, CustomerException
-from apps.core.utils.http import get_request_token
+from apps.core.utils.http import get_request_token, decode_jwt_token
 from apps.core.utils.string import format_decimal_with_two_digits_after_comma, convert_sharing_calculation_expression_to_json, convert_snake_to_camel_case
 from marshmallow import ValidationError
 from importlib import import_module
@@ -16,7 +16,7 @@ from apps.transaction.domain.transaction_domain import debit_entity_account, cre
     insert_operation, search_transaction, pay_transaction,\
     credit_entity_account, calculate_transaction_paid_amount_and_fee,\
     currency_change, get_fee_calculation_payload, save_transaction_response_payload, \
-    get_parent_transaction_payload
+    get_parent_transaction_payload, get_entity_commission
 from apps.transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
 from apps.transaction.repository.transaction_repository import TransactionRepository
 from apps.shared.models.price import AGENT_TRANSACTIONS
@@ -279,3 +279,18 @@ def _dispatch_revenu_in_accounts(transaction, json_expression):
             amount = currency_change(transaction.grille.corridor.currency,
                                      entity.country.currency, Decimal(value))
             TransactionRepository.save_entity_commission(transaction, entity, amount)
+
+
+@agent_code_required
+def get_entity_financial_situation(tastypie, request):
+    try:
+        agent_code = decode_jwt_token(get_request_token(request), 'agent_api_secret_key')
+        agent = AgentRepository.fetch_by_code(agent_code.get('code'))
+        balance = get_entity_balance_by_agent(agent)
+        commission = get_entity_commission(agent.entity)
+
+        result = {'balance': balance, 'commission': commission, 'response_code': '000'}
+
+        return tastypie.create_response(request, result)
+    except CoreException as err:
+        return tastypie.create_response(request, err.errors, HttpForbidden)
