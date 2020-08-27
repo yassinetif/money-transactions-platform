@@ -37,7 +37,7 @@ class TransactionResource(ModelResource):
             url(r"^(?P<resource_name>%s)/fee%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('fee'), name="api_fee_transaction"),
-            url(r'^(?P<resource_name>%s)/situation%s$' %
+            url(r'^(?P<resource_name>%s)/agent/finance/situation%s$' %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('balance_situation'), name='api_balance_situation'),
         ]
@@ -68,6 +68,5 @@ class TransactionResource(ModelResource):
 
     def balance_situation(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
-        payload = self.deserialize(request, request.body)
-        response = get_entity_financial_situation(self, payload, request)
+        response = get_entity_financial_situation(self, request)
         return response
