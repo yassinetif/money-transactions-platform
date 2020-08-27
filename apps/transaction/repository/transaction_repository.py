@@ -37,4 +37,4 @@ class TransactionRepository():
     def retreive_transactions_stat_by_type_giving_entity_agent(agent):
         transactions = Transaction.objects.filter(agent=agent, created=datetime.today()).\
             values('transaction_type').annotate(dcount=Count('transaction_type'))
-        return transactions
+        return [transaction for transaction in transactions]
