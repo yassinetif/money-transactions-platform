@@ -281,7 +281,6 @@ def _dispatch_revenu_in_accounts(transaction, json_expression):
             TransactionRepository.save_entity_commission(transaction, entity, amount)
 
 
-@agent_code_required
 def get_entity_financial_situation(tastypie, request):
     try:
         agent_code = decode_jwt_token(get_request_token(request), 'agent_api_secret_key')
