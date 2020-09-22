@@ -35,6 +35,8 @@ class TransactionRepository():
 
     @staticmethod
     def retreive_transactions_stat_by_type_giving_entity_agent(agent):
-        transactions = Transaction.objects.filter(agent=agent, created=datetime.today()).\
+        # TODO : remettre le filtre sur la date du jour
+        # transactions = Transaction.objects.filter(agent=agent, created=datetime.today()).\
+        transactions = Transaction.objects.filter(agent=agent).\
             values('transaction_type').annotate(dcount=Count('transaction_type'))
         return [transaction for transaction in transactions]
