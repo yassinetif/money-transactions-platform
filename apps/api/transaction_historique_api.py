@@ -23,3 +23,10 @@ class TransactionHistoriqueResource(ModelResource):
 
     def determine_format(self, request):
         return 'application/json'
+
+    def hydrate_agent(self, bundle):
+        import pdb; pdb.set_trace()
+        bundle.data['agent'] = 'TEST'
+
+    def obj_get_list(self, bundle, **kwargs):
+        return self.get_object_list(bundle.request)
