@@ -25,8 +25,7 @@ class TransactionHistoriqueResource(ModelResource):
         return 'application/json'
 
     def dehydrate_agent(self, bundle):
-        import pdb; pdb.set_trace()
-        bundle.data['agent'] = 'TEST'
+        return bundle.obj.agent.informations.username
 
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle.request)
