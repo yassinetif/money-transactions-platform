@@ -78,3 +78,4 @@ class TransactionResource(ModelResource):
         self.method_check(request, allowed=['post'])
         response = get_agent_transactions_stats(self, request)
         return response
+

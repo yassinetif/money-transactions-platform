@@ -303,3 +303,13 @@ def get_agent_transactions_stats(tastypie, request):
         return tastypie.create_response(request, result)
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
+
+def get_agent_transactions_historique(tastypie, request):
+    try:
+        agent_code = decode_jwt_token(get_request_token(request), 'agent_api_secret_key')
+        agent = AgentRepository.fetch_by_code(agent_code.get('code'))
+        result = TransactionRepository.retreive_transactions_stat_by_type_giving_entity_agent(agent)
+
+        return tastypie.create_response(request, result)
+    except CoreException as err:
+        return tastypie.create_response(request, err.errors, HttpForbidden)
