@@ -20,12 +20,16 @@ class TransactionHistoriqueResource(ModelResource):
             'status': ALL,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
+        excludes = ('code', 'resource_uri')
 
     def determine_format(self, request):
         return 'application/json'
 
     def dehydrate_agent(self, bundle):
         return bundle.obj.agent.informations.username
+
+    def dehydrate_destination_currency(self, bundle):
+        return bundle.obj.destination_country.currency.name
 
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle.request)
