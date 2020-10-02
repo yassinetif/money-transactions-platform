@@ -24,7 +24,7 @@ class TransactionHistoriqueResource(ModelResource):
     def determine_format(self, request):
         return 'application/json'
 
-    def hydrate_agent(self, bundle):
+    def dehydrate_agent(self, bundle):
         import pdb; pdb.set_trace()
         bundle.data['agent'] = 'TEST'
 
