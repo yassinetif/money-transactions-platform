@@ -1,10 +1,13 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+from tastypie.fields import ForeignKey
+from apps.api.agent_api import AgentResource
 from apps.transaction.models import Transaction
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 
 
 class TransactionHistoriqueResource(ModelResource):
+    agent = ForeignKey(AgentResource, 'agent')
 
     class Meta:
         queryset = Transaction.objects.all()
