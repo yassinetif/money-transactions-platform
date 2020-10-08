@@ -36,7 +36,7 @@ class TransactionHistoriqueResource(ModelResource):
 
     
     def alter_list_data_to_serialize(self, request, data):
-        data['page']['objects'] = {'your_data': True}
+        data['objects'] = {'your_data': True}
         return data
 
     def obj_get_list(self, bundle, **kwargs):
