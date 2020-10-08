@@ -22,7 +22,7 @@ class TransactionHistoriqueResource(ModelResource):
             'status': ALL,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
-        excludes = ('code', 'resource_uri')
+        excludes = ('code', 'resource_uri', 'destination_object_id', 'source_object_id')
 
     def determine_format(self, request):
         return 'application/json'
