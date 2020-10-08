@@ -37,12 +37,24 @@ class TransactionHistoriqueResource(ModelResource):
         return bundle.obj.destination_country.currency.name
 
     def dehydrate(self, bundle):
-        if bundle.obj.source_content_type == ContentType.objects.get_for_model(Customer)\
-                and bundle.obj.source_content_object:
-            bundle.data['source'] = '{0} {1}'.format(bundle.obj.source_content_object.informations.first_name,
-                                                     bundle.obj.source_content_object.informations.last_name)
+        bundle.data['source'] = self._transaction_source(bundle)
+        bundle.data['destination'] = self._transaction_destination(bundle)
 
         return bundle
+
+    def _transaction_source(self, bundle):
+        if bundle.obj.source_content_type == ContentType.objects.get_for_model(Customer)\
+                and bundle.obj.source_content_object:
+            return'{0} {1}'.format(bundle.obj.source_content_object.informations.first_name,
+                                   bundle.obj.source_content_object.informations.last_name)
+        return None
+
+     def _transaction_destination(self, bundle):
+        if bundle.obj.destination_content_type == ContentType.objects.get_for_model(Customer)\
+                and bundle.obj.destination_content_object:
+            return'{0} {1}'.format(bundle.obj.destination_content_object.informations.first_name,
+                                   bundle.obj.destination_content_object.informations.last_name)
+        return None
 
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle.request)
