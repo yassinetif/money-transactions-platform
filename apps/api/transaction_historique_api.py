@@ -39,6 +39,7 @@ class TransactionHistoriqueResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['source'] = self._transaction_source(bundle)
         bundle.data['destination'] = self._transaction_destination(bundle)
+        bundle.data['currency'] = self._transaction_currency(bundle)
 
         return bundle
 
@@ -55,6 +56,9 @@ class TransactionHistoriqueResource(ModelResource):
             return'{0} {1}'.format(bundle.obj.destination_content_object.informations.first_name,
                                    bundle.obj.destination_content_object.informations.last_name)
         return None
+
+    def _transaction_currency(self,bundle):
+        return bundle.obj.grille.corridor.currency.name
 
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle.request)
