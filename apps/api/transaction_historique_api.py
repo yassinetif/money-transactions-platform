@@ -49,7 +49,7 @@ class TransactionHistoriqueResource(ModelResource):
                                    bundle.obj.source_content_object.informations.last_name)
         return None
 
-     def _transaction_destination(self, bundle):
+    def _transaction_destination(self, bundle):
         if bundle.obj.destination_content_type == ContentType.objects.get_for_model(Customer)\
                 and bundle.obj.destination_content_object:
             return'{0} {1}'.format(bundle.obj.destination_content_object.informations.first_name,
