@@ -31,5 +31,13 @@ class TransactionHistoriqueResource(ModelResource):
     def dehydrate_destination_currency(self, bundle):
         return bundle.obj.destination_country.currency.name
 
+    def dehydrate_destination_currency(self, bundle):
+        return bundle.obj.destination_country.currency.name
+
+    
+    def alter_list_data_to_serialize(self, request, data):
+        data['page']['objects'] = {'your_data': True}
+        return data
+
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle.request)
