@@ -4,7 +4,8 @@ from apps.api.agent_api import AgentResource
 from apps.transaction.models import Transaction
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
-
+import json
+from django.http import HttpResponse
 
 class TransactionHistoriqueResource(ModelResource):
     agent = ForeignKey(AgentResource, 'agent')
@@ -34,10 +35,10 @@ class TransactionHistoriqueResource(ModelResource):
     def dehydrate_destination_currency(self, bundle):
         return bundle.obj.destination_country.currency.name
 
-    
-    def alter_list_data_to_serialize(self, request, data):
-        data['objects'] = {'your_data': True}
-        return data
+    def dehydrate(self, bundle):
+        bundle.data['custom_field'] = "Whatever you want"
+        return bundle
+
 
     def obj_get_list(self, bundle, **kwargs):
         return self.get_object_list(bundle.request)
