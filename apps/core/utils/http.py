@@ -38,5 +38,5 @@ def decode_jwt_token(token, secret_key):
     try:
         payload = jwt.decode(token, global_config.get(secret_key))
         return payload
-    except (jwt.ExpiredSignature, jwt.DecodeError, jwt.InvalidTokenError) as e:
+    except (jwt.ExpiredSignature, jwt.InvalidTokenError) as e:
         raise ApiAuthenticationException(str(e), 'invalid authorization token')

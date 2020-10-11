@@ -22,7 +22,7 @@ class TransactionHistoriqueResource(ModelResource):
             'status': ALL,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
-        excludes = ('code', 'resource_uri', 'destination_object_id', 'source_object_id')
+        excludes = ('code', 'resource_uri', 'destination_object_id', 'source_object_id', 'resource_uri', 'operation_amount')
 
     def determine_format(self, request):
         return 'application/json'
@@ -57,7 +57,7 @@ class TransactionHistoriqueResource(ModelResource):
                                    bundle.obj.destination_content_object.informations.last_name)
         return None
 
-    def _transaction_currency(self,bundle):
+    def _transaction_currency(self, bundle):
         return bundle.obj.grille.corridor.currency.name
 
     def obj_get_list(self, bundle, **kwargs):

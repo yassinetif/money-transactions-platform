@@ -7,11 +7,22 @@ from apps.entity.models.entity import Entity
 from enum import Enum
 
 
+class AgentHabilitation(Enum):
+    AGENT = 'AGENT'
+    SUPERVISEUR = 'SUPERVISEUR'
+    ADMIINISTRATEUR = 'ADMIINISTRATEUR'
+    AGENT_FINANCE = 'AGENT_FINANCE'
+   
+
+
 class AuthenticationType(Enum):
     DEFAULT = 'DEFAULT'
     OTP = 'OTP'
 
 class Agent(models.Model):
+    habilitation = models.CharField(max_length=30, choices=[
+        (tag.value, tag.value) for tag in AgentHabilitation],default=AgentHabilitation.AGENT.value)
+
     code = models.CharField(
         unique=True,
         max_length=10,

@@ -23,7 +23,7 @@ class EntitySettingsAdmin(admin.ModelAdmin):
 
 class AgentAdmin(admin.ModelAdmin):
     form = AgentForm
-    list_display = ('code', 'informations', 'entity', 'phone_number', 'address')
+    list_display = ('code', 'informations', 'entity', 'phone_number', 'address','habilitation')
 
 
 admin.site.register(Entity, EntityAdmin)
