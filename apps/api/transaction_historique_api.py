@@ -36,10 +36,6 @@ class TransactionHistoriqueResource(ModelResource):
     def dehydrate_destination_currency(self, bundle):
         return bundle.obj.destination_country.currency.name
 
-    def dehydrate_payload(self, bundle):
-        if bundle.obj.payload:
-            return json.loads(bundle.obj.payload)
-        return None
 
     def dehydrate(self, bundle):
         bundle.data['source'] = self._transaction_source(bundle)
