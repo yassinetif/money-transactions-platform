@@ -61,6 +61,3 @@ class TransactionHistoriqueResource(ModelResource):
 
     def _transaction_currency(self, bundle):
         return bundle.obj.grille.corridor.currency.name
-
-    def obj_get_list(self, bundle, **kwargs):
-        return self.get_object_list(bundle.request)
