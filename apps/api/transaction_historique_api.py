@@ -20,6 +20,7 @@ class TransactionHistoriqueResource(ModelResource):
             'transaction_type': ALL,
             'agent': ALL_WITH_RELATIONS,
             'status': ALL,
+            'number': ALL,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
         excludes = ('code', 'resource_uri', 'destination_object_id', 'source_object_id', 'resource_uri', 'operation_amount')
