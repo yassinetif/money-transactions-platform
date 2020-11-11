@@ -40,8 +40,3 @@ class TransactionRepository():
         transactions = Transaction.objects.filter(agent=agent).\
             values('transaction_type').annotate(dcount=Count('transaction_type'))
         return [transaction for transaction in transactions]
-
-    @staticmethod
-    def transactions_historique(agent):
-        # TODO :
-        pass

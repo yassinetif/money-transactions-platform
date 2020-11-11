@@ -79,7 +79,7 @@ admin.site.register(Operation, OperationAdmin)
 
 
 class RevenuSharingResultAdmin(admin.ModelAdmin):
-    list_display = ('created', 'entity', 'transaction', 'transaction_type', 'amount')
+    list_display = ('created', 'entity', 'transaction', 'transaction_type', 'amount','is_calculated')
     search_fields = ('transaction__number',)
 
     def has_add_permission(self, request):

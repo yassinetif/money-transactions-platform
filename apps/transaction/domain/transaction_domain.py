@@ -573,3 +573,17 @@ def get_entity_commission(entity):
             total_commission += commission.amount
         return total_commission
     return 0
+
+
+def create_batch_transaction(entity, commission):
+
+    batch = Transaction()
+    batch.transaction_type = TransactionType.BATCH.value
+    batch.number = random_code(10)
+    batch.code = random_code(9)
+    batch.amount = commission
+    batch.paid_amount = commission
+    batch.destination_content_object = entity
+    batch.status = TransactionStatus.SUCCESS.value
+    batch.paid_amount_in_destination_currency = commission
+    #batch.save()

@@ -109,6 +109,7 @@ class RevenuSharingResult(models.Model):
     entity = models.ForeignKey(
         Entity, null=False, blank=False, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
+    is_calculated = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = verbose_name_plural = _('Revenu Sharing result')
