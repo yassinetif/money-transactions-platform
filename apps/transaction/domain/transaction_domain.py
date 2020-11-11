@@ -594,6 +594,6 @@ def create_batch_transaction(entity, commission):
 def insert_batch_operation(transaction, entity):
     operation = Operation()
     operation.comment = 'BATCH OPERATION'
-    operation.balance_after_operation = entity.entity.accounts.last()
+    operation.balance_after_operation = entity.accounts.last()
     operation.transaction = transaction
     operation.save()
