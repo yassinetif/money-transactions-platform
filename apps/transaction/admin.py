@@ -59,12 +59,16 @@ class TransactionAdmin(admin.ModelAdmin):
     beneficiary.short_description = 'Benef.'
 
     def _source_country(self, obj):
-        return '{}'.format(obj.source_country.iso.name)
+        if obj.source_country:
+            return '{}'.format(obj.source_country.iso.name)
+        return '-'
     _source_country.allow_tags = True
     _source_country.short_description = _('Src. country')
 
     def _destination_country(self, obj):
-        return '{}'.format(obj.destination_country.iso.name)
+        if obj.destination_country:
+            return '{}'.format(obj.destination_country.iso.name)
+        return '-'
     _destination_country.allow_tags = True
     _destination_country.short_description = _('Dest. country')
 
@@ -85,7 +89,7 @@ admin.site.register(Operation, OperationAdmin)
 
 
 class RevenuSharingResultAdmin(admin.ModelAdmin):
-    list_display = ('created', 'entity', 'transaction', 'transaction_type', 'amount','is_calculated')
+    list_display = ('created', 'entity', 'transaction', 'transaction_type', 'amount', 'is_calculated')
     search_fields = ('transaction__number',)
 
     def has_add_permission(self, request):
