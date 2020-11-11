@@ -584,6 +584,7 @@ def create_batch_transaction(entity, commission):
     batch.amount = commission
     batch.paid_amount = commission
     batch.destination_content_object = entity
+    batch.agent = AgentRepository.get_batch_agent()
     batch.source_content_object = entity
     batch.status = TransactionStatus.SUCCESS.value
     batch.paid_amount_in_destination_currency = commission

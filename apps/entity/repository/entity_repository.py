@@ -68,3 +68,4 @@ class EntityRepository():
             return entity, entity.to_dict()
         except Entity.DoesNotExist:
             raise EntityException(ERR, {'response_code': '100', 'response_text': ERR})
+
