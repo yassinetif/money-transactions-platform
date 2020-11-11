@@ -38,8 +38,7 @@ class AgentRepository():
             return data
         except Agent.DoesNotExist:
             raise AgentException('unknown agent account', {'response_code': 'ERR', 'response_text': 'unknown agent'})
-    
+
     @staticmethod
     def get_batch_agent():
-        return Agent.objects.get('informations__username' = 'BATCH')
-
+        return Agent.objects.get(nformations__username='BATCH')
