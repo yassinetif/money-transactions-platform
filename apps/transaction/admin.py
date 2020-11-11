@@ -29,12 +29,16 @@ class TransactionAdmin(admin.ModelAdmin):
     entity.short_description = _('Entity')
 
     def transaction_amount(self, obj):
-        return '{} {} '.format(obj.amount, obj.source_country.currency.iso)
+        if obj.source_country:
+            return '{} {} '.format(obj.amount, obj.source_country.currency.iso)
+        return obj.amount
     transaction_amount.allow_tags = True
     transaction_amount.short_description = _('Transaction amount')
 
     def transaction_paid_amount(self, obj):
-        return '{} {} '.format(obj.paid_amount, obj.source_country.currency.iso)
+        if obj.source_country:
+            return '{} {} '.format(obj.paid_amount, obj.source_country.currency.iso)
+        return obj.amount
     transaction_paid_amount.allow_tags = True
     transaction_paid_amount.short_description = _('Paid amount')
 
