@@ -586,4 +586,12 @@ def create_batch_transaction(entity, commission):
     batch.destination_content_object = entity
     batch.status = TransactionStatus.SUCCESS.value
     batch.paid_amount_in_destination_currency = commission
-    #batch.save()
+    batch.save()
+    return batch
+
+def insert_batch_operation(transaction, entity):
+    operation = Operation()
+    operation.comment = 'BATCH OPERATION'
+    operation.balance_after_operation = entity.entity.accounts.last()
+    operation.transaction = transaction
+    operation.save()
