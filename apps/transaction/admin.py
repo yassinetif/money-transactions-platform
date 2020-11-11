@@ -19,7 +19,9 @@ class TransactionAdmin(admin.ModelAdmin):
         return False
 
     def transaction_fee(self, obj):
-        return' {} {} '.format(obj.grille.fee, obj.grille.corridor.currency)
+        if obj.grille:
+            return' {} {} '.format(obj.grille.fee, obj.grille.corridor.currency)
+        return '-'
     transaction_fee.allow_tags = True
     transaction_fee.short_description = _('Fee')
 
