@@ -41,4 +41,4 @@ class AgentRepository():
 
     @staticmethod
     def get_batch_agent():
-        return Agent.objects.get(nformations__username='BATCH')
+        return Agent.objects.get(informations__username='BATCH')
