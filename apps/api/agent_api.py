@@ -24,6 +24,7 @@ class AgentResource(ModelResource):
         resource_name = 'entity/agent'
         filtering = {
             'slug': ALL,
+            'code': ALL,
             'user': ALL_WITH_RELATIONS,
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
