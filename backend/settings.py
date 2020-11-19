@@ -69,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -268,3 +269,13 @@ BACKEND_BASE_URL = 'http://217.69.6.52/'
 
 # TASTYPIE RESOURCE CONFIG
 API_LIMIT_PER_PAGE = 0
+
+
+#ROLLBAR
+ROLLBAR = {
+    'access_token': '5b60920484374ca59fa338426c24d23c',
+    'environment': 'development' if DEBUG else 'production',
+    'root': BASE_DIR,
+}
+import rollbar
+rollbar.init(**ROLLBAR)
