@@ -19,8 +19,8 @@ class AgentResource(ModelResource):
 
     class Meta:
         queryset = Agent.objects.all()
-        list_allowed_methods = ['get', 'post']
-        detail_allowed_methods = ['get', 'post', 'put', 'delete']
+        list_allowed_methods = ['get', 'post', 'options']
+        detail_allowed_methods = ['get', 'post', 'put', 'delete','options']
         resource_name = 'entity/agent'
         filtering = {
             'slug': ALL,
