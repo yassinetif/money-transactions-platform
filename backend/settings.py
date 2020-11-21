@@ -282,3 +282,7 @@ ROLLBAR = {
     'root': BASE_DIR,
 }
 rollbar.init(**ROLLBAR)
+
+
+# CORSHEADERS
+CORS_ORIGIN_ALLOW_ALL = True   
