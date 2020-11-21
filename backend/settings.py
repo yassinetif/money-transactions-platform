@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+import rollbar
 import os
 from sys import path
 from django.utils.translation import ugettext_lazy as _
@@ -59,9 +60,12 @@ INSTALLED_APPS = [
     "apps.shared",
     "apps.transaction",
 
+    "corsheaders",
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -271,11 +275,10 @@ BACKEND_BASE_URL = 'http://217.69.6.52/'
 API_LIMIT_PER_PAGE = 0
 
 
-#ROLLBAR
+# ROLLBAR
 ROLLBAR = {
     'access_token': '5b60920484374ca59fa338426c24d23c',
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }
-import rollbar
 rollbar.init(**ROLLBAR)
