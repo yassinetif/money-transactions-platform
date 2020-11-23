@@ -170,5 +170,22 @@ def customer_beneficiaries(tastypie, phone_number, request):
 
         return tastypie.create_response(request, bundle)
     except Exception as err:
-        print(err)
-        return tastypie.create_response(request, {'response_text': 'no beneficiairies ', 'response_code': '100'}, HttpForbidden)
+        return tastypie.create_response(request, {'response_text': 'no beneficiairies', 'response_code': '100'}, HttpForbidden)
+
+
+def customer_info(tastypie, phone_number, request):
+
+    try:
+        customer = CustomerRepository.fetch_customer_by_phone_number(phone_number)
+        bundle = tastypie.build_bundle(obj=customer, request=request)
+        bundle = tastypie.full_dehydrate(bundle)
+        bundle.data.update({'response_code': '000'})
+        bundle.data.update({'customer': {
+            'first_name': customer.informations.first_name,
+            'last_name': customer.informations.last_name
+        }
+        })
+
+        return tastypie.create_response(request, bundle)
+    except Exception:
+        return tastypie.create_response(request, {'response_text': 'no customer', 'response_code': '100'}, HttpForbidden)

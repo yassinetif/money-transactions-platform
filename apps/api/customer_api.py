@@ -4,7 +4,9 @@ from apps.kyc.models import Customer
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from apps.transaction.controller.customer_controller import create_customer_with_card,\
-    create_customer_with_wallet, get_wallet_balance, wallet_login, define_wallet_password, customer_beneficiaries
+    create_customer_with_wallet, get_wallet_balance, wallet_login, define_wallet_password, customer_beneficiaries,\
+    customer_info
+
 
 class CustomerResource(ModelResource):
 
@@ -43,6 +45,9 @@ class CustomerResource(ModelResource):
             url(r"^(?P<resource_name>%s)/wallet/beneficiaries%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('beneficiaries'), name="api_beneficiaries"),
+            url(r"^(?P<resource_name>%s)/info%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('info'), name="api_customer_info"),
         ]
 
     def activate_card(self, request, **kwargs):
@@ -79,4 +84,10 @@ class CustomerResource(ModelResource):
         self.method_check(request, allowed=['get'])
         phone_number = request.GET['phone_number']
         response = customer_beneficiaries(self, phone_number, request)
+        return response
+
+    def info(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        phone_number = request.GET['phone_number']
+        response = customer_info(self, phone_number, request)
         return response
