@@ -425,7 +425,7 @@ def _create_recouvrement_transaction(payload, agent):
     operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
 
     transaction = Transaction()
-    transaction.transaction_type = TransactionType.CREDIT_COMPTE_ENTITE.value
+    transaction.transaction_type = TransactionType.RECOUVREMENT.value
     transaction.agent = agent
     transaction.number = random_code(10)
     transaction.code = random_code(9)
