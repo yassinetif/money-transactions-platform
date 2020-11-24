@@ -175,7 +175,7 @@ def get_source_and_destination_of_cash_to_bank_account(payload):
     return source, destination
 
 def get_source_and_destination_of_recouvrement(payload):
-    source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
+    source = CustomerRepository.fetch_customer_by_phone_number(payload.get('phone_number'))
     destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
     return source, destination
 
@@ -415,7 +415,7 @@ def _create_wallet_to_wallet_transaction(payload, customer):
 
 
 def _create_recouvrement_transaction(payload, agent):
-    _, destination = get_source_and_destination_of_transaction(
+    source, destination = get_source_and_destination_of_transaction(
         payload.copy())
     _can_agent_execute_transaction(agent.entity, destination)
     payload.update({'source_country': agent.entity.country.iso,

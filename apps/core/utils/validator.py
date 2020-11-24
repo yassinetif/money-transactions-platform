@@ -112,7 +112,14 @@ class WalletToWalletValidator(Schema):
         CustomerWalletValidator(), required=True)
     amount = fields.Str(required=True)
 
-
 class WalletLoginValidator(Schema):
     phone_number = fields.Str(required=True)
     password = fields.Str(required=True)
+
+
+class RecouvrementValidator(Schema):
+    phone_number = fields.Str(required=True)
+    account_number = fields.Str(required=True)
+    amount = fields.Str(required=True)
+    paid_amount = fields.Decimal(required=True, as_string=True)
+
