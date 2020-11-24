@@ -134,6 +134,7 @@ def create(tastypie, payload, request):
         token = get_request_token(request)
         transaction_type = payload.get('type')
         if transaction_type in AGENT_TRANSACTIONS:
+            print ('hhhhhhhh')
             transaction = _create_agent_transaction(payload, token)
         else:
             transaction = _create_wallet_transaction(payload, token)
