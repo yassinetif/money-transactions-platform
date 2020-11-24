@@ -586,6 +586,10 @@ def _get_operation_comment_of_wallet_to_wallet(transaction, flag=False):
         comment = 'Crédit de {0} : transaction {1}, Rechargement reçu de  {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
     return comment
 
+def _get_operation_comment_of_recouvrement(transaction, flag=False):
+    comment = 'Crédit de {0} : transaction {1}, Rechargement reçu de  {2}'.format(transaction.amount, transaction.number, transaction.source_content_object)
+    return comment
+
 
 def _can_agent_pay_transaction(transaction, agent):
     if transaction.agent == agent:
