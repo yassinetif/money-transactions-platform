@@ -44,11 +44,8 @@ def calculate_transaction_fee(payload):
 
 
 def calculate_transaction_paid_amount_and_fee(payload):
-    print('je suis ici')
     fee = calculate_transaction_fee(payload)
-    print('je suis ici aussi')
     total = fee + Decimal(payload.get('amount'))
-    print('je suis ici ')
     return fee, total
 
 
@@ -123,6 +120,10 @@ def get_wallet_to_cash_fee_payload(payload):
     data.update({'type': payload.get('type')})
     data.update({'destination_country': payload.get('destination_content_object').get('country')})
     data.update({'amount': payload.get('amount')})
+    return data
+
+def get_recouvrement_fee_payload(payload):
+    data = get_credit_compte_entite_fee_payload(payload)
     return data
 
 
