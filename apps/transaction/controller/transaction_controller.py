@@ -93,16 +93,19 @@ def _credit_entity(transaction):
 
 
 def _addtitional_transactions_informations(transaction, payload):
-    info = {'transaction_number': transaction.number, 'receipt_code': transaction.code}
-    payload.update(info)
-    payload.update({'response_code': '000', 'date': transaction.created})
-    payload.update({'destination_currency': transaction.destination_country.currency.iso})
-    payload.update({'source_currency': transaction.source_country.currency.iso})
-    payload.update({'operation_amount': transaction.operation_amount})
-    payload.update({'source_revenu': transaction.source_revenu.libelle})
-    payload.update({'motif_envoi': transaction.motif_envoi.libelle})
-    payload.update({'parity': SharedRepository.fetch_change_parity_value(transaction.source_country.currency,
+    try :
+        info = {'transaction_number': transaction.number, 'receipt_code': transaction.code}
+        payload.update(info)
+        payload.update({'response_code': '000', 'date': transaction.created})
+        payload.update({'destination_currency': transaction.destination_country.currency.iso})
+        payload.update({'source_currency': transaction.source_country.currency.iso})
+        payload.update({'operation_amount': transaction.operation_amount})
+        payload.update({'source_revenu': transaction.source_revenu.libelle})
+        payload.update({'motif_envoi': transaction.motif_envoi.libelle})
+        payload.update({'parity': SharedRepository.fetch_change_parity_value(transaction.source_country.currency,
                                                                          transaction.destination_country.currency)})
+    except Exception as e:
+        print (e)
 
     return payload
 
