@@ -1,10 +1,10 @@
 import requests
 import json
 headers = {'Content-Type': 'application/json'}
-url = 'http://127.0.0.1:8000/api/v1/entity/agent/login/'
+url = 'http://217.69.6.52/api/v1/entity/agent/login/'
 data = {
-    "username": "test.user",
-    "password": "Kodelines2020@"
+    "username": "test-agent",
+    "password": "testpasser"
 }
 response = requests.post(url, data=json.dumps(data), headers=headers)
 print(response.json())

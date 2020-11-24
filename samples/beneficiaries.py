@@ -4,7 +4,7 @@ import requests
 
 headers = {'Content-Type': 'application/json'}
 
-url = ('http: // 127.0.0.1: 8000/api/v1/customer/wallet/beneficiaries /?'
+url = ('http: // 127.0.0.1: 8000/api/v1/customer/wallet/beneficiaries/?'
        'phone_number=716-759-2189')
 response = requests.get(url, headers=headers)
 print(response.json())

@@ -174,6 +174,11 @@ def get_source_and_destination_of_cash_to_bank_account(payload):
     destination = CustomerRepository.fetch_or_create_customer(payload.get('destination_content_object'))
     return source, destination
 
+def get_source_and_destination_of_recouvrement(payload):
+    source = CustomerRepository.fetch_or_create_customer(payload.get('source_content_object'))
+    destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
+    return source, destination
+
 
 def create_relation_between(source, destination):
     if destination not in source.relations.all():
@@ -406,6 +411,35 @@ def _create_wallet_to_wallet_transaction(payload, customer):
     debit_customer_account(customer, get_customer_balance(customer), payload.get('paid_amount'))
     credit_customer_account(destination, get_customer_balance(destination), operation_amount)
     create_relation_between(customer, destination)
+    return transaction
+
+
+def _create_recouvrement_transaction(payload, agent):
+    _, destination = get_source_and_destination_of_transaction(
+        payload.copy())
+    _can_agent_execute_transaction(agent.entity, destination)
+    payload.update({'source_country': agent.entity.country.iso,
+                    'destination_country': 'GW'})
+
+    operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
+
+    transaction = Transaction()
+    transaction.transaction_type = TransactionType.CREDIT_COMPTE_ENTITE.value
+    transaction.agent = agent
+    transaction.number = random_code(10)
+    transaction.code = random_code(9)
+    transaction.amount = payload.get('amount')
+    transaction.paid_amount = payload.get('paid_amount')
+    transaction.source_content_object = agent.entity
+    transaction.destination_content_object = destination
+    transaction.grille = get_grille_tarifaire(payload)
+    transaction.source_country = agent.entity.country
+    transaction.destination_country = destination.country
+    transaction.status = TransactionStatus.SUCCESS.value
+    transaction.paid_amount_in_destination_currency = operation_amount
+    transaction.save()
+
+    credit_entity(destination, get_entity_balance(destination), operation_amount)
     return transaction
 
 
