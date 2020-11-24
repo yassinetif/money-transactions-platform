@@ -130,6 +130,7 @@ def fee(tastypie, payload, request):
 
 def create(tastypie, payload, request):
     try:
+        print (payload.copy())
         _validate_transaction_payload(payload.copy())
         token = get_request_token(request)
         transaction_type = payload.get('type')
