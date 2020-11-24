@@ -19,7 +19,7 @@ from apps.transaction.domain.transaction_domain import debit_entity_account, cre
     get_parent_transaction_payload, get_entity_commission
 from apps.transaction.decorator.transaction_decorator import agent_code_required, customer_code_required
 from apps.transaction.repository.transaction_repository import TransactionRepository
-from apps.shared.models.price import AGENT_TRANSACTIONS
+from apps.shared.models.price import AGENT_TRANSACTIONS, TransactionType
 from apps.shared.repository.shared_repository import SharedRepository
 from numexpr import evaluate as ev
 from decimal import Decimal
@@ -180,7 +180,7 @@ def _create_agent_transaction(payload, token):
 
 def _add_agent_informations(transaction, payload):
     transaction_type = payload.get('type')
-    if transaction_type in AGENT_TRANSACTIONS:
+    if transaction_type in AGENT_TRANSACTIONS.remove(TransactionType.RECOUVREMENT.value):
         agent_informations = AgentRepository.to_json(payload.get('agent').get('code'))
         payload.update({'agent': agent_informations})
     return payload
