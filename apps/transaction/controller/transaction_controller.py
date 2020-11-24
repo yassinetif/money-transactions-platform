@@ -147,7 +147,10 @@ def create(tastypie, payload, request):
         _ = _addtitional_transactions_informations(transaction, payload)
         _response = _add_agent_informations(transaction, _)
         response = _add_payer_informations(transaction, _response)
+        print (response)
+        print('hhhhhhhh')
         save_transaction_response_payload(transaction, response)
+        print('hhhhhhhh')
         return tastypie.create_response(request, response)
     except ValidationError as err:
         print(err)
