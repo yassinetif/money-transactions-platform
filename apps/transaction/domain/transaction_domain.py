@@ -513,8 +513,9 @@ def insert_operation(transaction):
         operation.save()
 
 def save_transaction_response_payload(transaction, response):
-    transaction.payload = response
-    transaction.save()
+    if not transaction.type == TransactionType.RECOUVREMENT.value:
+        transaction.payload = response
+        transaction.save()
 
 
 def _insert_credit_compte_entite_operation(transaction):
