@@ -147,6 +147,7 @@ def create(tastypie, payload, request):
         save_transaction_response_payload(transaction, response)
         return tastypie.create_response(request, response)
     except ValidationError as err:
+        print (err)
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
