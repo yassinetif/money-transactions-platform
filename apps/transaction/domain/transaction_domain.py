@@ -513,7 +513,7 @@ def insert_operation(transaction):
         operation.save()
 
 def save_transaction_response_payload(transaction, response):
-    if not transaction.type == TransactionType.RECOUVREMENT.value:
+    if not transaction.transaction_type == TransactionType.RECOUVREMENT.value:
         transaction.payload = response
         transaction.save()
 
