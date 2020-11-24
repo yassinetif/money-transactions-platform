@@ -93,7 +93,7 @@ def _credit_entity(transaction):
 
 
 def _addtitional_transactions_informations(transaction, payload):
-    try :
+    try:
         info = {'transaction_number': transaction.number, 'receipt_code': transaction.code}
         payload.update(info)
         payload.update({'response_code': '000', 'date': transaction.created})
@@ -103,9 +103,9 @@ def _addtitional_transactions_informations(transaction, payload):
         payload.update({'source_revenu': transaction.source_revenu.libelle})
         payload.update({'motif_envoi': transaction.motif_envoi.libelle})
         payload.update({'parity': SharedRepository.fetch_change_parity_value(transaction.source_country.currency,
-                                                                         transaction.destination_country.currency)})
+                                                                             transaction.destination_country.currency)})
     except Exception as e:
-        print (e)
+        print(e)
 
     return payload
 
@@ -133,12 +133,12 @@ def fee(tastypie, payload, request):
 
 def create(tastypie, payload, request):
     try:
-        print (payload.copy())
+        print(payload.copy())
         _validate_transaction_payload(payload.copy())
         token = get_request_token(request)
         transaction_type = payload.get('type')
         if transaction_type in AGENT_TRANSACTIONS:
-            print ('hhhhhhhh')
+            print('hhhhhhhh')
             transaction = _create_agent_transaction(payload, token)
         else:
             transaction = _create_wallet_transaction(payload, token)
@@ -150,7 +150,7 @@ def create(tastypie, payload, request):
         save_transaction_response_payload(transaction, response)
         return tastypie.create_response(request, response)
     except ValidationError as err:
-        print (err)
+        print(err)
         return tastypie.create_response(request, {'response_text': str(err), 'response_code': '100'}, HttpUnauthorized)
     except CoreException as err:
         return tastypie.create_response(request, err.errors, HttpForbidden)
@@ -180,7 +180,7 @@ def _create_agent_transaction(payload, token):
 
 def _add_agent_informations(transaction, payload):
     transaction_type = payload.get('type')
-    if transaction_type in AGENT_TRANSACTIONS.remove(TransactionType.RECOUVREMENT.value):
+    if transaction_type in AGENT_TRANSACTIONS and not transaction_type == TransactionType.RECOUVREMENT.value:
         agent_informations = AgentRepository.to_json(payload.get('agent').get('code'))
         payload.update({'agent': agent_informations})
     return payload
