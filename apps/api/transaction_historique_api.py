@@ -60,6 +60,6 @@ class TransactionHistoriqueResource(ModelResource):
         return None
 
     def _transaction_currency(self, bundle):
-        if bundle.obj.grille.corridor:
+        if bundle.obj.grille:
             return bundle.obj.grille.corridor.currency.name
         return None
