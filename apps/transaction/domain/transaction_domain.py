@@ -431,7 +431,7 @@ def _create_recouvrement_transaction(payload, agent):
     transaction.code = random_code(9)
     transaction.amount = payload.get('amount')
     transaction.paid_amount = payload.get('paid_amount')
-    transaction.source_content_object = agent.entity
+    transaction.source_content_object = source
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = agent.entity.country
