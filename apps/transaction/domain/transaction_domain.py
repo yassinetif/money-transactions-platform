@@ -176,9 +176,7 @@ def get_source_and_destination_of_cash_to_bank_account(payload):
     return source, destination
 
 def get_source_and_destination_of_recouvrement(payload):
-    print ('hhhhhhhh')
     source = CustomerRepository.fetch_customer_by_phone_number(payload.get('phone_number'))
-    print (source)
     destination = EntityRepository.fetch_by_account_number(payload.get('account_number'))
     return source, destination
 
@@ -425,6 +423,9 @@ def _create_recouvrement_transaction(payload, agent):
                     'destination_country': 'GW'})
 
     operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
+    print ('XXCXCCCCXXXXXX')
+    print (source)
+    print ('OKKOKKOKOKOKOKOK')
 
     transaction = Transaction()
     transaction.transaction_type = TransactionType.RECOUVREMENT.value
