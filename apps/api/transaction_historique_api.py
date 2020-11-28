@@ -24,7 +24,7 @@ class TransactionHistoriqueResource(ModelResource):
             'created': ['exact', 'range', 'gt', 'gte', 'lt', 'lte'],
         }
         excludes = ('code', 'resource_uri', 'destination_object_id', 'source_object_id', 'resource_uri', 'operation_amount')
-        ordering = ['-id']
+        ordering = ['id']
 
     def determine_format(self, request):
         return 'application/json'
