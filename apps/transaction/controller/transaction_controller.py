@@ -28,7 +28,7 @@ def _get_validator_class(transaction_type):
     validator = convert_snake_to_camel_case(transaction_type)
     module = import_module('apps.core.utils.validator')
     klass = getattr(module, '{}Validator'.format(validator))
-    return klass()
+    return klass() # Pourquoi vous mettez les parenthèses alors que vous renvoyer une variable
 
 
 def _validate_transaction_payload(payload):
@@ -138,7 +138,7 @@ def create(tastypie, payload, request):
         token = get_request_token(request)
         transaction_type = payload.get('type')
         if transaction_type in AGENT_TRANSACTIONS:
-            print('hhhhhhhh')
+            print('hhhhhhhh') # print de test à enlever
             transaction = _create_agent_transaction(payload, token)
         else:
             transaction = _create_wallet_transaction(payload, token)
@@ -148,9 +148,9 @@ def create(tastypie, payload, request):
         _response = _add_agent_informations(transaction, _)
         response = _add_payer_informations(transaction, _response)
         print (response)
-        print('hhhhhhhh')
+        print('hhhhhhhh')  # print de test à enlever
         save_transaction_response_payload(transaction, response)
-        print('hhhhhhhh')
+        print('hhhhhhhh') # print de test à enlever
         return tastypie.create_response(request, response)
     except ValidationError as err:
         print(err)

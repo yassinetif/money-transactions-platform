@@ -38,5 +38,5 @@ class TransactionRepository():
         # TODO : remettre le filtre sur la date du jour
         # transactions = Transaction.objects.filter(agent=agent, created=datetime.today()).\
         transactions = Transaction.objects.filter(agent=agent).\
-            values('transaction_type').annotate(dcount=Count('transaction_type'))
+            values('transaction_type').annotate(dcount=Count('transaction_type'))  # Pourquoi il y a un point anti-slache??
         return [transaction for transaction in transactions]

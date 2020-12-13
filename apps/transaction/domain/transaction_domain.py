@@ -57,7 +57,7 @@ def currency_change(source_currency, destination_currency, amount):
 def get_fee_calculation_payload(payload):
     module = import_module(CURRENT_MODULE)
     method = getattr(module, 'get_{0}_fee_payload'.format(payload.get('type').lower()))
-    return method(payload)
+    return method(payload) # Je comprends pas le fait de considèrer une variable comme une méthode
 
 def get_debit_compte_entite_fee_payload(payload):
     data = get_credit_compte_entite_fee_payload(payload)
@@ -197,13 +197,13 @@ def create_transaction(payload, executer):
     transaction_type = payload.get('type')
     _ = transaction_type.lower()
     module = import_module(CURRENT_MODULE)
-    method = getattr(module, '_create_{0}_transaction'.format(_))
+    method = getattr(module, '_create_{0}_transaction'.format(_)) # vous n'etes pas obligé de mettre zéro entre les accolades pour que ça soit remplaçable
     return method(payload, executer)
 
 
 def _create_cash_to_cash_transaction(payload, agent):
     source, destination = get_source_and_destination_of_transaction(
-        payload.copy())
+        payload.copy()) # Remettre cette ligne avec la ligne d'avant pour avoir une bonne visibilité de la méthode
     transaction = Transaction()
     transaction.transaction_type = TransactionType.CASH_TO_CASH.value
     transaction.agent = agent
@@ -215,9 +215,9 @@ def _create_cash_to_cash_transaction(payload, agent):
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = SharedRepository.fetch_country_by_iso(
-        payload.get('source_country'))
+        payload.get('source_country')) # pareil pour cette ligne
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
-        payload.get('destination_country'))
+        payload.get('destination_country')) # pareil pour cette ligne
     transaction.source_revenu = SharedRepository.fetch_source_revenu_libelle_by_code(payload.get('source_revenu'))
     transaction.motif_envoi = SharedRepository.fetch_motif_envoi_libelle_by_code(payload.get('motif_envoi'))
     transaction.save()
@@ -227,7 +227,7 @@ def _create_cash_to_cash_transaction(payload, agent):
 
 def _create_cash_to_bank_account_transaction(payload, agent):
     source, destination = get_source_and_destination_of_transaction(
-        payload.copy())
+        payload.copy()) # Remettre cette ligne avec la ligne d'avant pour avoir une bonne visibilité de la méthode
     transaction = Transaction()
     transaction.transaction_type = TransactionType.CASH_TO_CASH.value
     transaction.agent = agent
@@ -239,9 +239,9 @@ def _create_cash_to_bank_account_transaction(payload, agent):
     transaction.destination_content_object = destination
     transaction.grille = get_grille_tarifaire(payload)
     transaction.source_country = SharedRepository.fetch_country_by_iso(
-        payload.get('source_country'))
+        payload.get('source_country')) # pareil pour cette ligne
     transaction.destination_country = SharedRepository.fetch_country_by_iso(
-        payload.get('destination_country'))
+        payload.get('destination_country')) # pareil pour cette ligne
     transaction.other_informations = 'BANQUE : {}, RIB : {}'.format(payload.get('bank_name'), payload.get('rib'))
     transaction.source_revenu = SharedRepository.fetch_source_revenu_libelle_by_code(payload.get('source_revenu'))
     transaction.motif_envoi = SharedRepository.fetch_motif_envoi_libelle_by_code(payload.get('motif_envoi'))
@@ -423,7 +423,7 @@ def _create_recouvrement_transaction(payload, agent):
                     'destination_country': 'GW'})
 
     operation_amount = currency_change(agent.entity.country.currency.iso, destination.country.currency.iso, Decimal(payload.get('amount')))
-    print ('XXCXCCCCXXXXXX')
+    print ('XXCXCCCCXXXXXX') # Il y a des prints de test à enlever
     print (source)
     print ('OKKOKKOKOKOKOKOK')
 
@@ -495,7 +495,7 @@ def pay_transaction(payload, agent):
 
 def get_parent_transaction_payload(transaction):
     _ = TransactionRepository.retreive_transaction_by_number(transaction.parent_transaction_number)
-    return _.payload
+    return _.payload # evitez de renommer les variable avec des tildes pour que ça soit claire à celui qui relis votre code
 
 
 def insert_operation(transaction):

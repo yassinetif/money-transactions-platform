@@ -7,7 +7,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ('customer', 'country', 'phone_number', 'identification_type',
                     'identification_number', 'issuer_country', 'address')
     filter_horizontal = ('relations',)
-    search_fields = ('informations__first_name', 'informations__last_name', 'informations__username', )
+    search_fields = ('informations__first_name', 'informations__last_name', 'informations__username', ) # ça sert à rien de mettre la dernière virgule pour créer un tuple
 
     def has_add_permission(self, request):
         return False
@@ -31,7 +31,7 @@ admin.site.register(Customer, CustomerAdmin)
 
 
 class CarteraAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'card_number', 'card_identification_number',)
+    list_display = ('customer', 'card_number', 'card_identification_number',) # pareil ici
 
     def has_add_permission(self, request):
         return False

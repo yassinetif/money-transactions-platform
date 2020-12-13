@@ -128,7 +128,7 @@ def define_wallet_password(tastypie, data, request):
     password = data['password']
     otp = data['otp']
 
-    result = result = verify_totp(otp)
+    result = result = verify_totp(otp) # Il y a une redondance dans la declaration de la variable result
     if result is False:
         return tastypie.create_response(request, {'response_text': 'wrong OTP', 'response_code': '100'}, HttpUnauthorized)
     try:
